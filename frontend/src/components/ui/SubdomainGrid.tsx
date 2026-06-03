@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { getSubdomainUrl } from '@/utils/navigation';
 
 const subdomains = [
   {
@@ -75,6 +77,12 @@ const coreFeatures = [
 ];
 
 export default function SubdomainGrid() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <section className="relative z-10 w-full max-w-7xl mx-auto px-6">
 
@@ -99,7 +107,7 @@ export default function SubdomainGrid() {
         {subdomains.map((sub) => (
           <a
             key={sub.name}
-            href={sub.href}
+            href={mounted ? getSubdomainUrl(sub.name.toLowerCase()) : `/${sub.name.toLowerCase()}`}
             className="group relative rounded-2xl p-6 border border-[#0a1a40] hover:border-opacity-100 transition-all duration-500 overflow-hidden"
             style={{
               background: 'linear-gradient(145deg, rgba(10, 18, 40, 0.8), rgba(5, 10, 24, 0.9))',

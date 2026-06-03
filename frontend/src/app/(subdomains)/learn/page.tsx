@@ -48,7 +48,13 @@ export default function LearnPage() {
       }
 
       setIsAuthenticated(true);
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL !== undefined
+        ? process.env.NEXT_PUBLIC_API_URL
+        : (typeof window !== 'undefined' && 
+           !window.location.hostname.includes('localhost') && 
+           !window.location.hostname.endsWith('.local')
+            ? ''
+            : 'http://localhost:8000');
       
       const res = await fetch(`${apiBase}/api/v1/learning/courses`, {
         headers: {
@@ -148,7 +154,13 @@ export default function LearnPage() {
       const token = session?.access_token;
       if (!token) return;
 
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL !== undefined
+        ? process.env.NEXT_PUBLIC_API_URL
+        : (typeof window !== 'undefined' && 
+           !window.location.hostname.includes('localhost') && 
+           !window.location.hostname.endsWith('.local')
+            ? ''
+            : 'http://localhost:8000');
       
       if (currentProgress === 0) {
         // Enroll

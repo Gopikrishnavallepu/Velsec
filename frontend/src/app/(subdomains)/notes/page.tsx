@@ -48,7 +48,13 @@ export default function NotesPage() {
       }
 
       setIsAuthenticated(true);
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL !== undefined
+        ? process.env.NEXT_PUBLIC_API_URL
+        : (typeof window !== 'undefined' && 
+           !window.location.hostname.includes('localhost') && 
+           !window.location.hostname.endsWith('.local')
+            ? ''
+            : 'http://localhost:8000');
       const categoryParam = category !== 'ALL' ? encodeURIComponent(category) : 'all';
       const searchParam = search ? encodeURIComponent(search) : '';
       

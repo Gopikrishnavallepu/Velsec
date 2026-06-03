@@ -1,28 +1,38 @@
+'use client';
+
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import Scene from '@/components/3d/Scene';
 import SubdomainGrid from '@/components/ui/SubdomainGrid';
 import ParticleField from '@/components/ui/ParticleField';
+import { getSubdomainUrl } from '@/utils/navigation';
 
 const pillars = [
-  { icon: '🔒', label: 'CYBERSECURITY\nSOLUTIONS', href: 'http://velsec.com:3000' },
-  { icon: '🎓', label: 'LEARNING\nECOSYSTEM', href: 'http://learn.velsec.com:3000' },
-  { icon: '🧠', label: 'AI\nSECURITY', href: 'http://velsec.com:3000' },
-  { icon: '♾️', label: 'DEVSECOPS\nEXCELLENCE', href: 'http://projects.velsec.com:3000' },
-  { icon: '👤', label: 'PERSONAL &\nCAREER GROWTH', href: 'http://personal.velsec.com:3000' },
-  { icon: '💻', label: 'PROJECTS &\nPRACTICAL LABS', href: 'http://projects.velsec.com:3000' },
-  { icon: '📰', label: 'TECH NEWS &\nINSIGHTS', href: 'http://news.velsec.com:3000' },
-  { icon: '🎯', label: 'PROGRESS\nTRACKER', href: 'http://tracker.velsec.com:3000' },
+  { icon: '🔒', label: 'CYBERSECURITY\nSOLUTIONS', subdomain: 'home' },
+  { icon: '🎓', label: 'LEARNING\nECOSYSTEM', subdomain: 'learn' },
+  { icon: '🧠', label: 'AI\nSECURITY', subdomain: 'home' },
+  { icon: '♾️', label: 'DEVSECOPS\nEXCELLENCE', subdomain: 'projects' },
+  { icon: '👤', label: 'PERSONAL &\nCAREER GROWTH', subdomain: 'personal' },
+  { icon: '💻', label: 'PROJECTS &\nPRACTICAL LABS', subdomain: 'projects' },
+  { icon: '📰', label: 'TECH NEWS &\nINSIGHTS', subdomain: 'news' },
+  { icon: '🎯', label: 'PROGRESS\nTRACKER', subdomain: 'tracker' },
 ];
 
 const actionBar = [
-  { icon: '📖', label: 'LEARN', href: 'http://learn.velsec.com:3000' },
-  { icon: '🔬', label: 'PRACTICE', href: 'http://projects.velsec.com:3000' },
-  { icon: '⚙️', label: 'IMPLEMENT', href: 'http://projects.velsec.com:3000' },
-  { icon: '📈', label: 'GROW', href: 'http://tracker.velsec.com:3000' },
-  { icon: '🛡️', label: 'PROTECT', href: 'http://velsec.com:3000' },
+  { icon: '📖', label: 'LEARN', subdomain: 'learn' },
+  { icon: '🔬', label: 'PRACTICE', subdomain: 'projects' },
+  { icon: '⚙️', label: 'IMPLEMENT', subdomain: 'projects' },
+  { icon: '📈', label: 'GROW', subdomain: 'tracker' },
+  { icon: '🛡️', label: 'PROTECT', subdomain: 'home' },
 ];
 
 export default function HomePage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <main className="relative min-h-screen overflow-hidden">
       <ParticleField />
@@ -73,7 +83,7 @@ export default function HomePage() {
             {pillars.map((p) => (
               <a
                 key={p.label}
-                href={p.href}
+                href={mounted ? getSubdomainUrl(p.subdomain) : `/${p.subdomain}`}
                 className="group flex flex-col items-center text-center p-3 rounded-xl border border-[#0a1a40] hover:border-[#0096ff]/40 transition-all duration-500 cursor-pointer hover:shadow-[0_0_25px_rgba(0,150,255,0.08)]"
                 style={{
                   background: 'linear-gradient(180deg, rgba(10, 18, 40, 0.5), rgba(5, 10, 24, 0.7))',
@@ -101,7 +111,7 @@ export default function HomePage() {
             {actionBar.map((a, i) => (
               <div key={a.label} className="flex items-center">
                 <a
-                  href={a.href}
+                  href={mounted ? getSubdomainUrl(a.subdomain) : `/${a.subdomain}`}
                   className="flex items-center gap-2 px-4 py-1.5 text-xs font-mono font-bold tracking-widest text-[#0096ff]/70 hover:text-[#0096ff] hover:bg-[#0096ff]/5 rounded-lg transition-all duration-300"
                 >
                   <span>{a.icon}</span>

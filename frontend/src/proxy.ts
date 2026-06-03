@@ -22,6 +22,13 @@ export async function proxy(request: NextRequest) {
     subdomain = cleanHost.replace('.velsec.local', '');
   }
 
+  // If host is mapped to 'home' but path starts with a subdomain route (e.g. /learn), don't rewrite it to /home/learn
+  const subdomainsList = ['learn', 'notes', 'projects', 'tracker', 'news', 'personal'];
+  const firstSegment = request.nextUrl.pathname.split('/')[1];
+  if (subdomain === 'home' && subdomainsList.includes(firstSegment)) {
+    subdomain = '';
+  }
+
   // 1. Create base response (rewrite or next)
   let response = NextResponse.next();
   if (subdomain) {

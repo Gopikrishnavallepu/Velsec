@@ -1,15 +1,25 @@
+'use client';
+
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { getSubdomainUrl } from '@/utils/navigation';
 
 const navLinks = [
-  { label: 'LEARN', href: 'http://learn.velsec.com:3000' },
-  { label: 'PROJECTS', href: 'http://projects.velsec.com:3000' },
-  { label: 'NOTES', href: 'http://notes.velsec.com:3000' },
-  { label: 'NEWS', href: 'http://news.velsec.com:3000' },
-  { label: 'TRACKER', href: 'http://tracker.velsec.com:3000' },
-  { label: 'PERSONAL', href: 'http://personal.velsec.com:3000' },
+  { label: 'LEARN', key: 'learn' },
+  { label: 'PROJECTS', key: 'projects' },
+  { label: 'NOTES', key: 'notes' },
+  { label: 'NEWS', key: 'news' },
+  { label: 'TRACKER', key: 'tracker' },
+  { label: 'PERSONAL', key: 'personal' },
 ];
 
 export default function Navbar() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-6 py-3 flex justify-between items-center border-b border-[#0096ff]/10"
       style={{
@@ -18,7 +28,10 @@ export default function Navbar() {
       }}
     >
       {/* Logo */}
-      <a href="http://velsec.com:3000" className="flex items-center gap-3 group">
+      <a 
+        href={mounted ? getSubdomainUrl('home') : '/'} 
+        className="flex items-center gap-3 group"
+      >
         <div className="relative w-12 h-12 drop-shadow-[0_0_12px_rgba(0,150,255,0.4)] group-hover:drop-shadow-[0_0_20px_rgba(0,150,255,0.7)] transition-all duration-500">
           <Image
             src="/logo.png"
@@ -39,7 +52,7 @@ export default function Navbar() {
         {navLinks.map((link) => (
           <a
             key={link.label}
-            href={link.href}
+            href={mounted ? getSubdomainUrl(link.key) : `/${link.key}`}
             className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-zinc-500 hover:text-[#0096ff] hover:bg-[#0096ff]/5 rounded transition-all duration-300 border border-transparent hover:border-[#0096ff]/15"
           >
             {link.label}
