@@ -37,7 +37,7 @@ export default function NotesPage() {
       await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: getSubdomainUrl('notes'),
+          redirectTo: getSubdomainUrl('home', '/auth/callback?next=' + encodeURIComponent(getSubdomainUrl('notes'))),
         },
       });
     } catch (err: any) {

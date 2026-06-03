@@ -37,7 +37,7 @@ export default function LearnPage() {
       await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: getSubdomainUrl('learn'),
+          redirectTo: getSubdomainUrl('home', '/auth/callback?next=' + encodeURIComponent(getSubdomainUrl('learn'))),
         },
       });
     } catch (err: any) {

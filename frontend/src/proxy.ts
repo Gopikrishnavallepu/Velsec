@@ -25,8 +25,36 @@ export async function proxy(request: NextRequest) {
   // If host is mapped to 'home' but path starts with a subdomain route (e.g. /learn), don't rewrite it to /home/learn
   const subdomainsList = ['learn', 'notes', 'projects', 'tracker', 'news', 'personal'];
   const firstSegment = request.nextUrl.pathname.split('/')[1];
-  if (subdomain === 'home' && subdomainsList.includes(firstSegment)) {
+  
+  if (firstSegment === 'auth') {
     subdomain = '';
+  } else if (subdomain === 'home' && subdomainsList.includes(firstSegment)) {
+    subdomain = '';
+  }
+
+  // Handle incoming OAuth callback codes that landed elsewhere (e.g. fallback to homepage)
+  if (request.nextUrl.searchParams.has('code') && request.nextUrl.pathname !== '/auth/callback') {
+    const callbackUrl = new URL('/auth/callback', request.url);
+    // Copy all current search parameters
+    request.nextUrl.searchParams.forEach((value, key) => {
+      callbackUrl.searchParams.set(key, value);
+    });
+    // Add next if not already present, representing the current subdomain/path we are on
+    if (!callbackUrl.searchParams.has('next')) {
+      const proto = request.headers.get('x-forwarded-proto') || 'http';
+      const host = request.headers.get('host') || 'localhost:3000';
+      const nextUrlObj = new URL(`${proto}://${host}${request.nextUrl.pathname}${request.nextUrl.search}`);
+      nextUrlObj.searchParams.delete('code');
+      nextUrlObj.searchParams.delete('state');
+      
+      let nextDest = nextUrlObj.toString();
+      if (nextUrlObj.pathname === '/' && (subdomain === 'home' || !subdomain)) {
+        // If on home page, default redirect after login is profile page
+        nextDest = new URL('/profile', nextUrlObj.toString()).toString();
+      }
+      callbackUrl.searchParams.set('next', nextDest);
+    }
+    return NextResponse.redirect(callbackUrl);
   }
 
   // 1. Create base response (rewrite or next)
