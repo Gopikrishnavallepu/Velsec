@@ -3,11 +3,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/backend/app/main.py"
-    },
-    {
-      "source": "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
-      "destination": "/frontend/src/proxy.ts"
+      "destination": "backend/app/main.py"
     }
   ],
   "builds": [

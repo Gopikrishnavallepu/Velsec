@@ -40,7 +40,7 @@ It is possible to deploy both the **Next.js Frontend** and the **FastAPI Backend
 
 ## Part 3: Deploying Next.js & FastAPI Entirely on Vercel
 
-To configure Vercel to route frontend requests and handle FastAPI serverless compilation, add a `vercel.json` routing configuration in your repository root:
+To configure Vercel to route backend requests to FastAPI and let Next.js handle the frontend natively, add a `vercel.json` configuration in your repository root:
 
 #### `vercel.json`
 ```json
@@ -49,11 +49,7 @@ To configure Vercel to route frontend requests and handle FastAPI serverless com
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/backend/app/main.py"
-    },
-    {
-      "source": "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
-      "destination": "/frontend/src/proxy.ts"
+      "destination": "backend/app/main.py"
     }
   ],
   "builds": [
@@ -69,6 +65,8 @@ To configure Vercel to route frontend requests and handle FastAPI serverless com
 }
 ```
 
+* Vercel compiles your FastAPI routes into serverless Python execution layers under `/api/*`.
+* All non-API traffic is handled natively by the Next.js frontend, which automatically compiles and executes `frontend/src/proxy.ts` as the routing/auth proxy (matching the Next.js 16+ convention).
 * Vercel will detect `backend/requirements.txt` automatically and install all Python dependencies inside the serverless functions during build time.
 
 ---
@@ -88,19 +86,14 @@ Before deploying, you need a live database and authentication provider in the cl
 3. Scroll down to **JWT Settings** and copy the **JWT Secret** (used by FastAPI to verify cookies).
 
 ### Step 2: Push Local Code to GitHub
-Vercel integrates directly with GitHub to trigger automatic builds.
+Vercel integrates directly with GitHub to trigger automatic builds. Since your repository is already linked to the GitHub remote `https://github.com/Gopikrishnavallepu/VelSec.git`, you simply need to commit and push your local changes:
 
-1. Open your terminal in the root folder (`D:\Velsec\velsec-org`).
-2. Commit your code and push it to a new GitHub repository:
+1. Open your terminal in the root folder (`d:\Velsec\velsec-org`).
+2. Run the following commands to stage, commit, and push your changes:
    ```powershell
-   git init
    git add .
-   git commit -m "deploy: vercel monorepo configuration with serverless FastAPI"
-   
-   # Add your GitHub repository URL and push
-   git remote add origin https://github.com/YOUR_GITHUB_USERNAME/velsec-org.git
-   git branch -M main
-   git push -u origin main
+   git commit -m "deploy: vercel monorepo configuration with serverless FastAPI and proxy"
+   git push origin main
    ```
 
 ### Step 3: Deploy on Vercel
