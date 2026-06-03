@@ -8,7 +8,13 @@ export async function proxy(request: NextRequest) {
 
   let subdomain = '';
 
-  if (cleanHost === 'velsec.com' || cleanHost === 'www.velsec.com' || cleanHost === 'localhost') {
+  if (
+    cleanHost === 'velsec.com' ||
+    cleanHost === 'www.velsec.com' ||
+    cleanHost === 'localhost' ||
+    cleanHost.endsWith('.vercel.app') ||
+    cleanHost.endsWith('.now.sh')
+  ) {
     subdomain = 'home';
   } else if (cleanHost.endsWith('.velsec.com')) {
     subdomain = cleanHost.replace('.velsec.com', '');
