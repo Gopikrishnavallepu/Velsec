@@ -1,11 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { getCookieDomain } from "../navigation";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
 
 export const createClient = (request: NextRequest) => {
-  const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.velsec.local';
+  const host = request.headers.get('host') || 'velsec.local';
+  const cookieDomain = getCookieDomain(host);
 
   // Create an unmodified response
   let supabaseResponse = NextResponse.next({

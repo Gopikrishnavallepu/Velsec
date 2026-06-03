@@ -5,6 +5,8 @@ import os
 import logging
 from app.api.deps import get_current_user, TokenData
 from app.core.config import settings
+from app.core.cache import cache_service
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +82,17 @@ async def get_notes(
     current_user: TokenData = Depends(get_current_user)
 ):
     """Retrieve pentest and SecOps notes, supporting search and filters."""
+    cache_key = f"notes:cat:{category or 'all'}:q:{search or ''}"
+    if cache_service.redis_client:
+        try:
+            cached_data = await cache_service.redis_client.get(cache_key)
+            if cached_data:
+                notes_data = json.loads(cached_data)
+                return [NoteSchema(**n) for n in notes_data]
+        except Exception as e:
+            logger.warning(f"Cache read error: {e}")
+
+    notes_list = None
     if supabase:
         try:
             query_builder = supabase.table("notes").select("*")
@@ -99,21 +112,30 @@ async def get_notes(
                     content=item.get("content"),
                     last_updated=item.get("last_updated") or item.get("lastUpdated") or "2026-06-03"
                 ))
-            return notes_list
         except Exception as e:
             logger.error(f"Supabase query error: {e}. Falling back to mock notes.")
     
-    # Fallback to mock notes
-    filtered_notes = MOCK_NOTES
-    if category and category.lower() != 'all':
-        filtered_notes = [n for n in filtered_notes if n["category"].lower() == category.lower()]
-    if search:
-        search_lower = search.lower()
-        filtered_notes = [
-            n for n in filtered_notes 
-            if search_lower in n["title"].lower() or search_lower in n["content"].lower()
-        ]
-    return [NoteSchema(**n) for n in filtered_notes]
+    if notes_list is None:
+        # Fallback to mock notes
+        filtered_notes = MOCK_NOTES
+        if category and category.lower() != 'all':
+            filtered_notes = [n for n in filtered_notes if n["category"].lower() == category.lower()]
+        if search:
+            search_lower = search.lower()
+            filtered_notes = [
+                n for n in filtered_notes 
+                if search_lower in n["title"].lower() or search_lower in n["content"].lower()
+            ]
+        notes_list = [NoteSchema(**n) for n in filtered_notes]
+
+    if cache_service.redis_client:
+        try:
+            notes_dicts = [n.model_dump() for n in notes_list]
+            await cache_service.redis_client.set(cache_key, json.dumps(notes_dicts), ex=300)
+        except Exception as e:
+            logger.warning(f"Cache write error: {e}")
+
+    return notes_list
 
 @router.post("/sync")
 async def sync_notes(
@@ -121,12 +143,27 @@ async def sync_notes(
     x_sync_key: Optional[str] = Header(None, alias="X-Sync-Key")
 ):
     """Sync notes from GitHub/Obsidian vault into the database."""
-    expected_key = os.environ.get("SYNC_API_KEY", "default-sync-key")
+    expected_key = settings.SYNC_API_KEY
+    if expected_key == "default-sync-key" and not os.environ.get("PYTEST_CURRENT_TEST"):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="SYNC_API_KEY is configured with an insecure fallback key in production."
+        )
+
     if not x_sync_key or x_sync_key != expected_key:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or missing sync authorization key."
         )
+
+    # Clear notes cache
+    if cache_service.redis_client:
+        try:
+            keys = await cache_service.redis_client.keys("notes:cat:*")
+            if keys:
+                await cache_service.redis_client.delete(*keys)
+        except Exception as e:
+            logger.warning(f"Cache clear error: {e}")
 
     if supabase:
         try:
@@ -155,7 +192,7 @@ async def sync_notes(
     updated_count = 0
     for new_note in notes:
         existing_idx = next((i for i, n in enumerate(MOCK_NOTES) if n["id"] == new_note.id), None)
-        note_dict = new_note.dict()
+        note_dict = new_note.model_dump()
         if existing_idx is not None:
             MOCK_NOTES[existing_idx] = note_dict
         else:

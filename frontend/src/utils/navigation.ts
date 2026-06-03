@@ -52,3 +52,46 @@ export function getSubdomainUrl(subdomain: string, path: string = ''): string {
   }
   return `${protocol}//${subdomain}.${apexDomain}${path}`;
 }
+
+/**
+ * Dynamically resolves the cookie domain based on the hostname.
+ * Ensures that:
+ * - Localhost uses empty domain (to allow standard single-host cookie storage)
+ * - Vercel preview URLs share cookies across .vercel.app paths
+ * - Velsec local/production domains share cookies across subdomains (e.g. .velsec.com / .velsec.local)
+ */
+export function getCookieDomain(hostname: string): string {
+  const cleanHost = hostname.split(':')[0];
+  if (cleanHost === 'localhost' || cleanHost === '127.0.0.1') {
+    return '';
+  }
+
+  // If env cookie domain is defined and matches the current domain, we can use it.
+  const envDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+  if (envDomain) {
+    const cleanEnvDomain = envDomain.startsWith('.') ? envDomain.slice(1) : envDomain;
+    if (cleanHost === cleanEnvDomain || cleanHost.endsWith('.' + cleanEnvDomain)) {
+      return envDomain;
+    }
+  }
+
+  if (cleanHost.endsWith('.vercel.app')) {
+    return '.vercel.app';
+  }
+  if (cleanHost.endsWith('.now.sh')) {
+    return '.now.sh';
+  }
+  if (cleanHost.endsWith('.velsec.com') || cleanHost === 'velsec.com') {
+    return '.velsec.com';
+  }
+  if (cleanHost.endsWith('.velsec.local') || cleanHost === 'velsec.local') {
+    return '.velsec.local';
+  }
+  
+  // General extraction for custom apex domains
+  const parts = cleanHost.split('.');
+  if (parts.length >= 2) {
+    return `.${parts.slice(-2).join('.')}`;
+  }
+  return '';
+}

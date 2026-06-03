@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import ParticleField from '@/components/ui/ParticleField';
 import { getSubdomainUrl } from '@/utils/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 interface Badge {
   id: string;
@@ -14,10 +15,8 @@ interface Badge {
 }
 
 export default function TrackerPage() {
+  const supabase = createClient();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const [xp, setXp] = useState<number>(3450);
   const [level, setLevel] = useState<number>(3);
@@ -31,7 +30,132 @@ export default function TrackerPage() {
     { id: 'secops_master', name: 'SecOps Master', icon: '👑', description: 'Configure secure automated staging pipelines.', unlocked: false },
   ]);
 
+  const [skills, setSkills] = useState<any[]>([]);
+  const [certs, setCerts] = useState<any[]>([]);
+
   const [activeBadge, setActiveBadge] = useState<Badge | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+
+  const getApiBase = () => {
+    return process.env.NEXT_PUBLIC_API_URL !== undefined
+      ? process.env.NEXT_PUBLIC_API_URL
+      : (typeof window !== 'undefined' && 
+         !window.location.hostname.includes('localhost') && 
+         !window.location.hostname.endsWith('.local')
+          ? ''
+          : 'http://localhost:8000');
+  };
+
+  const handleGithubLogin = async () => {
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: getSubdomainUrl('home', '/auth/callback?next=' + encodeURIComponent(getSubdomainUrl('tracker'))),
+        },
+      });
+    } catch (err: any) {
+      console.error('OAuth handshake failed:', err);
+    }
+  };
+
+  const fetchProfile = async () => {
+    setLoading(true);
+    setErrorMsg(null);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      setIsAuthenticated(true);
+      const apiBase = getApiBase();
+      const res = await fetch(`${apiBase}/api/v1/tracking/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (res.status === 401) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(`API status ${res.status}`);
+      }
+
+      const data = await res.json();
+      setXp(data.xp);
+      setLevel(data.level);
+      setSolvedLabs(data.solved_labs);
+      setLabHistory(data.lab_history);
+      setBadges(data.badges);
+      setSkills(data.skills);
+      setCerts(data.certs);
+    } catch (err: any) {
+      console.warn("Failed to connect to API, using default local tracker state:", err);
+      setErrorMsg("Offline fallback mode active.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveProfile = async (nextXp: number, nextLvl: number, nextSolved: number, nextHistory: number[], nextBadges: Badge[]) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) return;
+
+      const apiBase = getApiBase();
+      await fetch(`${apiBase}/api/v1/tracking/profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          xp: nextXp,
+          level: nextLvl,
+          solved_labs: nextSolved,
+          lab_history: nextHistory,
+          skills: skills.length > 0 ? skills : [
+            {"name": "Python Scripting", "level": 75},
+            {"name": "Docker / Kubernetes Sec", "level": 50},
+            {"name": "Linux System Internals", "level": 60},
+            {"name": "Threat Hunting (ELK)", "level": 40}
+          ],
+          certs: certs.length > 0 ? certs : [
+            {"id": "secplus", "name": "Security+", "acquired": true},
+            {"id": "oscp", "name": "OSCP", "acquired": false},
+            {"id": "cissp", "name": "CISSP", "acquired": false},
+            {"id": "ceh", "name": "CEH", "acquired": true}
+          ],
+          badges: nextBadges
+        })
+      });
+    } catch (err) {
+      console.error("Failed to persist profile updates:", err);
+    }
+  };
+
+  useEffect(() => {
+    setMounted(true);
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      fetchProfile();
+    });
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
 
   // Simulate solving a lab
   const solveLabSimulate = () => {
@@ -40,19 +164,27 @@ export default function TrackerPage() {
     setSolvedLabs(nextSolved);
 
     // Update history array by appending new count
-    setLabHistory([...labHistory, nextSolved]);
+    const nextHistory = [...labHistory, nextSolved];
+    setLabHistory(nextHistory);
 
     // Increase XP
     const nextXp = xp + 350;
+    let nextLvl = level;
+    let nextBadges = [...badges];
+
     if (nextXp >= 4000 && level < 4) {
+      nextLvl = 4;
       setLevel(4);
       setXp(nextXp - 4000);
       
       // Unlock Cloud Tamer badge
-      setBadges(badges.map(b => b.id === 'cloud_tamer' ? { ...b, unlocked: true, unlockedAt: 'Just Now' } : b));
+      nextBadges = badges.map(b => b.id === 'cloud_tamer' ? { ...b, unlocked: true, unlockedAt: 'Just Now' } : b);
+      setBadges(nextBadges);
       alert('[LEVEL UP] Congratulations! You reached Operative Level 4 and unlocked the Cloud Tamer badge!');
+      saveProfile(nextXp - 4000, 4, nextSolved, nextHistory, nextBadges);
     } else {
       setXp(nextXp);
+      saveProfile(nextXp, nextLvl, nextSolved, nextHistory, nextBadges);
     }
   };
 
@@ -60,12 +192,16 @@ export default function TrackerPage() {
   const xpPercent = Math.min((xp / xpMax) * 100, 100);
 
   // Generate SVG coordinates for history graph
-  // Assume width of graph is 300, height is 100
+  // Assume width of graph is 320, height is 110
   const width = 320;
   const height = 110;
   const padding = 15;
+  
+  // Guard divisor to prevent divide-by-zero NaN coordinates when labHistory length is <= 1
+  const divisor = labHistory.length > 1 ? labHistory.length - 1 : 1;
+
   const points = labHistory.map((val, idx) => {
-    const x = padding + (idx * (width - padding * 2)) / (labHistory.length - 1);
+    const x = padding + (idx * (width - padding * 2)) / divisor;
     const maxVal = Math.max(...labHistory, 20);
     const y = height - padding - (val * (height - padding * 2)) / maxVal;
     return { x, y };
@@ -116,137 +252,174 @@ export default function TrackerPage() {
           </div>
         </div>
 
-        {/* main tracker dashboard layouts */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-          
-          {/* Column 1: XP Progress & Level card */}
-          <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+        {errorMsg && (
+          <div className="p-3.5 border border-amber-500/30 bg-amber-500/10 rounded-xl text-xs font-mono text-amber-400 text-center shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+            ⚠️ {errorMsg}
+          </div>
+        )}
 
-            <div>
-              <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// EXPERIENCE_MATRICES</span>
-              
-              <div className="flex justify-between items-end mb-3 font-mono">
-                <div>
-                  <span className="text-[10px] text-zinc-500 block font-bold">LEVEL</span>
-                  <span className="text-4xl font-extrabold text-zinc-100">{level}</span>
-                </div>
-                <div className="text-right text-xs font-bold text-zinc-400">
-                  <span className="text-[#0096ff]">{xp}</span> / {xpMax} XP
-                </div>
-              </div>
+        {!isAuthenticated ? (
+          /* Authentication Required Alert */
+          <div className="relative border border-rose-500/25 bg-rose-500/5 backdrop-blur-md rounded-2xl p-12 text-center flex flex-col items-center justify-center gap-4 max-w-xl mx-auto my-8">
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-rose-500" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-rose-500" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-rose-500" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-rose-500" />
 
-              {/* Progress bar */}
-              <div className="w-full h-3 bg-[#050a18] rounded-full overflow-hidden border border-[#0096ff]/15 mb-6">
-                <div
-                  className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-500 shadow-[0_0_8px_rgba(0,150,255,0.4)]"
-                  style={{ width: `${xpPercent}%` }}
-                />
-              </div>
-
-              <p className="text-[11px] font-mono text-zinc-400 leading-relaxed">
-                Complete modules across Learn &amp; Projects subdomains to collect experience logs. Reaching Level 4 unlocks advanced Cloud namespace operations.
-              </p>
-            </div>
-
+            <span className="text-4xl">🔒</span>
+            <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
+            <p className="text-xs text-zinc-400 font-mono max-w-md leading-relaxed">
+              Velsec operative tracker and experience logs are encrypted at rest. Please authorize your session credentials at the central security gateway.
+            </p>
             <button
-              onClick={solveLabSimulate}
-              className="w-full py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] rounded-lg border border-[#0096ff]/35 transition-all duration-300 shadow-[0_0_12px_rgba(0,150,255,0.05)]"
+              onClick={handleGithubLogin}
+              className="mt-2 px-6 py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] border border-[#0096ff]/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
             >
-              SIMULATE_LAB_COMPLETION (+350 XP)
+              CONNECT_WITH_GITHUB
             </button>
+            <a
+              href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
+              className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 hover:underline mt-1"
+            >
+              OR_AUTHORIZE_VIA_EMAIL
+            </a>
           </div>
+        ) : (
+          /* Main Tracker Dashboard Layouts */
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+            
+            {/* Column 1: XP Progress & Level card */}
+            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
 
-          {/* Column 2: Solved Labs Graph SVG */}
-          <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
-
-            <div>
-              <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// ACTIVITY_HISTORY</span>
-              
-              {/* SVG Area graph */}
-              <div className="flex justify-center items-center bg-[#050a18]/70 border border-[#0a1a40] rounded-lg p-3">
-                <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
-                  {/* Grid Lines */}
-                  <line x1={padding} y1={padding} x2={width-padding} y2={padding} stroke="#0a1a40" strokeWidth={1} strokeDasharray="3 3" />
-                  <line x1={padding} y1={height-padding} x2={width-padding} y2={height-padding} stroke="#0a1a40" strokeWidth={1} />
-                  
-                  {/* Line Path */}
-                  <path
-                    d={pathData}
-                    fill="none"
-                    stroke="#0096ff"
-                    strokeWidth={2}
-                    className="transition-all duration-500"
-                  />
-
-                  {/* Nodes */}
-                  {points.map((p, idx) => (
-                    <circle
-                      key={idx}
-                      cx={p.x}
-                      cy={p.y}
-                      r={4}
-                      className="fill-[#050a18] stroke-[#0096ff] stroke-2 hover:scale-125 transition-transform duration-300 cursor-pointer"
-                    />
-                  ))}
-                </svg>
-              </div>
-            </div>
-
-            <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3">
-              Real-time activity logs tracked across global Velsec systems.
-            </div>
-          </div>
-
-          {/* Column 3: Badge Matrix */}
-          <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
-
-            <div>
-              <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// ACHIEVEMENT_MATRIX</span>
-              
-              <div className="grid grid-cols-4 gap-3">
-                {badges.map(b => (
-                  <div
-                    key={b.id}
-                    onMouseEnter={() => setActiveBadge(b)}
-                    onMouseLeave={() => setActiveBadge(null)}
-                    className={`h-12 rounded-lg border flex items-center justify-center text-xl cursor-help transition-all duration-300 ${
-                      b.unlocked
-                        ? 'border-[#0096ff]/35 bg-[#0096ff]/10 shadow-[0_0_10px_rgba(0,150,255,0.1)]'
-                        : 'border-[#0a1a40] bg-[#0a1432]/5 opacity-30'
-                    }`}
-                  >
-                    {b.icon}
+              <div>
+                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// EXPERIENCE_MATRICES</span>
+                
+                <div className="flex justify-between items-end mb-3 font-mono">
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block font-bold">LEVEL</span>
+                    <span className="text-4xl font-extrabold text-zinc-100">{level}</span>
                   </div>
-                ))}
+                  <div className="text-right text-xs font-bold text-zinc-400">
+                    <span className="text-[#0096ff]">{xp}</span> / {xpMax} XP
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full h-3 bg-[#050a18] rounded-full overflow-hidden border border-[#0096ff]/15 mb-6">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-500 shadow-[0_0_8px_rgba(0,150,255,0.4)]"
+                    style={{ width: `${xpPercent}%` }}
+                  />
+                </div>
+
+                <p className="text-[11px] font-mono text-zinc-400 leading-relaxed">
+                  Complete modules across Learn &amp; Projects subdomains to collect experience logs. Reaching Level 4 unlocks advanced Cloud namespace operations.
+                </p>
+              </div>
+
+              <button
+                onClick={solveLabSimulate}
+                disabled={loading}
+                className="w-full py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] rounded-lg border border-[#0096ff]/35 transition-all duration-300 shadow-[0_0_12px_rgba(0,150,255,0.05)] disabled:opacity-50"
+              >
+                SIMULATE_LAB_COMPLETION (+350 XP)
+              </button>
+            </div>
+
+            {/* Column 2: Solved Labs Graph SVG */}
+            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+
+              <div>
+                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// ACTIVITY_HISTORY</span>
+                
+                {/* SVG Area graph */}
+                <div className="flex justify-center items-center bg-[#050a18]/70 border border-[#0a1a40] rounded-lg p-3">
+                  <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+                    {/* Grid Lines */}
+                    <line x1={padding} y1={padding} x2={width-padding} y2={padding} stroke="#0a1a40" strokeWidth={1} strokeDasharray="3 3" />
+                    <line x1={padding} y1={height-padding} x2={width-padding} y2={height-padding} stroke="#0a1a40" strokeWidth={1} />
+                    
+                    {/* Line Path */}
+                    {points.length > 0 && (
+                      <path
+                        d={pathData}
+                        fill="none"
+                        stroke="#0096ff"
+                        strokeWidth={2}
+                        className="transition-all duration-500"
+                      />
+                    )}
+
+                    {/* Nodes */}
+                    {points.map((p, idx) => (
+                      <circle
+                        key={idx}
+                        cx={p.x}
+                        cy={p.y}
+                        r={4}
+                        className="fill-[#050a18] stroke-[#0096ff] stroke-2 hover:scale-125 transition-transform duration-300 cursor-pointer"
+                      />
+                    ))}
+                  </svg>
+                </div>
+              </div>
+
+              <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3">
+                Real-time activity logs tracked across global Velsec systems.
               </div>
             </div>
 
-            {/* Hover details container */}
-            <div className="border border-[#0a1a40] bg-[#050a18]/80 rounded-lg p-3 min-h-[90px] font-mono text-[10px]">
-              {activeBadge ? (
-                <div>
-                  <h4 className="font-bold text-[#0096ff]">{activeBadge.name}</h4>
-                  <p className="text-zinc-400 mt-1">{activeBadge.description}</p>
-                  {activeBadge.unlocked && (
-                    <span className="text-[8px] text-zinc-500 mt-2 block">UNLOCKED: {activeBadge.unlockedAt}</span>
-                  )}
+            {/* Column 3: Badge Matrix */}
+            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+
+              <div>
+                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// ACHIEVEMENT_MATRIX</span>
+                
+                <div className="grid grid-cols-4 gap-3">
+                  {badges.map(b => (
+                    <div
+                      key={b.id}
+                      onMouseEnter={() => setActiveBadge(b)}
+                      onMouseLeave={() => setActiveBadge(null)}
+                      className={`h-12 rounded-lg border flex items-center justify-center text-xl cursor-help transition-all duration-300 ${
+                        b.unlocked
+                          ? 'border-[#0096ff]/35 bg-[#0096ff]/10 shadow-[0_0_10px_rgba(0,150,255,0.1)]'
+                          : 'border-[#0a1a40] bg-[#0a1432]/5 opacity-30'
+                      }`}
+                    >
+                      {b.icon}
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                <div className="text-zinc-500 text-center flex items-center justify-center h-full min-h-[66px]">
-                  HOVER_OVER_BADGES_FOR_DETAILS
-                </div>
-              )}
+              </div>
+
+              {/* Hover details container */}
+              <div className="border border-[#0a1a40] bg-[#050a18]/80 rounded-lg p-3 min-h-[90px] font-mono text-[10px]">
+                {activeBadge ? (
+                  <div>
+                    <h4 className="font-bold text-[#0096ff]">{activeBadge.name}</h4>
+                    <p className="text-zinc-400 mt-1">{activeBadge.description}</p>
+                    {activeBadge.unlocked && (
+                      <span className="text-[8px] text-zinc-500 mt-2 block">UNLOCKED: {activeBadge.unlockedAt}</span>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-zinc-500 text-center flex items-center justify-center h-full min-h-[66px]">
+                    HOVER_OVER_BADGES_FOR_DETAILS
+                  </div>
+                )}
+              </div>
+
             </div>
 
           </div>
-
-        </div>
+        )}
 
         {/* Back Link */}
         <div className="text-center mt-4">

@@ -1,11 +1,22 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routers import learning, tracking, notes, projects
+from app.core.cache import cache_service
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Connect cache service on startup
+    await cache_service.connect()
+    yield
+    # Close cache service on shutdown
+    await cache_service.close()
 
 app = FastAPI(
     title="Velsec API",
     description="Backend API for Velsec Cybersecurity Learning and Solutions Ecosystem",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # CORS configuration

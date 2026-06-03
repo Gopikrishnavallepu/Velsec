@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getCookieDomain } from './utils/navigation';
 
 export async function proxy(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
@@ -66,7 +67,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // 2. Initialize Supabase client to sync/refresh active sessions
-  const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || '.velsec.local';
+  const cookieDomain = getCookieDomain(cleanHost);
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',

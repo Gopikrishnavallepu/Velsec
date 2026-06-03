@@ -5,7 +5,7 @@ metadata:
   labels:
     app: velsec-backend
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: velsec-backend
@@ -20,6 +20,23 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 10001
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 3
+          periodSeconds: 5
         envFrom:
         - secretRef:
             name: velsec-backend-secrets

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import ParticleField from '@/components/ui/ParticleField';
 import { getSubdomainUrl } from '@/utils/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 interface Task {
   id: number;
@@ -22,12 +23,17 @@ interface Cert {
 }
 
 export default function PersonalPage() {
+  const supabase = createClient();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
-  // Tasks list state
+  // Profile state variables
+  const [xp, setXp] = useState<number>(3450);
+  const [level, setLevel] = useState<number>(3);
+  const [solvedLabs, setSolvedLabs] = useState<number>(14);
+  const [labHistory, setLabHistory] = useState<number[]>([]);
+  const [badges, setBadges] = useState<any[]>([]);
+
+  // Tasks list state (local workspace objective checklist)
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, text: 'Review STRIDE threat profile for API module', completed: false },
     { id: 2, text: 'Complete "Ghidra Assembly analysis" challenge', completed: true },
@@ -52,6 +58,118 @@ export default function PersonalPage() {
   ]);
 
   const [cvCompiling, setCvCompiling] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+
+  const getApiBase = () => {
+    return process.env.NEXT_PUBLIC_API_URL !== undefined
+      ? process.env.NEXT_PUBLIC_API_URL
+      : (typeof window !== 'undefined' && 
+         !window.location.hostname.includes('localhost') && 
+         !window.location.hostname.endsWith('.local')
+          ? ''
+          : 'http://localhost:8000');
+  };
+
+  const handleGithubLogin = async () => {
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: getSubdomainUrl('home', '/auth/callback?next=' + encodeURIComponent(getSubdomainUrl('personal'))),
+        },
+      });
+    } catch (err: any) {
+      console.error('OAuth handshake failed:', err);
+    }
+  };
+
+  const fetchProfile = async () => {
+    setLoading(true);
+    setErrorMsg(null);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      setIsAuthenticated(true);
+      const apiBase = getApiBase();
+      const res = await fetch(`${apiBase}/api/v1/tracking/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (res.status === 401) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(`API status ${res.status}`);
+      }
+
+      const data = await res.json();
+      setXp(data.xp);
+      setLevel(data.level);
+      setSolvedLabs(data.solved_labs);
+      setLabHistory(data.lab_history);
+      setBadges(data.badges);
+      if (data.skills && data.skills.length > 0) setSkills(data.skills);
+      if (data.certs && data.certs.length > 0) setCerts(data.certs);
+    } catch (err: any) {
+      console.warn("Failed to connect to API, using default local profile state:", err);
+      setErrorMsg("Offline fallback mode active.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveProfile = async (nextSkills: Skill[], nextCerts: Cert[]) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) return;
+
+      const apiBase = getApiBase();
+      await fetch(`${apiBase}/api/v1/tracking/profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          xp,
+          level,
+          solved_labs: solvedLabs,
+          lab_history: labHistory,
+          skills: nextSkills,
+          certs: nextCerts,
+          badges
+        })
+      });
+    } catch (err) {
+      console.error("Failed to save profile:", err);
+    }
+  };
+
+  useEffect(() => {
+    setMounted(true);
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      fetchProfile();
+    });
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
 
   // Toggle tasks
   const toggleTask = (id: number) => {
@@ -60,18 +178,22 @@ export default function PersonalPage() {
 
   // Toggle certification acquired status
   const toggleCert = (id: string) => {
-    setCerts(certs.map(c => c.id === id ? { ...c, acquired: !c.acquired } : c));
+    const nextCerts = certs.map(c => c.id === id ? { ...c, acquired: !c.acquired } : c);
+    setCerts(nextCerts);
+    saveProfile(skills, nextCerts);
   };
 
   // Increment skills level
   const trainSkill = (name: string) => {
-    setSkills(skills.map(s => {
+    const nextSkills = skills.map(s => {
       if (s.name === name) {
         const nextLvl = Math.min(s.level + 5, 100);
         return { ...s, level: nextLvl };
       }
       return s;
-    }));
+    });
+    setSkills(nextSkills);
+    saveProfile(nextSkills, certs);
   };
 
   // Compile CV animation
@@ -122,140 +244,175 @@ export default function PersonalPage() {
             </div>
             <div className="text-center font-mono">
               <p className="text-[10px] text-zinc-500 font-bold">OPERATIVE_LVL</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">03</p>
+              <p className="text-lg font-extrabold text-[#0096ff]">0{level}</p>
             </div>
           </div>
         </div>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
-          {/* Card 1: Agent Profile & Certifications */}
-          <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+        {errorMsg && (
+          <div className="p-3.5 border border-amber-500/30 bg-amber-500/10 rounded-xl text-xs font-mono text-amber-400 text-center shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+            ⚠️ {errorMsg}
+          </div>
+        )}
 
-            <div>
-              <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-2">// AGENT_IDENTIFICATION</span>
-              <div className="flex items-center gap-4 border-b border-[#0096ff]/10 pb-4 mb-4">
-                <div className="w-14 h-14 rounded-full border-2 border-[#0096ff]/50 bg-[#050a18] flex items-center justify-center text-2xl shadow-[0_0_12px_rgba(0,150,255,0.2)]">
-                  👤
-                </div>
-                <div className="font-mono">
-                  <h3 className="text-sm font-bold text-zinc-200">GOPISHEK_VALLEPU</h3>
-                  <p className="text-[9px] text-[#0096ff] font-bold">TITLE: CYBER_OPERATIVE</p>
-                  <p className="text-[9px] text-zinc-500">SECTOR: DEVSECOPS_SEC</p>
-                </div>
-              </div>
+        {!isAuthenticated ? (
+          /* Authentication Required Alert */
+          <div className="relative border border-rose-500/25 bg-rose-500/5 backdrop-blur-md rounded-2xl p-12 text-center flex flex-col items-center justify-center gap-4 max-w-xl mx-auto my-8">
+            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-rose-500" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-rose-500" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-rose-500" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-rose-500" />
 
-              {/* Certifications toggles */}
-              <span className="text-[9px] font-mono text-zinc-500 block mb-2 font-bold tracking-wider">CERTIFICATE_DECK (CLICK TO UPDATE):</span>
-              <div className="grid grid-cols-2 gap-2">
-                {certs.map(c => (
-                  <button
-                    key={c.id}
-                    onClick={() => toggleCert(c.id)}
-                    className={`p-2 rounded text-[10px] font-mono font-bold text-center border transition-all duration-300 ${
-                      c.acquired
-                        ? 'border-[#0096ff]/40 bg-[#0096ff]/10 text-[#0096ff] shadow-[0_0_8px_rgba(0,150,255,0.15)]'
-                        : 'border-[#0a1a40] bg-[#0a1432]/5 text-zinc-500 hover:border-[#0096ff]/25'
-                    }`}
-                  >
-                    {c.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-
+            <span className="text-4xl">🔒</span>
+            <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
+            <p className="text-xs text-zinc-400 font-mono max-w-md leading-relaxed">
+              Velsec career profiles and user details are encrypted at rest. Please authorize your session credentials at the central security gateway.
+            </p>
             <button
-              onClick={compileCV}
-              disabled={cvCompiling}
-              className={`w-full py-2 mt-4 text-xs font-mono font-bold tracking-widest rounded-lg border transition-all duration-300 ${
-                cvCompiling
-                  ? 'border-amber-500 text-amber-500 bg-transparent animate-pulse cursor-not-allowed'
-                  : 'border-[#0096ff] text-[#0096ff] bg-[#0096ff]/5 hover:bg-[#0096ff]/15'
-              }`}
+              onClick={handleGithubLogin}
+              className="mt-2 px-6 py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] border border-[#0096ff]/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
             >
-              {cvCompiling ? 'COMPILING_CV...' : 'GENERATE_CV_REPORT'}
+              CONNECT_WITH_GITHUB
             </button>
+            <a
+              href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
+              className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 hover:underline mt-1"
+            >
+              OR_AUTHORIZE_VIA_EMAIL
+            </a>
           </div>
+        ) : (
+          /* Dashboard Grid */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* Card 1: Agent Profile & Certifications */}
+            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
 
-          {/* Card 2: Objective Tracker Checklist */}
-          <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
-
-            <div>
-              <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-3">// ACTIVE_OBJECTIVES</span>
-              <div className="flex flex-col gap-3">
-                {tasks.map(t => (
-                  <div
-                    key={t.id}
-                    onClick={() => toggleTask(t.id)}
-                    className="flex items-center gap-3 cursor-pointer group"
-                  >
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                      t.completed
-                        ? 'border-[#0096ff] bg-[#0096ff]/15 text-[#0096ff]'
-                        : 'border-[#0a1a40] group-hover:border-[#0096ff]/40'
-                    }`}>
-                      {t.completed && <span className="text-[9px]">✔</span>}
-                    </div>
-                    <span className={`text-[11px] font-mono transition-colors ${
-                      t.completed ? 'text-zinc-500 line-through' : 'text-zinc-300 group-hover:text-zinc-200'
-                    }`}>
-                      {t.text}
-                    </span>
+              <div>
+                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-2">// AGENT_IDENTIFICATION</span>
+                <div className="flex items-center gap-4 border-b border-[#0096ff]/10 pb-4 mb-4">
+                  <div className="w-14 h-14 rounded-full border-2 border-[#0096ff]/50 bg-[#050a18] flex items-center justify-center text-2xl shadow-[0_0_12px_rgba(0,150,255,0.2)]">
+                    👤
                   </div>
-                ))}
+                  <div className="font-mono">
+                    <h3 className="text-sm font-bold text-zinc-200">GOPISHEK_VALLEPU</h3>
+                    <p className="text-[9px] text-[#0096ff] font-bold">TITLE: CYBER_OPERATIVE</p>
+                    <p className="text-[9px] text-zinc-500">SECTOR: DEVSECOPS_SEC</p>
+                  </div>
+                </div>
+
+                {/* Certifications toggles */}
+                <span className="text-[9px] font-mono text-zinc-500 block mb-2 font-bold tracking-wider">CERTIFICATE_DECK (CLICK TO UPDATE):</span>
+                <div className="grid grid-cols-2 gap-2">
+                  {certs.map(c => (
+                    <button
+                      key={c.id}
+                      onClick={() => toggleCert(c.id)}
+                      className={`p-2 rounded text-[10px] font-mono font-bold text-center border transition-all duration-300 ${
+                        c.acquired
+                          ? 'border-[#0096ff]/40 bg-[#0096ff]/10 text-[#0096ff] shadow-[0_0_8px_rgba(0,150,255,0.15)]'
+                          : 'border-[#0a1a40] bg-[#0a1432]/5 text-zinc-500 hover:border-[#0096ff]/25'
+                      }`}
+                    >
+                      {c.name}
+                    </button>
+                  ))}
+                </div>
               </div>
+
+              <button
+                onClick={compileCV}
+                disabled={cvCompiling}
+                className={`w-full py-2 mt-4 text-xs font-mono font-bold tracking-widest rounded-lg border transition-all duration-300 ${
+                  cvCompiling
+                    ? 'border-amber-500 text-amber-500 bg-transparent animate-pulse cursor-not-allowed'
+                    : 'border-[#0096ff] text-[#0096ff] bg-[#0096ff]/5 hover:bg-[#0096ff]/15'
+                }`}
+              >
+                {cvCompiling ? 'COMPILING_CV...' : 'GENERATE_CV_REPORT'}
+              </button>
             </div>
 
-            <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3 mt-4">
-              * Resolving active objectives boosts operative tier levels.
-            </div>
-          </div>
+            {/* Card 2: Objective Tracker Checklist */}
+            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
 
-          {/* Card 3: Skill Matrix Levels */}
-          <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
-
-            <div>
-              <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-3">// COGNITIVE_SKILL_MATRIX</span>
-              <div className="space-y-4">
-                {skills.map(s => (
-                  <div key={s.name} className="flex flex-col gap-1.5 font-mono">
-                    <div className="flex justify-between items-center text-[10px] text-zinc-400">
-                      <span>{s.name}</span>
-                      <span className="text-[#0096ff] font-bold">{s.level}%</span>
-                    </div>
-                    
-                    <div className="flex gap-2 items-center">
-                      <div className="flex-1 h-2 bg-[#050a18] rounded-full overflow-hidden border border-[#0096ff]/10">
-                        <div
-                          className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-300"
-                          style={{ width: `${s.level}%` }}
-                        />
+              <div>
+                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-3">// ACTIVE_OBJECTIVES</span>
+                <div className="flex flex-col gap-3">
+                  {tasks.map(t => (
+                    <div
+                      key={t.id}
+                      onClick={() => toggleTask(t.id)}
+                      className="flex items-center gap-3 cursor-pointer group"
+                    >
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                        t.completed
+                          ? 'border-[#0096ff] bg-[#0096ff]/15 text-[#0096ff]'
+                          : 'border-[#0a1a40] group-hover:border-[#0096ff]/40'
+                      }`}>
+                        {t.completed && <span className="text-[9px]">✔</span>}
                       </div>
-                      <button
-                        onClick={() => trainSkill(s.name)}
-                        className="px-2 py-0.5 rounded border border-[#0096ff]/30 text-[8px] text-[#0096ff] hover:bg-[#0096ff]/10 font-bold active:scale-95 transition-all"
-                      >
-                        TRAIN
-                      </button>
+                      <span className={`text-[11px] font-mono transition-colors ${
+                        t.completed ? 'text-zinc-500 line-through' : 'text-zinc-300 group-hover:text-zinc-200'
+                      }`}>
+                        {t.text}
+                      </span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+
+              <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3 mt-4">
+                * Resolving active objectives boosts operative tier levels.
               </div>
             </div>
 
-            <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3 mt-4">
-              Train competencies iteratively to secure final sandbox clearances.
-            </div>
-          </div>
+            {/* Card 3: Skill Matrix Levels */}
+            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
 
-        </div>
+              <div>
+                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-3">// COGNITIVE_SKILL_MATRIX</span>
+                <div className="space-y-4">
+                  {skills.map(s => (
+                    <div key={s.name} className="flex flex-col gap-1.5 font-mono">
+                      <div className="flex justify-between items-center text-[10px] text-zinc-400">
+                        <span>{s.name}</span>
+                        <span className="text-[#0096ff] font-bold">{s.level}%</span>
+                      </div>
+                      
+                      <div className="flex gap-2 items-center">
+                        <div className="flex-1 h-2 bg-[#050a18] rounded-full overflow-hidden border border-[#0096ff]/10">
+                          <div
+                            className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-300"
+                            style={{ width: `${s.level}%` }}
+                          />
+                        </div>
+                        <button
+                          onClick={() => trainSkill(s.name)}
+                          disabled={loading}
+                          className="px-2 py-0.5 rounded border border-[#0096ff]/30 text-[8px] text-[#0096ff] hover:bg-[#0096ff]/10 font-bold active:scale-95 transition-all disabled:opacity-50"
+                        >
+                          TRAIN
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3 mt-4">
+                Train competencies iteratively to secure final sandbox clearances.
+              </div>
+            </div>
+
+          </div>
+        )}
 
         {/* Back Link */}
         <div className="text-center mt-4">

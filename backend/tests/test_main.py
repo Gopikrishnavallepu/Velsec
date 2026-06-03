@@ -1,3 +1,7 @@
+import os
+os.environ["SUPABASE_JWT_SECRET"] = "test-jwt-secret-for-testing"
+os.environ["SYNC_API_KEY"] = "default-sync-key"
+
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
@@ -100,3 +104,44 @@ def test_list_projects():
     data = response.json()
     assert len(data) > 0
     assert data[0]["id"] == "p1"
+
+def test_get_profile():
+    """Verify retrieving user profile achievements and skill matrix."""
+    response = client.get("/api/v1/tracking/profile")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["xp"] == 3450
+    assert data["level"] == 3
+    assert len(data["skills"]) == 4
+
+def test_update_profile():
+    """Verify saving user profile adjustments."""
+    payload = {
+        "xp": 3800,
+        "level": 3,
+        "solved_labs": 15,
+        "lab_history": [2, 5, 8, 12, 14, 15],
+        "skills": [
+            {"name": "Python Scripting", "level": 80},
+            {"name": "Docker / Kubernetes Sec", "level": 50},
+            {"name": "Linux System Internals", "level": 60},
+            {"name": "Threat Hunting (ELK)", "level": 40}
+        ],
+        "certs": [
+            {"id": "secplus", "name": "Security+", "acquired": True},
+            {"id": "oscp", "name": "OSCP", "acquired": False},
+            {"id": "cissp", "name": "CISSP", "acquired": False},
+            {"id": "ceh", "name": "CEH", "acquired": True}
+        ],
+        "badges": [
+            {"id": "first_blood", "name": "First Blood", "icon": "🩸", "description": "Solve your first practical lab sandbox.", "unlocked": True, "unlockedAt": "2026-05-10"},
+            {"id": "buffer_buster", "name": "Buffer Buster", "icon": "💥", "description": "Complete stack overflow binary execution.", "unlocked": True, "unlockedAt": "2026-05-18"},
+            {"id": "cloud_tamer", "name": "Cloud Tamer", "icon": "☁️", "description": "Resolve container namespace escapes.", "unlocked": False},
+            {"id": "secops_master", "name": "SecOps Master", "icon": "👑", "description": "Configure secure automated staging pipelines.", "unlocked": False}
+        ]
+    }
+    response = client.post("/api/v1/tracking/profile", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["xp"] == 3800
+    assert len(data["lab_history"]) == 6

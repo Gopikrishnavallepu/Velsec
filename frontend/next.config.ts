@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 // Force dev server config cache reload
 const nextConfig: NextConfig = {
+  output: "standalone",
   allowedDevOrigins: [
     'velsec.com',
     'learn.velsec.com',

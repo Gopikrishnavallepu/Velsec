@@ -1,9 +1,11 @@
 import { createClient } from '@/utils/supabase/server'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 
 export default async function Page() {
   const cookieStore = await cookies()
-  const supabase = createClient(cookieStore)
+  const headersList = await headers()
+  const host = headersList.get('host') || 'velsec.local'
+  const supabase = createClient(cookieStore, host)
 
   // Fetch todos (fails gracefully if table is not configured)
   const { data: todos } = await supabase.from('todos').select()

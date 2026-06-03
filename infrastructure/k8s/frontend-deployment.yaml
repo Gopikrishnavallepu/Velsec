@@ -5,7 +5,7 @@ metadata:
   labels:
     app: velsec-frontend
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: velsec-frontend
@@ -20,6 +20,23 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 10001
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
         resources:
           requests:
             memory: "128Mi"

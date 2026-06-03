@@ -5,6 +5,11 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "traefik" # default on K3s
 spec:
+  tls:
+  - hosts:
+    - velsec.com
+    - "*.velsec.com"
+    secretName: velsec-tls-secret
   rules:
   - host: velsec.com
     http:

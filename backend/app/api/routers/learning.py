@@ -5,6 +5,8 @@ import os
 import logging
 from app.api.deps import get_current_user, TokenData
 from app.core.config import settings
+from app.core.cache import cache_service
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -81,17 +83,32 @@ async def list_courses(current_user: TokenData = Depends(get_current_user)):
     """List all available courses with authenticated user's current progress."""
     user_id = current_user.sub
     
-    # 1. Load courses from Supabase or Mock
-    courses_list = []
-    if supabase:
+    # 1. Load courses from Cache, Supabase or Mock
+    courses_list = None
+    if cache_service.redis_client:
         try:
-            res = supabase.table("courses").select("*").execute()
-            courses_list = res.data
+            cached_courses = await cache_service.redis_client.get("courses:list")
+            if cached_courses:
+                courses_list = json.loads(cached_courses)
         except Exception as e:
-            logger.error(f"Supabase courses fetch error: {e}. Using fallback mock courses.")
+            logger.warning(f"Cache read error: {e}")
+
+    if courses_list is None:
+        if supabase:
+            try:
+                res = supabase.table("courses").select("*").execute()
+                courses_list = res.data
+            except Exception as e:
+                logger.error(f"Supabase courses fetch error: {e}. Using fallback mock courses.")
+                courses_list = MOCK_COURSES
+        else:
             courses_list = MOCK_COURSES
-    else:
-        courses_list = MOCK_COURSES
+
+        if cache_service.redis_client:
+            try:
+                await cache_service.redis_client.set("courses:list", json.dumps(courses_list), ex=3600)
+            except Exception as e:
+                logger.warning(f"Cache write error: {e}")
 
     # 2. Load enrollments for current user to map progress
     user_progress = {}

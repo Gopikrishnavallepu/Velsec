@@ -19,9 +19,9 @@ CREATE INDEX IF NOT EXISTS notes_fts_idx ON public.notes USING gin(fts);
 -- Enable RLS (Row Level Security) - optional but recommended
 ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
 
--- Allow anonymous and authenticated select reads
-CREATE POLICY "Allow public select access to notes" ON public.notes
-    FOR SELECT USING (true);
+-- Allow authenticated select reads
+CREATE POLICY "Allow authenticated select access to notes" ON public.notes
+    FOR SELECT TO authenticated USING (true);
 
 -- Allow all operations for service role (used during sync script update)
 CREATE POLICY "Allow service role write access to notes" ON public.notes
