@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ParticleField from '@/components/ui/ParticleField';
+import { getSubdomainUrl } from '@/utils/navigation';
 
 interface Project {
   id: string;
@@ -48,6 +49,11 @@ const projectsData: Project[] = [
 ];
 
 export default function ProjectsPage() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [selectedProject, setSelectedProject] = useState<Project>(projectsData[0]);
   const [pipelineState, setPipelineState] = useState<'idle' | 'running' | 'completed' | 'failed'>('idle');
   const [activeStageIndex, setActiveStageIndex] = useState<number>(-1);
@@ -269,7 +275,7 @@ export default function ProjectsPage() {
         {/* Back Link */}
         <div className="text-center mt-4">
           <a
-            href="http://velsec.com:3000"
+            href={mounted ? getSubdomainUrl('home') : '/'}
             className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
           >
             <span>&lt;--</span>

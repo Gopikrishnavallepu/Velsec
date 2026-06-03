@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ParticleField from '@/components/ui/ParticleField';
+import { getSubdomainUrl } from '@/utils/navigation';
 
 interface NewsItem {
   id: string;
@@ -52,6 +53,11 @@ const newsData: NewsItem[] = [
 ];
 
 export default function NewsPage() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeItem, setActiveItem] = useState<NewsItem | null>(newsData[0]);
 
@@ -201,7 +207,7 @@ export default function NewsPage() {
         {/* Back Link */}
         <div className="text-center mt-4">
           <a
-            href="http://velsec.com:3000"
+            href={mounted ? getSubdomainUrl('home') : '/'}
             className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
           >
             <span>&lt;--</span>

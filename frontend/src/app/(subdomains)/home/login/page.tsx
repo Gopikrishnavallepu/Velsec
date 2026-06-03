@@ -45,7 +45,7 @@ export default function LoginPage() {
             '[SYSTEM] Redirecting to operative dashboard...',
           ]);
           setTimeout(() => {
-            window.location.href = 'http://velsec.com:3000/profile';
+            window.location.href = '/profile';
           }, 1000);
         }
       } catch (err: any) {

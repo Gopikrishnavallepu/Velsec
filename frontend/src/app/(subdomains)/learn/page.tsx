@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import ParticleField from '@/components/ui/ParticleField';
+import { getSubdomainUrl } from '@/utils/navigation';
 
 interface Course {
   id: string;
@@ -25,6 +26,25 @@ const categories = [
 
 export default function LearnPage() {
   const supabase = createClient();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleGithubLogin = async () => {
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: getSubdomainUrl('learn'),
+        },
+      });
+    } catch (err: any) {
+      console.error('OAuth handshake failed:', err);
+    }
+  };
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -301,11 +321,17 @@ export default function LearnPage() {
             <p className="text-xs text-zinc-400 font-mono max-w-md leading-relaxed">
               Velsec learning curriculums and interactive lab access keys are encrypted at rest. Please authorize your session credentials at the central security gateway.
             </p>
-            <a
-              href="http://velsec.com:3000/login"
-              className="mt-2 px-6 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-rose-400 border border-rose-500/40 rounded-lg transition-all duration-300"
+            <button
+              onClick={handleGithubLogin}
+              className="mt-2 px-6 py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] border border-[#0096ff]/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
             >
-              AUTHENTICATE_SESSION
+              CONNECT_WITH_GITHUB
+            </button>
+            <a
+              href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
+              className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 hover:underline mt-1"
+            >
+              OR_AUTHORIZE_VIA_EMAIL
             </a>
           </div>
         ) : (
@@ -454,7 +480,7 @@ export default function LearnPage() {
         {/* Back Link */}
         <div className="text-center mt-4">
           <a
-            href="http://velsec.com:3000"
+            href={mounted ? getSubdomainUrl('home') : '/'}
             className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
           >
             <span>&lt;--</span>

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ParticleField from '@/components/ui/ParticleField';
+import { getSubdomainUrl } from '@/utils/navigation';
 
 interface Task {
   id: number;
@@ -21,6 +22,11 @@ interface Cert {
 }
 
 export default function PersonalPage() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Tasks list state
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, text: 'Review STRIDE threat profile for API module', completed: false },
@@ -254,7 +260,7 @@ export default function PersonalPage() {
         {/* Back Link */}
         <div className="text-center mt-4">
           <a
-            href="http://velsec.com:3000"
+            href={mounted ? getSubdomainUrl('home') : '/'}
             className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
           >
             <span>&lt;--</span>

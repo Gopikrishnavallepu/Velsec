@@ -64,7 +64,7 @@ export default function ProfilePage() {
     } else {
       setLogs((prev) => [...prev, '[SUCCESS] Session terminated. Redirecting to gateway...']);
       setTimeout(() => {
-        window.location.href = 'http://velsec.com:3000/login';
+        window.location.href = '/login';
       }, 1000);
     }
   };
