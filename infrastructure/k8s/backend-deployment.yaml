@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: velsec-backend
+  labels:
+    app: velsec-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: velsec-backend
+  template:
+    metadata:
+      labels:
+        app: velsec-backend
+    spec:
+      containers:
+      - name: backend
+        image: ghcr.io/velsec-org/velsec-backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: velsec-backend-secrets
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: velsec-backend-svc
+spec:
+  selector:
+    app: velsec-backend
+  ports:
+  - port: 8000
+    targetPort: 8000

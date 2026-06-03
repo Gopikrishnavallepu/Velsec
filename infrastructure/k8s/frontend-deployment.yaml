@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: velsec-frontend
+  labels:
+    app: velsec-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: velsec-frontend
+  template:
+    metadata:
+      labels:
+        app: velsec-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: ghcr.io/velsec-org/velsec-frontend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: velsec-frontend-svc
+spec:
+  selector:
+    app: velsec-frontend
+  ports:
+  - port: 80
+    targetPort: 3000
