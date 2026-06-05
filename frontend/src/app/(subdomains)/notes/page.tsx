@@ -17,11 +17,10 @@ interface Note {
 
 const categories = [
   'ALL',
-  'SIEM Queries',
-  'Detection Rules',
-  'MITRE ATT&CK',
-  'Cheat Sheets',
-  'Runbooks'
+  'Security Engineer',
+  'Data Analyst',
+  'Career Development',
+  'General'
 ];
 
 export default function NotesPage() {
@@ -117,43 +116,27 @@ export default function NotesPage() {
       // Fallback local filtering logic
       const fallbackNotes = [
         {
-          id: "cobalt-strike",
-          title: "Detecting Cobalt Strike Beacons",
-          category: "Detection Rules",
-          tags: ["Cobalt Strike", "SIEM", "Windows", "EDR"],
-          content: "Cobalt Strike is a popular threat emulation tool widely abused by malicious threat actors to maintain persistence and command-and-control (C2) channels. This detection rule aims to identify default Cobalt Strike beaconing patterns in network traffic.\n\n### Threat Details\nCobalt Strike beacons typically use HTTP/S GET requests to check for commands and POST requests to upload results. Standard configurations often have a recognizable jitter and sleep time.\n\n### Yara Rule for Memory Detection\n```yara\nrule CobaltStrike_Beacon_Memory {\n    meta:\n        description = \"Detects default Cobalt Strike beacons in memory\"\n        author = \"Velsec Security\"\n    strings:\n        $beacon_loader = { 55 8B EC 83 C4 ?? 53 56 57 8B 7D 08 8B 75 0C }\n        $user_agent = \"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\"\n    condition:\n        $beacon_loader or $user_agent\n}\n```\n\n### Mitigation Recommendations\n1. Block known default C2 domains at the DNS/Proxy level.\n2. Monitor host process injections targeting legitimate binaries like `svchost.exe` or `explorer.exe`.",
+          id: "cloud-sec-intro",
+          title: "Introduction to Cloud Security",
+          category: "Security Engineer",
+          tags: ["Cloud", "AWS", "Security"],
+          content: "This is a fallback offline note. Please ensure the backend API is running to fetch your full library of notes.",
           last_updated: "2026-06-03"
         },
         {
-          id: "nmap-cheatsheet",
-          title: "Nmap Penetration Testing Cheat Sheet",
-          category: "Cheat Sheets",
-          tags: ["Recon", "Nmap", "Scanning", "Network"],
-          content: "Nmap (\"Network Mapper\") is a free and open-source utility for network discovery and vulnerability auditing. This cheat sheet captures primary scanning switch commands for quick retrieval during engagements.\n\n### Critical Scan Commands\n\n#### Stealth / SYN Scan\nStandard stealth scanning option that doesn't trigger full TCP connections.\n```bash\nnmap -sS -T4 <target-ip>\n```\n\n#### Service Version Detection\nQueries target ports to determine service protocols, applications, and versions.\n```bash\nnmap -sV -p- <target-ip>\n```\n\n#### OS and Script Scanning\nEnables OS detection, version detection, script scanning, and traceroute.\n```bash\nnmap -A -v <target-ip>\n```\n\n#### Vuln Assessment Scripts\nRuns standard Nmap Scripting Engine (NSE) scripts focused on vulnerability discovery.\n```bash\nnmap --script vuln -p 80,443 <target-ip>\n```",
+          id: "data-analytics-intro",
+          title: "Data Analytics Foundations",
+          category: "Data Analyst",
+          tags: ["Data", "Excel", "PowerBI"],
+          content: "This is a fallback offline note. Please ensure the backend API is running to fetch your full library of notes.",
           last_updated: "2026-06-03"
         },
         {
-          id: "sql-injection",
-          title: "SIEM Rules: SQL Injection Detection",
-          category: "SIEM Queries",
-          tags: ["SQL Injection", "WAF", "SIEM", "KQL"],
-          content: "SQL Injection (SQLi) is a code injection technique used to attack data-driven applications by inserting malicious SQL statements into entry fields. This note documents SIEM detection rules for tracing SQLi attempts in web access logs.\n\n### KQL Query (Microsoft Sentinel)\nUse the following Kusto Query Language (KQL) rule to detect typical SQL injection query signatures (like `' OR 1=1`) inside Web Application Firewall (WAF) requests:\n\n```kql\nAzureDiagnostics\n| where ResourceProvider == \"MICROSOFT.NETWORK\" and Category == \"ApplicationGatewayFirewallLog\"\n| where Message has \"SQL Injection\" or details_message_s has \"SQL Injection\"\n| extend clientIP = clientIp_s, requestUri = requestUri_s\n| summarize count() by clientIP, requestUri, bin(TimeGenerated, 5m)\n| filter count_ > 5\n```\n\n### Splunk Search Query\n```splunk\nindex=security sourcetype=access_combined (select OR union OR \"1=1\" OR \"1'1\")\n| stats count by clientip, uri\n| where count > 10\n```",
-          last_updated: "2026-06-03"
-        },
-        {
-          id: "active-directory",
-          title: "Active Directory Compromise Incident Response Runbook",
-          category: "Runbooks",
-          tags: ["AD", "IR", "Windows", "Incident Response"],
-          content: "This runbook guides responders through containment, eradication, and recovery steps after identifying an Active Directory (AD) domain compromise (e.g., Golden Ticket exploitation, Domain Controller access).\n\n### 1. Containment Phase\n* **Isolate Domain Controllers (DCs):** Immediately isolate compromised DCs at the network virtualization layer if possible. Avoid rebooting to preserve RAM artifact memory.\n* **Revoke KRBTGT Kerberos Key:** Perform the double-reset protocol for the `krbtgt` password to invalidate all existing Kerberos tickets.\n* **Block Internet Access:** Sever external routing paths from Domain Controllers.\n\n### 2. Eradication Phase\n* **Reset Privileged Credentials:** Reset passwords for all Domain Administrators, Enterprise Administrators, and service accounts.\n* **Audit Group Memberships:** Query `Domain Admins` and nested groups for unauthorized additions.\n\n### 3. Recovery Phase\n* Rebuild affected DCs from clean, known-secure backups or clean operating system installs.\n* Monitor directory change replication logs for replication errors.",
-          last_updated: "2026-06-03"
-        },
-        {
-          id: "t1003-lsass",
-          title: "T1003.001 - OS Credential Dumping: LSASS Memory",
-          category: "MITRE ATT&CK",
-          tags: ["MITRE", "T1003", "Credentials", "Windows"],
-          content: "Adversaries may attempt to access credential material, passwords, or hashes from the Local Security Authority Subsystem Service (LSASS) process memory. Dumping LSASS memory is a common technique (T1003.001) used to gather cleartext credentials or NTLM hashes.\n\n### Exploit Mechanics\nTools like Mimikatz or built-in utilities like `rundll32.exe` with `comsvcs.dll` can dump the LSASS process space:\n\n```powershell\nrundll32.exe C:\\windows\\System32\\comsvcs.dll, MiniDump <lsass-pid> C:\\windows\\temp\\lsass.dmp full\n```\n\n### Detection Strategy\n* **Process Creation Audit:** Alert on process command lines executing `comsvcs.dll` alongside `MiniDump`.\n* **Access Request Tracing:** Monitor handles requested to LSASS process (`ProcessAccess` mask `0x1010` or `0x1410` inside Sysmon Event ID 10 logs).\n* **Credential Guard:** Ensure Windows Credential Guard is active to isolate LSASS inside virtualized containers.",
+          id: "interview-prep",
+          title: "Security Engineer Interview Guide",
+          category: "Career Development",
+          tags: ["Interview", "Career", "HR"],
+          content: "This is a fallback offline note. Please ensure the backend API is running to fetch your full library of notes.",
           last_updated: "2026-06-03"
         }
       ];
