@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
+import { getSubdomainUrl } from '@/utils/navigation';
 import ParticleField from '@/components/ui/ParticleField';
 
 export default function LoginPage() {
@@ -64,7 +65,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(window.location.origin + '/profile')}`,
+          redirectTo: getSubdomainUrl('home', '/auth/callback?next=' + encodeURIComponent(getSubdomainUrl('home', '/profile'))),
         },
       });
 

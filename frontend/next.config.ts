@@ -10,7 +10,15 @@ const nextConfig: NextConfig = {
     'projects.velsec.com',
     'news.velsec.com',
     'personal.velsec.com',
-    'tracker.velsec.com'
+    'tracker.velsec.com',
+    'velsec.local',
+    'learn.velsec.local',
+    'notes.velsec.local',
+    'projects.velsec.local',
+    'news.velsec.local',
+    'personal.velsec.local',
+    'tracker.velsec.local',
+    'localhost',
   ],
 };
 

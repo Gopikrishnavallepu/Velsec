@@ -12,7 +12,7 @@ export function getSubdomainUrl(subdomain: string, path: string = ''): string {
     return `/${subdomain}${path}`;
   }
 
-  const hostname = window.location.hostname; // e.g. "learn.velsec.local" or "velsec-org.vercel.app"
+  const hostname = window.location.hostname; // e.g. "learn.velsec.local" or "velsec.vercel.app"
   const port = window.location.port; // e.g. "3000"
   const protocol = window.location.protocol; // e.g. "http:" or "https:"
   const cleanHost = hostname.split(':')[0];
@@ -30,7 +30,7 @@ export function getSubdomainUrl(subdomain: string, path: string = ''): string {
   }
 
   // 3. Vercel deployment URLs (which don't support wildcard DNS/SSL certificates on vercel.app)
-  // Fall back to path-based routing: https://velsec-org.vercel.app/learn
+  // Fall back to path-based routing: https://velsec.vercel.app/learn
   if (cleanHost.endsWith('.vercel.app') || cleanHost.endsWith('.now.sh')) {
     const mainHost = window.location.host; // includes port if any
     if (subdomain === 'home' || !subdomain) return `${protocol}//${mainHost}${path}`;
