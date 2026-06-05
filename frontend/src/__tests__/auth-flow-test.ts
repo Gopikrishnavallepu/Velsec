@@ -66,10 +66,10 @@ function getCookieDomain(hostname: string): string {
   }
 
   if (cleanHost.endsWith('.vercel.app')) {
-    return '.vercel.app';
+    return '';
   }
   if (cleanHost.endsWith('.now.sh')) {
-    return '.now.sh';
+    return '';
   }
   if (cleanHost.endsWith('.velsec.com') || cleanHost === 'velsec.com') {
     return '.velsec.com';
@@ -186,12 +186,12 @@ async function main() {
     assertEqual(getCookieDomain('learn.velsec.com'), '.velsec.com', 'learn.velsec.com cookie domain');
   });
 
-  await test('velsec.vercel.app returns .vercel.app', () => {
-    assertEqual(getCookieDomain('velsec.vercel.app'), '.vercel.app', 'vercel.app cookie domain');
+  await test('velsec.vercel.app returns empty cookie domain (PSL protection)', () => {
+    assertEqual(getCookieDomain('velsec.vercel.app'), '', 'vercel.app cookie domain');
   });
 
-  await test('custom.now.sh returns .now.sh', () => {
-    assertEqual(getCookieDomain('custom.now.sh'), '.now.sh', 'now.sh cookie domain');
+  await test('custom.now.sh returns empty cookie domain (PSL protection)', () => {
+    assertEqual(getCookieDomain('custom.now.sh'), '', 'now.sh cookie domain');
   });
 
   await test('custom apex domain extracts correctly', () => {

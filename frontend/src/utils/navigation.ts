@@ -76,10 +76,10 @@ export function getCookieDomain(hostname: string): string {
   }
 
   if (cleanHost.endsWith('.vercel.app')) {
-    return '.vercel.app';
+    return ''; // Browsers reject cookies set on PSL domains like .vercel.app
   }
   if (cleanHost.endsWith('.now.sh')) {
-    return '.now.sh';
+    return ''; // Browsers reject cookies set on PSL domains like .now.sh
   }
   if (cleanHost.endsWith('.velsec.com') || cleanHost === 'velsec.com') {
     return '.velsec.com';
