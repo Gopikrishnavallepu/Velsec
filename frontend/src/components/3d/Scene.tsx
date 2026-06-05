@@ -7,7 +7,7 @@ import DataMesh from './DataMesh';
 
 export default function Scene() {
   return (
-    <div className="fixed inset-0 -z-10 bg-[#050a18]">
+    <div className="fixed inset-0 -z-10 bg-background">
       <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
         <color attach="background" args={['#050a18']} />
         <ambientLight intensity={0.5} />

@@ -109,7 +109,7 @@ export default function ProjectsPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-[#050a18]">
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
       <ParticleField />
       
       {/* Background vignette overlay */}
@@ -118,33 +118,33 @@ export default function ProjectsPage() {
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-[#0096ff]/20 bg-[#0a1432]/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#0096ff]" />
+        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
           
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-[#0096ff] rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-[#0096ff] tracking-[0.3em] font-bold">V_LABS</span>
+              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_LABS</span>
             </div>
             <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              PROJECTS<span className="text-[#0096ff]">.VELSEC</span>
+              PROJECTS<span className="text-secondary">.VELSEC</span>
             </h1>
-            <p className="text-xs text-zinc-400 font-mono mt-1">
+            <p className="text-xs text-muted-foreground font-mono mt-1">
               DevSecOps Sandboxes, Hardened Configurations &amp; Automated Security Audits
             </p>
           </div>
 
-          <div className="flex gap-4 border-l border-[#0096ff]/15 pl-0 md:pl-6 pt-4 md:pt-0">
+          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">TEMPLATES</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">12</p>
+              <p className="text-[10px] text-muted-foreground font-bold">TEMPLATES</p>
+              <p className="text-lg font-extrabold text-secondary">12</p>
             </div>
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">SECURE_LEVEL</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">98%</p>
+              <p className="text-[10px] text-muted-foreground font-bold">SECURE_LEVEL</p>
+              <p className="text-lg font-extrabold text-secondary">98%</p>
             </div>
           </div>
         </div>
@@ -154,7 +154,7 @@ export default function ProjectsPage() {
           
           {/* Workspace List Panel */}
           <div className="flex flex-col gap-4">
-            <h2 className="text-xs font-mono font-bold tracking-widest text-[#0096ff]">// CHOOSE_WORKSPACE</h2>
+            <h2 className="text-xs font-mono font-bold tracking-widest text-secondary">// CHOOSE_WORKSPACE</h2>
             <div className="flex flex-col gap-3">
               {projectsData.map((p) => (
                 <div
@@ -162,21 +162,21 @@ export default function ProjectsPage() {
                   onClick={() => setSelectedProject(p)}
                   className={`group relative p-4 rounded-xl border cursor-pointer transition-all duration-300 ${
                     selectedProject.id === p.id
-                      ? 'border-[#0096ff] bg-[#0a1432]/30 shadow-[0_0_15px_rgba(0,150,255,0.08)]'
-                      : 'border-[#0a1a40] hover:border-[#0096ff]/30 bg-[#0a1432]/5'
+                      ? 'border-secondary bg-card/30 shadow-[0_0_15px_rgba(0,150,255,0.08)]'
+                      : 'border-border hover:border-secondary/30 bg-card/5'
                   }`}
                 >
-                  <p className="text-[9px] font-mono text-zinc-500 tracking-wider mb-1">{p.category.toUpperCase()}</p>
-                  <h3 className="text-xs font-bold font-mono text-zinc-200 group-hover:text-[#0096ff] transition-colors">{p.name}</h3>
+                  <p className="text-[9px] font-mono text-muted-foreground tracking-wider mb-1">{p.category.toUpperCase()}</p>
+                  <h3 className="text-xs font-bold font-mono text-foreground group-hover:text-secondary transition-colors">{p.name}</h3>
                   <div className="flex justify-between items-center mt-3">
                     <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded border ${
                       p.status === 'passed' ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-400' :
                       p.status === 'failed' ? 'border-rose-500/25 bg-rose-500/10 text-rose-400' :
-                      'border-zinc-500/25 bg-zinc-500/10 text-zinc-400'
+                      'border-zinc-500/25 bg-zinc-500/10 text-muted-foreground'
                     }`}>
                       {p.status.toUpperCase()}
                     </span>
-                    <span className="text-[9px] font-mono text-zinc-500">
+                    <span className="text-[9px] font-mono text-muted-foreground">
                       {p.vulnerabilities} VULNS
                     </span>
                   </div>
@@ -189,19 +189,19 @@ export default function ProjectsPage() {
           <div className="lg:col-span-2 flex flex-col gap-4">
             
             {/* Visualizer Panel */}
-            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[300px]">
-              <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#0096ff]/40" />
+            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[300px]">
+              <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary/40" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary/40" />
               
               <div className="flex justify-between items-center mb-6">
-                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest">// DEPLOYMENT_PIPELINE</span>
+                <span className="text-[9px] font-mono text-secondary tracking-widest">// DEPLOYMENT_PIPELINE</span>
                 <button
                   onClick={triggerPipeline}
                   disabled={pipelineState === 'running'}
                   className={`px-4 py-1.5 text-xs font-mono font-bold tracking-wider rounded-lg border transition-all duration-300 ${
                     pipelineState === 'running'
-                      ? 'border-[#0a1a40] text-zinc-600 bg-transparent cursor-not-allowed'
-                      : 'border-[#0096ff] text-[#0096ff] bg-[#0096ff]/5 hover:bg-[#0096ff]/20 shadow-[0_0_10px_rgba(0,150,255,0.15)] active:scale-98'
+                      ? 'border-border text-zinc-600 bg-transparent cursor-not-allowed'
+                      : 'border-secondary text-secondary bg-secondary/5 hover:bg-secondary/20 shadow-[0_0_10px_rgba(0,150,255,0.15)] active:scale-98'
                   }`}
                 >
                   {pipelineState === 'running' ? 'EXECUTING...' : 'TRIGGER_PIPELINE'}
@@ -211,7 +211,7 @@ export default function ProjectsPage() {
               {/* Pipeline Nodes */}
               <div className="flex flex-col md:flex-row items-center justify-around gap-4 md:gap-2 my-auto">
                 {selectedProject.stages.map((stage, idx) => {
-                  let statusColor = 'border-[#0a1a40] text-zinc-500 bg-[#050a18]';
+                  let statusColor = 'border-border text-muted-foreground bg-background';
                   if (pipelineState === 'running') {
                     if (idx < activeStageIndex) {
                       statusColor = 'border-emerald-500 text-emerald-400 bg-emerald-500/5 shadow-[0_0_10px_rgba(16,185,129,0.15)]';
@@ -227,12 +227,12 @@ export default function ProjectsPage() {
                       statusColor = 'border-rose-500 text-rose-400 bg-rose-500/5 shadow-[0_0_10px_rgba(239,68,68,0.25)]';
                     }
                   } else if (selectedProject.status === 'passed') {
-                    statusColor = 'border-emerald-500/50 text-emerald-400/80 bg-[#050a18]';
+                    statusColor = 'border-emerald-500/50 text-emerald-400/80 bg-background';
                   } else if (selectedProject.status === 'failed') {
                     if (idx < selectedProject.stages.length - 1) {
-                      statusColor = 'border-emerald-500/50 text-emerald-400/80 bg-[#050a18]';
+                      statusColor = 'border-emerald-500/50 text-emerald-400/80 bg-background';
                     } else {
-                      statusColor = 'border-rose-500/50 text-rose-400/80 bg-[#050a18]';
+                      statusColor = 'border-rose-500/50 text-rose-400/80 bg-background';
                     }
                   }
 
@@ -250,15 +250,15 @@ export default function ProjectsPage() {
               </div>
 
               {/* Logs output */}
-              <div className="mt-8 bg-[#050a18]/90 rounded-lg border border-[#0a1a40] p-4 font-mono text-[10px] text-zinc-400 min-h-[120px] max-h-[180px] overflow-y-auto space-y-1">
+              <div className="mt-8 bg-background/90 rounded-lg border border-border p-4 font-mono text-[10px] text-muted-foreground min-h-[120px] max-h-[180px] overflow-y-auto space-y-1">
                 {logs.map((log, i) => (
                   <div
                     key={i}
                     className={
                       log.includes('[SUCCESS]') ? 'text-emerald-400' :
                       log.includes('[FATAL]') ? 'text-rose-400 font-bold' :
-                      log.includes('[STAGE]') ? 'text-[#0096ff]' :
-                      'text-zinc-500'
+                      log.includes('[STAGE]') ? 'text-secondary' :
+                      'text-muted-foreground'
                     }
                   >
                     {log}
@@ -276,7 +276,7 @@ export default function ProjectsPage() {
         <div className="text-center mt-4">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"
           >
             <span>&lt;--</span>
             <span>SYSTEM_CORE_HOME</span>

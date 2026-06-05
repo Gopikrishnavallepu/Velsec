@@ -64,6 +64,36 @@
   --radius: 0.5rem;
 }
 
+.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  
+  --primary: #22c55e;
+  --primary-foreground: #ffffff;
+  
+  --secondary: #007cdb;
+  --secondary-foreground: #ffffff;
+  
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  
+  --accent: rgba(0, 124, 219, 0.1);
+  --accent-foreground: #007cdb;
+  
+  --destructive: #ef4444;
+  --destructive-foreground: #f8fafc;
+
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #007cdb;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { getSubdomainUrl } from '@/utils/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { useTheme } from 'next-themes';
+import { Sun, Moon } from 'lucide-react';
 
 const navLinks = [
   { label: 'LEARN', key: 'learn' },
@@ -18,6 +20,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [session, setSession] = useState<any>(null);
   const supabase = createClient();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -36,12 +39,7 @@ export default function Navbar() {
   }, [supabase.auth]);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 px-6 py-3 flex justify-between items-center border-b border-[#0096ff]/10"
-      style={{
-        background: 'linear-gradient(180deg, rgba(5, 10, 24, 0.95), rgba(5, 10, 24, 0.8))',
-        backdropFilter: 'blur(16px)',
-      }}
-    >
+    <nav className="fixed top-0 left-0 w-full z-50 px-6 py-3 flex justify-between items-center border-b border-border bg-background/90 backdrop-blur-md">
       {/* Logo */}
       <a 
         href={mounted ? getSubdomainUrl('home') : '/'} 
@@ -52,13 +50,13 @@ export default function Navbar() {
             src="/logo.png"
             alt="Velsec Logo"
             fill
-            className="object-contain mix-blend-lighten"
+            className="object-contain dark:mix-blend-lighten"
             priority
           />
         </div>
         <span className="text-xl font-bold tracking-widest font-mono hidden sm:inline-block">
-          <span className="text-zinc-300">VEL</span>
-          <span className="text-[#0096ff]">SEC</span>
+          <span className="text-foreground">VEL</span>
+          <span className="text-secondary">SEC</span>
         </span>
       </a>
 
@@ -70,26 +68,37 @@ export default function Navbar() {
             <a
               key={link.label}
               href={mounted ? getSubdomainUrl(link.key) : `/${link.key}`}
-              className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-zinc-500 hover:text-[#0096ff] hover:bg-[#0096ff]/5 rounded transition-all duration-300 border border-transparent hover:border-[#0096ff]/15"
+              className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-muted-foreground hover:text-secondary hover:bg-accent rounded transition-all duration-300 border border-transparent hover:border-border"
             >
               {link.label}
             </a>
           ))}
         </div>
 
-        {/* Auth Button */}
-        <div className="flex items-center lg:border-l lg:border-[#0096ff]/20 lg:pl-4">
+        <div className="flex items-center gap-3 lg:border-l lg:border-border lg:pl-4">
+          {/* Theme Toggle */}
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg bg-card border border-border text-muted-foreground hover:text-secondary transition-all"
+              aria-label="Toggle Theme"
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+          )}
+
+          {/* Auth Button */}
           {session ? (
             <a
               href={mounted ? getSubdomainUrl('home', '/profile') : '/profile'}
-              className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-[#0096ff] hover:bg-[#0096ff]/10 rounded transition-all duration-300 border border-[#0096ff]/30 shadow-[0_0_10px_rgba(0,150,255,0.1)] whitespace-nowrap"
+              className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-secondary hover:bg-accent rounded transition-all duration-300 border border-border shadow-[0_0_10px_rgba(0,150,255,0.1)] whitespace-nowrap"
             >
               PROFILE
             </a>
           ) : (
             <a
               href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
-              className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-[#050a18] bg-[#0096ff] hover:bg-[#007cdb] rounded transition-all duration-300 shadow-[0_0_15px_rgba(0,150,255,0.3)] whitespace-nowrap"
+              className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-primary-foreground bg-secondary hover:opacity-90 rounded transition-all duration-300 shadow-[0_0_15px_rgba(0,150,255,0.3)] whitespace-nowrap"
             >
               LOGIN
             </a>

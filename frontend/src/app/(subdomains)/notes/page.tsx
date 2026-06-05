@@ -205,7 +205,7 @@ export default function NotesPage() {
   }, [supabase.auth, activeCategory, searchQuery, fetchNotes]);
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-[#050a18]">
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
       <ParticleField />
       
       {/* Background vignette overlay */}
@@ -214,33 +214,33 @@ export default function NotesPage() {
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-[#0096ff]/20 bg-[#0a1432]/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#0096ff]" />
+        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
           
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-[#0096ff] rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-[#0096ff] tracking-[0.3em] font-bold">V_INTELLIGENCE</span>
+              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_INTELLIGENCE</span>
             </div>
             <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              NOTES<span className="text-[#0096ff]">.VELSEC</span>
+              NOTES<span className="text-secondary">.VELSEC</span>
             </h1>
-            <p className="text-xs text-zinc-400 font-mono mt-1">
+            <p className="text-xs text-muted-foreground font-mono mt-1">
               SecOps Cheat Sheets, Penetration Testing Guides &amp; Vulnerability Writeups
             </p>
           </div>
 
-          <div className="flex gap-4 border-l border-[#0096ff]/15 pl-0 md:pl-6 pt-4 md:pt-0">
+          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">WIKI_ENTRIES</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">{notes.length}</p>
+              <p className="text-[10px] text-muted-foreground font-bold">WIKI_ENTRIES</p>
+              <p className="text-lg font-extrabold text-secondary">{notes.length}</p>
             </div>
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">REVISION</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">v2.5</p>
+              <p className="text-[10px] text-muted-foreground font-bold">REVISION</p>
+              <p className="text-lg font-extrabold text-secondary">v2.5</p>
             </div>
           </div>
         </div>
@@ -261,18 +261,18 @@ export default function NotesPage() {
 
             <span className="text-4xl">🔒</span>
             <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
-            <p className="text-xs text-zinc-400 font-mono max-w-md leading-relaxed">
+            <p className="text-xs text-muted-foreground font-mono max-w-md leading-relaxed">
               Velsec intelligence dossiers and SecOps playbooks are encrypted at rest. Please authorize your session credentials at the central security gateway.
             </p>
             <button
               onClick={handleGithubLogin}
-              className="mt-2 px-6 py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] border border-[#0096ff]/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
+              className="mt-2 px-6 py-2.5 bg-secondary/10 hover:bg-secondary/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-secondary border border-secondary/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
             >
               CONNECT_WITH_GITHUB
             </button>
             <a
               href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
-              className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 hover:underline mt-1"
+              className="text-[10px] font-mono text-muted-foreground hover:text-foreground hover:underline mt-1"
             >
               OR_AUTHORIZE_VIA_EMAIL
             </a>
@@ -289,19 +289,19 @@ export default function NotesPage() {
                 placeholder="SEARCH_NOTES..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#0a1432]/25 text-xs font-mono text-zinc-200 placeholder-zinc-500 border border-[#0096ff]/20 focus:border-[#0096ff]/50 focus:outline-none rounded-lg px-3 py-2 transition-all duration-300"
+                className="w-full bg-card/25 text-xs font-mono text-foreground placeholder-zinc-500 border border-secondary/20 focus:border-secondary/50 focus:outline-none rounded-lg px-3 py-2 transition-all duration-300"
               />
               
               {/* Categories */}
-              <div className="flex flex-wrap gap-1.5 p-2 bg-[#0a1432]/10 rounded-xl border border-[#0096ff]/10">
+              <div className="flex flex-wrap gap-1.5 p-2 bg-card/10 rounded-xl border border-secondary/10">
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
                     className={`px-2.5 py-1 rounded text-[9px] font-mono font-bold uppercase transition-all duration-300 ${
                       activeCategory === cat
-                        ? 'bg-[#0096ff]/20 text-[#0096ff] border border-[#0096ff]/40'
-                        : 'text-zinc-500 border border-transparent hover:text-zinc-300'
+                        ? 'bg-secondary/20 text-secondary border border-secondary/40'
+                        : 'text-muted-foreground border border-transparent hover:text-foreground'
                     }`}
                   >
                     {cat}
@@ -312,7 +312,7 @@ export default function NotesPage() {
               {/* Notes List */}
               <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto pr-1">
                 {loading ? (
-                  <div className="text-center py-8 font-mono text-xs text-zinc-500">
+                  <div className="text-center py-8 font-mono text-xs text-muted-foreground">
                     SYNCHRONIZING_NOTES_LIST...
                   </div>
                 ) : notes.map((n) => (
@@ -321,21 +321,21 @@ export default function NotesPage() {
                     onClick={() => setSelectedNote(n)}
                     className={`p-3 rounded-lg border text-left cursor-pointer transition-all duration-300 w-full ${
                       selectedNote?.id === n.id
-                        ? 'border-[#0096ff] bg-[#0a1432]/35 shadow-[0_0_12px_rgba(0,150,255,0.06)]'
-                        : 'border-[#0a1a40] hover:border-[#0096ff]/20 bg-[#0a1432]/5'
+                        ? 'border-secondary bg-card/35 shadow-[0_0_12px_rgba(0,150,255,0.06)]'
+                        : 'border-border hover:border-secondary/20 bg-card/5'
                     }`}
                   >
-                    <span className="text-[8px] font-mono text-zinc-500 font-bold uppercase tracking-wider block mb-1">
+                    <span className="text-[8px] font-mono text-muted-foreground font-bold uppercase tracking-wider block mb-1">
                       {n.category}
                     </span>
-                    <span className="text-xs font-mono font-bold text-zinc-200 block truncate">
+                    <span className="text-xs font-mono font-bold text-foreground block truncate">
                       {n.title}
                     </span>
                   </button>
                 ))}
 
                 {!loading && notes.length === 0 && (
-                  <div className="text-center py-6 border border-dashed border-[#0a1a40] rounded-lg text-zinc-600 font-mono text-xs">
+                  <div className="text-center py-6 border border-dashed border-border rounded-lg text-zinc-600 font-mono text-xs">
                     NO_INDEXED_ENTRIES_FOUND
                   </div>
                 )}
@@ -343,12 +343,12 @@ export default function NotesPage() {
             </div>
 
             {/* Reader Panel */}
-            <div className="md:col-span-2 relative border border-[#0096ff]/15 bg-[#0a1432]/20 backdrop-blur-md rounded-xl p-6 min-h-[450px] flex flex-col">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+            <div className="md:col-span-2 relative border border-secondary/15 bg-card/20 backdrop-blur-md rounded-xl p-6 min-h-[450px] flex flex-col">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
               {loading ? (
-                <div className="flex flex-col items-center justify-center flex-1 text-center font-mono text-xs text-zinc-400 gap-2">
+                <div className="flex flex-col items-center justify-center flex-1 text-center font-mono text-xs text-muted-foreground gap-2">
                   <span className="animate-spin">⏳</span>
                   <span>DECRYPTING_NOTE_DOSSIER...</span>
                 </div>
@@ -358,33 +358,33 @@ export default function NotesPage() {
                     {selectedNote.tags.map((t) => (
                       <span
                         key={t}
-                        className="px-2 py-0.5 rounded text-[8px] font-mono font-bold tracking-widest bg-[#0a1432] border border-[#0096ff]/20 text-[#0096ff]"
+                        className="px-2 py-0.5 rounded text-[8px] font-mono font-bold tracking-widest bg-card border border-secondary/20 text-secondary"
                       >
                         {t.toUpperCase()}
                       </span>
                     ))}
                   </div>
 
-                  <h2 className="text-xl font-bold text-zinc-100 mb-2">{selectedNote.title}</h2>
-                  <div className="flex justify-between items-center text-[9px] text-zinc-500 border-b border-[#0096ff]/10 pb-4 mb-4">
+                  <h2 className="text-xl font-bold text-foreground mb-2">{selectedNote.title}</h2>
+                  <div className="flex justify-between items-center text-[9px] text-muted-foreground border-b border-secondary/10 pb-4 mb-4">
                     <span>SECURITY_MEMORANDUM // CATEGORY: {selectedNote.category.toUpperCase()}</span>
                     <span>LAST_UPDATED: {selectedNote.last_updated}</span>
                   </div>
 
                   {/* Markdown Renderer */}
-                  <div className="text-xs text-zinc-300 leading-relaxed max-w-none mb-4 space-y-4">
+                  <div className="text-xs text-foreground leading-relaxed max-w-none mb-4 space-y-4">
                     <ReactMarkdown
                       components={{
-                        h1: ({node: _, ...props}) => <h1 className="text-sm font-bold text-zinc-200 mt-4 mb-2 border-b border-[#0096ff]/10 pb-1" {...props} />,
-                        h2: ({node: _, ...props}) => <h2 className="text-xs font-bold text-zinc-200 mt-4 mb-2" {...props} />,
-                        h3: ({node: _, ...props}) => <h3 className="text-[11px] font-bold text-zinc-300 mt-3 mb-1" {...props} />,
-                        p: ({node: _, ...props}) => <p className="mb-4 leading-relaxed text-zinc-400" {...props} />,
+                        h1: ({node: _, ...props}) => <h1 className="text-sm font-bold text-foreground mt-4 mb-2 border-b border-secondary/10 pb-1" {...props} />,
+                        h2: ({node: _, ...props}) => <h2 className="text-xs font-bold text-foreground mt-4 mb-2" {...props} />,
+                        h3: ({node: _, ...props}) => <h3 className="text-[11px] font-bold text-foreground mt-3 mb-1" {...props} />,
+                        p: ({node: _, ...props}) => <p className="mb-4 leading-relaxed text-muted-foreground" {...props} />,
                         ul: ({node: _, ...props}) => <ul className="list-disc pl-4 mb-4 space-y-1" {...props} />,
                         ol: ({node: _, ...props}) => <ol className="list-decimal pl-4 mb-4 space-y-1" {...props} />,
-                        li: ({node: _, ...props}) => <li className="text-zinc-400" {...props} />,
-                        pre: ({node: _, ...props}) => <pre className="bg-[#050a18]/90 rounded-lg border border-[#0a1a40] p-4 text-[10px] text-[#00f0ff] overflow-x-auto my-4 whitespace-pre" {...props} />,
-                        code: ({node: _, ...props}) => <code className="bg-[#050a18]/60 text-[#00f0ff] px-1 py-0.5 rounded border border-[#0a1a40] text-[10px]" {...props} />,
-                        a: ({node: _, ...props}) => <a className="text-[#0096ff] hover:underline" target="_blank" rel="noreferrer" {...props} />,
+                        li: ({node: _, ...props}) => <li className="text-muted-foreground" {...props} />,
+                        pre: ({node: _, ...props}) => <pre className="bg-background/90 rounded-lg border border-border p-4 text-[10px] text-[#00f0ff] overflow-x-auto my-4 whitespace-pre" {...props} />,
+                        code: ({node: _, ...props}) => <code className="bg-background/60 text-[#00f0ff] px-1 py-0.5 rounded border border-border text-[10px]" {...props} />,
+                        a: ({node: _, ...props}) => <a className="text-secondary hover:underline" target="_blank" rel="noreferrer" {...props} />,
                       }}
                     >
                       {selectedNote.content}
@@ -392,7 +392,7 @@ export default function NotesPage() {
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center flex-1 text-center text-zinc-500 font-mono text-xs">
+                <div className="flex flex-col items-center justify-center flex-1 text-center text-muted-foreground font-mono text-xs">
                   <span className="text-3xl mb-3">📖</span>
                   SELECT_A_DOSSIER_TO_VIEW_INTELLIGENCE
                 </div>
@@ -406,7 +406,7 @@ export default function NotesPage() {
         <div className="text-center mt-4">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"
           >
             <span>&lt;--</span>
             <span>SYSTEM_CORE_HOME</span>

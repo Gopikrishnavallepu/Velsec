@@ -91,10 +91,10 @@ export default function SubdomainGrid() {
         {coreFeatures.map((feat) => (
           <div
             key={feat.label}
-            className="glass-panel rounded-xl p-4 text-center border border-[#0096ff]/10 hover:border-[#0096ff]/40 transition-all duration-500 group cursor-default hover:shadow-[0_0_25px_rgba(0,150,255,0.1)]"
+            className="glass-panel rounded-xl p-4 text-center border border-secondary/10 hover:border-secondary/40 transition-all duration-500 group cursor-default hover:shadow-[0_0_25px_rgba(0,150,255,0.1)]"
           >
             <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">{feat.icon}</div>
-            <div className="text-[11px] font-mono font-bold text-zinc-300 group-hover:text-[#0096ff] transition-colors duration-300">
+            <div className="text-[11px] font-mono font-bold text-foreground group-hover:text-secondary transition-colors duration-300">
               {feat.label}
             </div>
             <div className="text-[10px] text-zinc-600 mt-1 leading-tight">{feat.desc}</div>
@@ -108,7 +108,7 @@ export default function SubdomainGrid() {
           <a
             key={sub.name}
             href={mounted ? getSubdomainUrl(sub.name.toLowerCase()) : `/${sub.name.toLowerCase()}`}
-            className="group relative rounded-2xl p-6 border border-[#0a1a40] hover:border-opacity-100 transition-all duration-500 overflow-hidden"
+            className="group relative rounded-2xl p-6 border border-border hover:border-opacity-100 transition-all duration-500 overflow-hidden"
             style={{
               background: 'linear-gradient(145deg, rgba(10, 18, 40, 0.8), rgba(5, 10, 24, 0.9))',
             }}
@@ -152,10 +152,10 @@ export default function SubdomainGrid() {
             </div>
 
             {/* Tagline */}
-            <p className="text-sm font-semibold text-zinc-300 mb-2">{sub.tagline}</p>
+            <p className="text-sm font-semibold text-foreground mb-2">{sub.tagline}</p>
 
             {/* Description */}
-            <p className="text-xs text-zinc-500 leading-relaxed mb-4">{sub.description}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-4">{sub.description}</p>
 
             {/* Feature Pills */}
             <div className="flex flex-wrap gap-2">

@@ -209,7 +209,7 @@ export default function PersonalPage() {
   const completedCount = tasks.filter(t => t.completed).length;
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-[#050a18]">
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
       <ParticleField />
       
       {/* Background vignette overlay */}
@@ -218,33 +218,33 @@ export default function PersonalPage() {
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-[#0096ff]/20 bg-[#0a1432]/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#0096ff]" />
+        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
           
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-[#0096ff] rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-[#0096ff] tracking-[0.3em] font-bold">V_PERSONAL</span>
+              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_PERSONAL</span>
             </div>
             <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              PERSONAL<span className="text-[#0096ff]">.VELSEC</span>
+              PERSONAL<span className="text-secondary">.VELSEC</span>
             </h1>
-            <p className="text-xs text-zinc-400 font-mono mt-1">
+            <p className="text-xs text-muted-foreground font-mono mt-1">
               Career Milestones, Daily Objectives &amp; Cyber Skill Matrix
             </p>
           </div>
 
-          <div className="flex gap-4 border-l border-[#0096ff]/15 pl-0 md:pl-6 pt-4 md:pt-0">
+          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">SOLVED_TASKS</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">{completedCount} / {tasks.length}</p>
+              <p className="text-[10px] text-muted-foreground font-bold">SOLVED_TASKS</p>
+              <p className="text-lg font-extrabold text-secondary">{completedCount} / {tasks.length}</p>
             </div>
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">OPERATIVE_LVL</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">0{level}</p>
+              <p className="text-[10px] text-muted-foreground font-bold">OPERATIVE_LVL</p>
+              <p className="text-lg font-extrabold text-secondary">0{level}</p>
             </div>
           </div>
         </div>
@@ -265,18 +265,18 @@ export default function PersonalPage() {
 
             <span className="text-4xl">🔒</span>
             <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
-            <p className="text-xs text-zinc-400 font-mono max-w-md leading-relaxed">
+            <p className="text-xs text-muted-foreground font-mono max-w-md leading-relaxed">
               Velsec career profiles and user details are encrypted at rest. Please authorize your session credentials at the central security gateway.
             </p>
             <button
               onClick={handleGithubLogin}
-              className="mt-2 px-6 py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] border border-[#0096ff]/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
+              className="mt-2 px-6 py-2.5 bg-secondary/10 hover:bg-secondary/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-secondary border border-secondary/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
             >
               CONNECT_WITH_GITHUB
             </button>
             <a
               href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
-              className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 hover:underline mt-1"
+              className="text-[10px] font-mono text-muted-foreground hover:text-foreground hover:underline mt-1"
             >
               OR_AUTHORIZE_VIA_EMAIL
             </a>
@@ -286,25 +286,25 @@ export default function PersonalPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             {/* Card 1: Agent Profile & Certifications */}
-            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
               <div>
-                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-2">// AGENT_IDENTIFICATION</span>
-                <div className="flex items-center gap-4 border-b border-[#0096ff]/10 pb-4 mb-4">
-                  <div className="w-14 h-14 rounded-full border-2 border-[#0096ff]/50 bg-[#050a18] flex items-center justify-center text-2xl shadow-[0_0_12px_rgba(0,150,255,0.2)]">
+                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-2">// AGENT_IDENTIFICATION</span>
+                <div className="flex items-center gap-4 border-b border-secondary/10 pb-4 mb-4">
+                  <div className="w-14 h-14 rounded-full border-2 border-secondary/50 bg-background flex items-center justify-center text-2xl shadow-[0_0_12px_rgba(0,150,255,0.2)]">
                     👤
                   </div>
                   <div className="font-mono">
-                    <h3 className="text-sm font-bold text-zinc-200">GOPISHEK_VALLEPU</h3>
-                    <p className="text-[9px] text-[#0096ff] font-bold">TITLE: CYBER_OPERATIVE</p>
-                    <p className="text-[9px] text-zinc-500">SECTOR: DEVSECOPS_SEC</p>
+                    <h3 className="text-sm font-bold text-foreground">GOPISHEK_VALLEPU</h3>
+                    <p className="text-[9px] text-secondary font-bold">TITLE: CYBER_OPERATIVE</p>
+                    <p className="text-[9px] text-muted-foreground">SECTOR: DEVSECOPS_SEC</p>
                   </div>
                 </div>
 
                 {/* Certifications toggles */}
-                <span className="text-[9px] font-mono text-zinc-500 block mb-2 font-bold tracking-wider">CERTIFICATE_DECK (CLICK TO UPDATE):</span>
+                <span className="text-[9px] font-mono text-muted-foreground block mb-2 font-bold tracking-wider">CERTIFICATE_DECK (CLICK TO UPDATE):</span>
                 <div className="grid grid-cols-2 gap-2">
                   {certs.map(c => (
                     <button
@@ -312,8 +312,8 @@ export default function PersonalPage() {
                       onClick={() => toggleCert(c.id)}
                       className={`p-2 rounded text-[10px] font-mono font-bold text-center border transition-all duration-300 ${
                         c.acquired
-                          ? 'border-[#0096ff]/40 bg-[#0096ff]/10 text-[#0096ff] shadow-[0_0_8px_rgba(0,150,255,0.15)]'
-                          : 'border-[#0a1a40] bg-[#0a1432]/5 text-zinc-500 hover:border-[#0096ff]/25'
+                          ? 'border-secondary/40 bg-secondary/10 text-secondary shadow-[0_0_8px_rgba(0,150,255,0.15)]'
+                          : 'border-border bg-card/5 text-muted-foreground hover:border-secondary/25'
                       }`}
                     >
                       {c.name}
@@ -328,7 +328,7 @@ export default function PersonalPage() {
                 className={`w-full py-2 mt-4 text-xs font-mono font-bold tracking-widest rounded-lg border transition-all duration-300 ${
                   cvCompiling
                     ? 'border-amber-500 text-amber-500 bg-transparent animate-pulse cursor-not-allowed'
-                    : 'border-[#0096ff] text-[#0096ff] bg-[#0096ff]/5 hover:bg-[#0096ff]/15'
+                    : 'border-secondary text-secondary bg-secondary/5 hover:bg-secondary/15'
                 }`}
               >
                 {cvCompiling ? 'COMPILING_CV...' : 'GENERATE_CV_REPORT'}
@@ -336,12 +336,12 @@ export default function PersonalPage() {
             </div>
 
             {/* Card 2: Objective Tracker Checklist */}
-            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
               <div>
-                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-3">// ACTIVE_OBJECTIVES</span>
+                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-3">// ACTIVE_OBJECTIVES</span>
                 <div className="flex flex-col gap-3">
                   {tasks.map(t => (
                     <div
@@ -351,13 +351,13 @@ export default function PersonalPage() {
                     >
                       <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
                         t.completed
-                          ? 'border-[#0096ff] bg-[#0096ff]/15 text-[#0096ff]'
-                          : 'border-[#0a1a40] group-hover:border-[#0096ff]/40'
+                          ? 'border-secondary bg-secondary/15 text-secondary'
+                          : 'border-border group-hover:border-secondary/40'
                       }`}>
                         {t.completed && <span className="text-[9px]">✔</span>}
                       </div>
                       <span className={`text-[11px] font-mono transition-colors ${
-                        t.completed ? 'text-zinc-500 line-through' : 'text-zinc-300 group-hover:text-zinc-200'
+                        t.completed ? 'text-muted-foreground line-through' : 'text-foreground group-hover:text-foreground'
                       }`}>
                         {t.text}
                       </span>
@@ -366,28 +366,28 @@ export default function PersonalPage() {
                 </div>
               </div>
 
-              <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3 mt-4">
+              <div className="text-[9px] font-mono text-muted-foreground text-center border-t border-secondary/10 pt-3 mt-4">
                 * Resolving active objectives boosts operative tier levels.
               </div>
             </div>
 
             {/* Card 3: Skill Matrix Levels */}
-            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
               <div>
-                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-3">// COGNITIVE_SKILL_MATRIX</span>
+                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-3">// COGNITIVE_SKILL_MATRIX</span>
                 <div className="space-y-4">
                   {skills.map(s => (
                     <div key={s.name} className="flex flex-col gap-1.5 font-mono">
-                      <div className="flex justify-between items-center text-[10px] text-zinc-400">
+                      <div className="flex justify-between items-center text-[10px] text-muted-foreground">
                         <span>{s.name}</span>
-                        <span className="text-[#0096ff] font-bold">{s.level}%</span>
+                        <span className="text-secondary font-bold">{s.level}%</span>
                       </div>
                       
                       <div className="flex gap-2 items-center">
-                        <div className="flex-1 h-2 bg-[#050a18] rounded-full overflow-hidden border border-[#0096ff]/10">
+                        <div className="flex-1 h-2 bg-background rounded-full overflow-hidden border border-secondary/10">
                           <div
                             className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-300"
                             style={{ width: `${s.level}%` }}
@@ -396,7 +396,7 @@ export default function PersonalPage() {
                         <button
                           onClick={() => trainSkill(s.name)}
                           disabled={loading}
-                          className="px-2 py-0.5 rounded border border-[#0096ff]/30 text-[8px] text-[#0096ff] hover:bg-[#0096ff]/10 font-bold active:scale-95 transition-all disabled:opacity-50"
+                          className="px-2 py-0.5 rounded border border-secondary/30 text-[8px] text-secondary hover:bg-secondary/10 font-bold active:scale-95 transition-all disabled:opacity-50"
                         >
                           TRAIN
                         </button>
@@ -406,7 +406,7 @@ export default function PersonalPage() {
                 </div>
               </div>
 
-              <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3 mt-4">
+              <div className="text-[9px] font-mono text-muted-foreground text-center border-t border-secondary/10 pt-3 mt-4">
                 Train competencies iteratively to secure final sandbox clearances.
               </div>
             </div>
@@ -418,7 +418,7 @@ export default function PersonalPage() {
         <div className="text-center mt-4">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"
           >
             <span>&lt;--</span>
             <span>SYSTEM_CORE_HOME</span>

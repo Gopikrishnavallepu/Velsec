@@ -261,7 +261,7 @@ export default function LearnPage() {
   });
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-[#050a18]">
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
       <ParticleField />
       
       {/* Background vignette overlay */}
@@ -270,34 +270,34 @@ export default function LearnPage() {
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-[#0096ff]/20 bg-[#0a1432]/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#0096ff]" />
+        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
           
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-[#0096ff] rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-[#0096ff] tracking-[0.3em] font-bold">V_ACADEMY</span>
+              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_ACADEMY</span>
             </div>
             <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              LEARN<span className="text-[#0096ff]">.VELSEC</span>
+              LEARN<span className="text-secondary">.VELSEC</span>
             </h1>
-            <p className="text-xs text-zinc-400 font-mono mt-1">
+            <p className="text-xs text-muted-foreground font-mono mt-1">
               Advanced Cybersecurity Curriculum &amp; Practical Hands-on Labs
             </p>
           </div>
 
           {/* Quick Stats */}
-          <div className="flex gap-4 border-l border-[#0096ff]/15 pl-0 md:pl-6 pt-4 md:pt-0">
+          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">ACTIVE LABS</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">{courses.filter(c => c.progress > 0).length} / {courses.length}</p>
+              <p className="text-[10px] text-muted-foreground font-bold">ACTIVE LABS</p>
+              <p className="text-lg font-extrabold text-secondary">{courses.filter(c => c.progress > 0).length} / {courses.length}</p>
             </div>
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">XP MULTIPLIER</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">1.5x</p>
+              <p className="text-[10px] text-muted-foreground font-bold">XP MULTIPLIER</p>
+              <p className="text-lg font-extrabold text-secondary">1.5x</p>
             </div>
           </div>
         </div>
@@ -318,18 +318,18 @@ export default function LearnPage() {
 
             <span className="text-4xl">🔒</span>
             <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
-            <p className="text-xs text-zinc-400 font-mono max-w-md leading-relaxed">
+            <p className="text-xs text-muted-foreground font-mono max-w-md leading-relaxed">
               Velsec learning curriculums and interactive lab access keys are encrypted at rest. Please authorize your session credentials at the central security gateway.
             </p>
             <button
               onClick={handleGithubLogin}
-              className="mt-2 px-6 py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] border border-[#0096ff]/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
+              className="mt-2 px-6 py-2.5 bg-secondary/10 hover:bg-secondary/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-secondary border border-secondary/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
             >
               CONNECT_WITH_GITHUB
             </button>
             <a
               href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
-              className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 hover:underline mt-1"
+              className="text-[10px] font-mono text-muted-foreground hover:text-foreground hover:underline mt-1"
             >
               OR_AUTHORIZE_VIA_EMAIL
             </a>
@@ -338,7 +338,7 @@ export default function LearnPage() {
           /* Main Learning Academy Panel */
           <>
             {/* Search & Filter Bar */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-[#0a1432]/10 p-4 rounded-xl border border-[#0096ff]/10">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-card/10 p-4 rounded-xl border border-secondary/10">
               {/* Filters */}
               <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                 {categories.map((cat) => (
@@ -347,8 +347,8 @@ export default function LearnPage() {
                     onClick={() => setSelectedCategory(cat)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold tracking-wider transition-all duration-300 ${
                       selectedCategory === cat
-                        ? 'bg-[#0096ff]/20 text-[#0096ff] border border-[#0096ff]/40 shadow-[0_0_10px_rgba(0,150,255,0.2)]'
-                        : 'text-zinc-400 border border-[#0a1a40] hover:border-[#0096ff]/30 hover:text-zinc-200'
+                        ? 'bg-secondary/20 text-secondary border border-secondary/40 shadow-[0_0_10px_rgba(0,150,255,0.2)]'
+                        : 'text-muted-foreground border border-border hover:border-secondary/30 hover:text-foreground'
                     }`}
                   >
                     {cat}
@@ -363,9 +363,9 @@ export default function LearnPage() {
                   placeholder="SEARCH_COURSES..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#050a18]/80 text-xs font-mono text-zinc-200 placeholder-zinc-500 border border-[#0a1a40] focus:border-[#0096ff]/40 focus:outline-none rounded-lg px-3 py-2 transition-colors"
+                  className="w-full bg-background/80 text-xs font-mono text-foreground placeholder-zinc-500 border border-border focus:border-secondary/40 focus:outline-none rounded-lg px-3 py-2 transition-colors"
                 />
-                <span className="absolute right-3 top-2.5 text-zinc-500 text-xs font-mono">🔍</span>
+                <span className="absolute right-3 top-2.5 text-muted-foreground text-xs font-mono">🔍</span>
               </div>
             </div>
 
@@ -375,7 +375,7 @@ export default function LearnPage() {
               {/* Courses List Grid */}
               <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {loading && courses.length === 0 ? (
-                  <div className="col-span-2 text-center py-16 font-mono text-xs text-zinc-500">
+                  <div className="col-span-2 text-center py-16 font-mono text-xs text-muted-foreground">
                     DECRYPTING_LAB_CURRICULUM_CORES...
                   </div>
                 ) : filteredCourses.map((c) => (
@@ -384,36 +384,36 @@ export default function LearnPage() {
                     onClick={() => setActiveCourse(c)}
                     className={`group relative flex flex-col p-5 rounded-xl border transition-all duration-500 cursor-pointer ${
                       activeCourse?.id === c.id
-                        ? 'border-[#0096ff] bg-[#0a1432]/40 shadow-[0_0_20px_rgba(0,150,255,0.1)]'
-                        : 'border-[#0a1a40] hover:border-[#0096ff]/40 bg-[#0a1432]/10 hover:shadow-[0_0_15px_rgba(0,150,255,0.05)]'
+                        ? 'border-secondary bg-card/40 shadow-[0_0_20px_rgba(0,150,255,0.1)]'
+                        : 'border-border hover:border-secondary/40 bg-card/10 hover:shadow-[0_0_15px_rgba(0,150,255,0.05)]'
                     }`}
                   >
                     {/* Plexus design dots */}
-                    <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-[#0096ff]/40 rounded-full m-2 group-hover:scale-125 transition-transform duration-300" />
-                    <div className="absolute bottom-0 left-0 w-1.5 h-1.5 bg-[#0096ff]/20 rounded-full m-2" />
+                    <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-secondary/40 rounded-full m-2 group-hover:scale-125 transition-transform duration-300" />
+                    <div className="absolute bottom-0 left-0 w-1.5 h-1.5 bg-secondary/20 rounded-full m-2" />
 
                     <div className="flex justify-between items-center mb-3">
-                      <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider bg-[#0a1432] border border-[#0096ff]/25 text-[#0096ff]">
+                      <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider bg-card border border-secondary/25 text-secondary">
                         {c.level.toUpperCase()}
                       </span>
-                      <span className="text-[10px] font-mono text-zinc-500 font-bold">{c.hours} HOURS</span>
+                      <span className="text-[10px] font-mono text-muted-foreground font-bold">{c.hours} HOURS</span>
                     </div>
 
-                    <h3 className="text-base font-bold font-mono text-zinc-200 group-hover:text-[#0096ff] transition-colors duration-300 mb-2">
+                    <h3 className="text-base font-bold font-mono text-foreground group-hover:text-secondary transition-colors duration-300 mb-2">
                       {c.title}
                     </h3>
 
-                    <p className="text-[11px] text-zinc-400 mb-4 leading-relaxed line-clamp-2">
+                    <p className="text-[11px] text-muted-foreground mb-4 leading-relaxed line-clamp-2">
                       {c.description}
                     </p>
 
                     {/* Progress bar */}
                     <div className="mt-auto pt-2">
-                      <div className="flex justify-between text-[9px] font-mono text-zinc-500 font-bold mb-1">
+                      <div className="flex justify-between text-[9px] font-mono text-muted-foreground font-bold mb-1">
                         <span>PROGRESS</span>
-                        <span className="text-[#0096ff]">{c.progress}%</span>
+                        <span className="text-secondary">{c.progress}%</span>
                       </div>
-                      <div className="w-full h-1.5 bg-[#050a18] rounded-full overflow-hidden border border-[#0096ff]/10">
+                      <div className="w-full h-1.5 bg-background rounded-full overflow-hidden border border-secondary/10">
                         <div
                           className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-500"
                           style={{ width: `${c.progress}%` }}
@@ -424,36 +424,36 @@ export default function LearnPage() {
                 ))}
 
                 {filteredCourses.length === 0 && !loading && (
-                  <div className="col-span-2 text-center p-8 rounded-xl border border-dashed border-[#0a1a40] text-zinc-500 font-mono text-xs">
+                  <div className="col-span-2 text-center p-8 rounded-xl border border-dashed border-border text-muted-foreground font-mono text-xs">
                     NO_COURSES_FOUND_MATCHING_CRITERIA
                   </div>
                 )}
               </div>
 
               {/* Details / Preview Drawer */}
-              <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 min-h-[350px]">
-                <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-                <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+              <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 min-h-[350px]">
+                <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+                <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
                 {activeCourse ? (
                   <div className="flex flex-col h-full font-mono">
-                    <span className="text-[9px] text-[#0096ff] font-bold tracking-widest uppercase mb-1">
+                    <span className="text-[9px] text-secondary font-bold tracking-widest uppercase mb-1">
                       {"//"} {activeCourse.category.toUpperCase()} MODULES
                     </span>
-                    <h2 className="text-lg font-bold text-zinc-100 mb-3 border-b border-[#0096ff]/10 pb-2">
+                    <h2 className="text-lg font-bold text-foreground mb-3 border-b border-secondary/10 pb-2">
                       {activeCourse.title}
                     </h2>
                     
-                    <p className="text-[11px] text-zinc-400 mb-5 leading-relaxed">
+                    <p className="text-[11px] text-muted-foreground mb-5 leading-relaxed">
                       {activeCourse.description}
                     </p>
 
-                    <h4 className="text-[10px] text-zinc-500 font-bold mb-3 tracking-wider">LAB_CURRICULUM:</h4>
+                    <h4 className="text-[10px] text-muted-foreground font-bold mb-3 tracking-wider">LAB_CURRICULUM:</h4>
                     <ul className="space-y-3 mb-6 flex-1">
                       {activeCourse.modules.map((mod, index) => (
                         <li key={mod} className="flex gap-2 items-start text-[10px]">
-                          <span className="text-[#0096ff] font-bold">0{index + 1}.</span>
-                          <span className="text-zinc-300 leading-tight">{mod}</span>
+                          <span className="text-secondary font-bold">0{index + 1}.</span>
+                          <span className="text-foreground leading-tight">{mod}</span>
                         </li>
                       ))}
                     </ul>
@@ -461,13 +461,13 @@ export default function LearnPage() {
                     <button
                       onClick={() => handleLabAction(activeCourse.id, activeCourse.progress)}
                       disabled={loading}
-                      className="w-full py-2 bg-[#0096ff] hover:bg-[#007cdb] active:scale-98 text-xs font-mono font-bold tracking-widest text-[#050a18] rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(0,150,255,0.3)] disabled:opacity-50"
+                      className="w-full py-2 bg-secondary hover:opacity-90 active:scale-98 text-xs font-mono font-bold tracking-widest text-primary-foreground rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(0,150,255,0.3)] disabled:opacity-50"
                     >
                       {activeCourse.progress === 100 ? 'LAB_COMPLETED' : activeCourse.progress > 0 ? 'RESUME_LAB (+20% PROGRESS)' : 'INITIALIZE_LAB'}
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full min-h-[310px] text-center text-zinc-500 font-mono text-xs">
+                  <div className="flex flex-col items-center justify-center h-full min-h-[310px] text-center text-muted-foreground font-mono text-xs">
                     <span className="text-3xl mb-3">🎓</span>
                     SELECT_A_COURSE_TO_VIEW_CURRICULUM
                   </div>
@@ -481,7 +481,7 @@ export default function LearnPage() {
         <div className="text-center mt-4">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"
           >
             <span>&lt;--</span>
             <span>SYSTEM_CORE_HOME</span>

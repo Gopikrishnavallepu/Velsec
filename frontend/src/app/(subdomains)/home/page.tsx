@@ -59,18 +59,18 @@ export default function HomePage() {
 
             {/* VELSEC Title */}
             <h1 className="text-6xl md:text-8xl font-black tracking-[0.15em] font-mono leading-none">
-              <span className="text-zinc-200">VEL</span>
-              <span className="text-[#0096ff] text-glow-blue">SEC</span>
+              <span className="text-foreground">VEL</span>
+              <span className="text-secondary text-glow-blue">SEC</span>
             </h1>
 
             {/* Tagline */}
             <p className="text-base md:text-xl font-bold tracking-wider mt-2 text-center">
-              <span className="text-zinc-300">SECURE TODAY. </span>
-              <span className="text-[#0096ff] italic text-glow-blue">EMPOWER TOMORROW.</span>
+              <span className="text-foreground">SECURE TODAY. </span>
+              <span className="text-secondary italic text-glow-blue">EMPOWER TOMORROW.</span>
             </p>
 
             {/* Subtitle */}
-            <p className="text-xs md:text-sm text-zinc-400 italic tracking-wide text-center mt-1">
+            <p className="text-xs md:text-sm text-muted-foreground italic tracking-wide text-center mt-1">
               The Ultimate Cybersecurity Learning &amp; Solutions Ecosystem
             </p>
           </div>
@@ -84,17 +84,17 @@ export default function HomePage() {
               <a
                 key={p.label}
                 href={mounted ? getSubdomainUrl(p.subdomain) : `/${p.subdomain}`}
-                className="group flex flex-col items-center text-center p-3 rounded-xl border border-[#0a1a40] hover:border-[#0096ff]/40 transition-all duration-500 cursor-pointer hover:shadow-[0_0_25px_rgba(0,150,255,0.08)]"
+                className="group flex flex-col items-center text-center p-3 rounded-xl border border-border hover:border-secondary/40 transition-all duration-500 cursor-pointer hover:shadow-[0_0_25px_rgba(0,150,255,0.08)]"
                 style={{
                   background: 'linear-gradient(180deg, rgba(10, 18, 40, 0.5), rgba(5, 10, 24, 0.7))',
                 }}
               >
                 {/* Icon circle */}
-                <div className="w-12 h-12 rounded-full border border-[#0096ff]/30 flex items-center justify-center mb-2 group-hover:border-[#0096ff]/60 group-hover:shadow-[0_0_15px_rgba(0,150,255,0.2)] transition-all duration-500">
+                <div className="w-12 h-12 rounded-full border border-secondary/30 flex items-center justify-center mb-2 group-hover:border-secondary/60 group-hover:shadow-[0_0_15px_rgba(0,150,255,0.2)] transition-all duration-500">
                   <span className="text-xl group-hover:scale-110 transition-transform duration-300">{p.icon}</span>
                 </div>
                 {/* Label */}
-                <span className="text-[9px] md:text-[10px] font-mono font-bold text-zinc-400 group-hover:text-[#0096ff] transition-colors duration-300 leading-tight whitespace-pre-line">
+                <span className="text-[9px] md:text-[10px] font-mono font-bold text-muted-foreground group-hover:text-secondary transition-colors duration-300 leading-tight whitespace-pre-line">
                   {p.label}
                 </span>
               </a>
@@ -103,7 +103,7 @@ export default function HomePage() {
 
           {/* ---- Action Bar (LEARN | PRACTICE | IMPLEMENT | GROW | PROTECT) ---- */}
           <div
-            className="w-full max-w-3xl rounded-xl border border-[#0096ff]/15 px-4 py-3 flex flex-wrap items-center justify-center gap-2 md:gap-0"
+            className="w-full max-w-3xl rounded-xl border border-secondary/15 px-4 py-3 flex flex-wrap items-center justify-center gap-2 md:gap-0"
             style={{
               background: 'linear-gradient(180deg, rgba(0,150,255,0.04), rgba(5,10,24,0.6))',
             }}
@@ -112,13 +112,13 @@ export default function HomePage() {
               <div key={a.label} className="flex items-center">
                 <a
                   href={mounted ? getSubdomainUrl(a.subdomain) : `/${a.subdomain}`}
-                  className="flex items-center gap-2 px-4 py-1.5 text-xs font-mono font-bold tracking-widest text-[#0096ff]/70 hover:text-[#0096ff] hover:bg-[#0096ff]/5 rounded-lg transition-all duration-300"
+                  className="flex items-center gap-2 px-4 py-1.5 text-xs font-mono font-bold tracking-widest text-secondary/70 hover:text-secondary hover:bg-secondary/5 rounded-lg transition-all duration-300"
                 >
                   <span>{a.icon}</span>
                   <span>{a.label}</span>
                 </a>
                 {i < actionBar.length - 1 && (
-                  <span className="hidden md:inline text-[#0096ff]/20 mx-1">│</span>
+                  <span className="hidden md:inline text-secondary/20 mx-1">│</span>
                 )}
               </div>
             ))}
@@ -131,10 +131,10 @@ export default function HomePage() {
       <section className="relative py-24 px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold font-mono tracking-wider mb-4">
-            <span className="text-zinc-400">THE </span>
+            <span className="text-muted-foreground">THE </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0096ff] to-[#39ff14] text-glow-blue">ECOSYSTEM</span>
           </h2>
-          <p className="text-sm text-zinc-500 font-mono max-w-xl mx-auto">
+          <p className="text-sm text-muted-foreground font-mono max-w-xl mx-auto">
             Six integrated platforms designed to accelerate your cybersecurity career from learning to implementation.
           </p>
           <div className="w-32 h-[2px] bg-gradient-to-r from-transparent via-[#0096ff] to-transparent mx-auto mt-6" />
@@ -148,7 +148,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-2xl font-bold font-mono tracking-wider mb-12">
             <span className="text-zinc-600">{'//'} </span>
-            <span className="text-zinc-400">POWERED_BY</span>
+            <span className="text-muted-foreground">POWERED_BY</span>
           </h2>
           <div className="flex flex-wrap justify-center gap-3 text-xs font-mono">
             {[
@@ -158,7 +158,7 @@ export default function HomePage() {
             ].map((tech) => (
               <span
                 key={tech}
-                className="px-4 py-2 rounded-full border border-[#0a1a40] text-zinc-500 hover:text-[#0096ff] hover:border-[#0096ff]/30 hover:shadow-[0_0_15px_rgba(0,150,255,0.1)] transition-all duration-300 cursor-default"
+                className="px-4 py-2 rounded-full border border-border text-muted-foreground hover:text-secondary hover:border-secondary/30 hover:shadow-[0_0_15px_rgba(0,150,255,0.1)] transition-all duration-300 cursor-default"
               >
                 {tech}
               </span>
@@ -168,7 +168,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== FOOTER ========== */}
-      <footer className="relative py-12 px-6 border-t border-[#0a1a40]">
+      <footer className="relative py-12 px-6 border-t border-border">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
             <div className="relative w-8 h-8">
@@ -184,9 +184,9 @@ export default function HomePage() {
             </span>
           </div>
           <div className="flex gap-6 text-xs font-mono">
-            <span className="text-zinc-600 hover:text-[#0096ff] transition-colors cursor-pointer">GitHub</span>
-            <span className="text-zinc-600 hover:text-[#0096ff] transition-colors cursor-pointer">Discord</span>
-            <span className="text-zinc-600 hover:text-[#0096ff] transition-colors cursor-pointer">Twitter</span>
+            <span className="text-zinc-600 hover:text-secondary transition-colors cursor-pointer">GitHub</span>
+            <span className="text-zinc-600 hover:text-secondary transition-colors cursor-pointer">Discord</span>
+            <span className="text-zinc-600 hover:text-secondary transition-colors cursor-pointer">Twitter</span>
           </div>
         </div>
       </footer>

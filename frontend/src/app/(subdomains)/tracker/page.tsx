@@ -212,7 +212,7 @@ export default function TrackerPage() {
   }, '');
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-[#050a18]">
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
       <ParticleField />
       
       {/* Background vignette overlay */}
@@ -221,33 +221,33 @@ export default function TrackerPage() {
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-[#0096ff]/20 bg-[#0a1432]/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-[#0096ff]" />
+        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
           
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-[#0096ff] rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-[#0096ff] tracking-[0.3em] font-bold">V_TRACKER</span>
+              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_TRACKER</span>
             </div>
             <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              TRACKER<span className="text-[#0096ff]">.VELSEC</span>
+              TRACKER<span className="text-secondary">.VELSEC</span>
             </h1>
-            <p className="text-xs text-zinc-400 font-mono mt-1">
+            <p className="text-xs text-muted-foreground font-mono mt-1">
               Operative Experience, Achievement Matrix &amp; Activity Overviews
             </p>
           </div>
 
-          <div className="flex gap-4 border-l border-[#0096ff]/15 pl-0 md:pl-6 pt-4 md:pt-0">
+          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">SOLVED_LABS</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">{solvedLabs}</p>
+              <p className="text-[10px] text-muted-foreground font-bold">SOLVED_LABS</p>
+              <p className="text-lg font-extrabold text-secondary">{solvedLabs}</p>
             </div>
             <div className="text-center font-mono">
-              <p className="text-[10px] text-zinc-500 font-bold">OPERATIVE_RANK</p>
-              <p className="text-lg font-extrabold text-[#0096ff]">{level >= 4 ? 'ELITE_DEFENDER' : 'APPRENTICE'}</p>
+              <p className="text-[10px] text-muted-foreground font-bold">OPERATIVE_RANK</p>
+              <p className="text-lg font-extrabold text-secondary">{level >= 4 ? 'ELITE_DEFENDER' : 'APPRENTICE'}</p>
             </div>
           </div>
         </div>
@@ -268,18 +268,18 @@ export default function TrackerPage() {
 
             <span className="text-4xl">🔒</span>
             <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
-            <p className="text-xs text-zinc-400 font-mono max-w-md leading-relaxed">
+            <p className="text-xs text-muted-foreground font-mono max-w-md leading-relaxed">
               Velsec operative tracker and experience logs are encrypted at rest. Please authorize your session credentials at the central security gateway.
             </p>
             <button
               onClick={handleGithubLogin}
-              className="mt-2 px-6 py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] border border-[#0096ff]/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
+              className="mt-2 px-6 py-2.5 bg-secondary/10 hover:bg-secondary/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-secondary border border-secondary/40 rounded-lg transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,150,255,0.05)]"
             >
               CONNECT_WITH_GITHUB
             </button>
             <a
               href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
-              className="text-[10px] font-mono text-zinc-500 hover:text-zinc-300 hover:underline mt-1"
+              className="text-[10px] font-mono text-muted-foreground hover:text-foreground hover:underline mt-1"
             >
               OR_AUTHORIZE_VIA_EMAIL
             </a>
@@ -289,32 +289,32 @@ export default function TrackerPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
             
             {/* Column 1: XP Progress & Level card */}
-            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
               <div>
-                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// EXPERIENCE_MATRICES</span>
+                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// EXPERIENCE_MATRICES</span>
                 
                 <div className="flex justify-between items-end mb-3 font-mono">
                   <div>
-                    <span className="text-[10px] text-zinc-500 block font-bold">LEVEL</span>
-                    <span className="text-4xl font-extrabold text-zinc-100">{level}</span>
+                    <span className="text-[10px] text-muted-foreground block font-bold">LEVEL</span>
+                    <span className="text-4xl font-extrabold text-foreground">{level}</span>
                   </div>
-                  <div className="text-right text-xs font-bold text-zinc-400">
-                    <span className="text-[#0096ff]">{xp}</span> / {xpMax} XP
+                  <div className="text-right text-xs font-bold text-muted-foreground">
+                    <span className="text-secondary">{xp}</span> / {xpMax} XP
                   </div>
                 </div>
 
                 {/* Progress bar */}
-                <div className="w-full h-3 bg-[#050a18] rounded-full overflow-hidden border border-[#0096ff]/15 mb-6">
+                <div className="w-full h-3 bg-background rounded-full overflow-hidden border border-secondary/15 mb-6">
                   <div
                     className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-500 shadow-[0_0_8px_rgba(0,150,255,0.4)]"
                     style={{ width: `${xpPercent}%` }}
                   />
                 </div>
 
-                <p className="text-[11px] font-mono text-zinc-400 leading-relaxed">
+                <p className="text-[11px] font-mono text-muted-foreground leading-relaxed">
                   Complete modules across Learn &amp; Projects subdomains to collect experience logs. Reaching Level 4 unlocks advanced Cloud namespace operations.
                 </p>
               </div>
@@ -322,22 +322,22 @@ export default function TrackerPage() {
               <button
                 onClick={solveLabSimulate}
                 disabled={loading}
-                className="w-full py-2.5 bg-[#0096ff]/10 hover:bg-[#0096ff]/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-[#0096ff] rounded-lg border border-[#0096ff]/35 transition-all duration-300 shadow-[0_0_12px_rgba(0,150,255,0.05)] disabled:opacity-50"
+                className="w-full py-2.5 bg-secondary/10 hover:bg-secondary/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-secondary rounded-lg border border-secondary/35 transition-all duration-300 shadow-[0_0_12px_rgba(0,150,255,0.05)] disabled:opacity-50"
               >
                 SIMULATE_LAB_COMPLETION (+350 XP)
               </button>
             </div>
 
             {/* Column 2: Solved Labs Graph SVG */}
-            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
               <div>
-                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// ACTIVITY_HISTORY</span>
+                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACTIVITY_HISTORY</span>
                 
                 {/* SVG Area graph */}
-                <div className="flex justify-center items-center bg-[#050a18]/70 border border-[#0a1a40] rounded-lg p-3">
+                <div className="flex justify-center items-center bg-background/70 border border-border rounded-lg p-3">
                   <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
                     {/* Grid Lines */}
                     <line x1={padding} y1={padding} x2={width-padding} y2={padding} stroke="#0a1a40" strokeWidth={1} strokeDasharray="3 3" />
@@ -368,18 +368,18 @@ export default function TrackerPage() {
                 </div>
               </div>
 
-              <div className="text-[9px] font-mono text-zinc-500 text-center border-t border-[#0096ff]/10 pt-3">
+              <div className="text-[9px] font-mono text-muted-foreground text-center border-t border-secondary/10 pt-3">
                 Real-time activity logs tracked across global Velsec systems.
               </div>
             </div>
 
             {/* Column 3: Badge Matrix */}
-            <div className="relative border border-[#0096ff]/15 bg-[#0a1432]/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#0096ff]/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#0096ff]/40" />
+            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
 
               <div>
-                <span className="text-[9px] font-mono text-[#0096ff] tracking-widest block mb-4">// ACHIEVEMENT_MATRIX</span>
+                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACHIEVEMENT_MATRIX</span>
                 
                 <div className="grid grid-cols-4 gap-3">
                   {badges.map(b => (
@@ -389,8 +389,8 @@ export default function TrackerPage() {
                       onMouseLeave={() => setActiveBadge(null)}
                       className={`h-12 rounded-lg border flex items-center justify-center text-xl cursor-help transition-all duration-300 ${
                         b.unlocked
-                          ? 'border-[#0096ff]/35 bg-[#0096ff]/10 shadow-[0_0_10px_rgba(0,150,255,0.1)]'
-                          : 'border-[#0a1a40] bg-[#0a1432]/5 opacity-30'
+                          ? 'border-secondary/35 bg-secondary/10 shadow-[0_0_10px_rgba(0,150,255,0.1)]'
+                          : 'border-border bg-card/5 opacity-30'
                       }`}
                     >
                       {b.icon}
@@ -400,17 +400,17 @@ export default function TrackerPage() {
               </div>
 
               {/* Hover details container */}
-              <div className="border border-[#0a1a40] bg-[#050a18]/80 rounded-lg p-3 min-h-[90px] font-mono text-[10px]">
+              <div className="border border-border bg-background/80 rounded-lg p-3 min-h-[90px] font-mono text-[10px]">
                 {activeBadge ? (
                   <div>
-                    <h4 className="font-bold text-[#0096ff]">{activeBadge.name}</h4>
-                    <p className="text-zinc-400 mt-1">{activeBadge.description}</p>
+                    <h4 className="font-bold text-secondary">{activeBadge.name}</h4>
+                    <p className="text-muted-foreground mt-1">{activeBadge.description}</p>
                     {activeBadge.unlocked && (
-                      <span className="text-[8px] text-zinc-500 mt-2 block">UNLOCKED: {activeBadge.unlockedAt}</span>
+                      <span className="text-[8px] text-muted-foreground mt-2 block">UNLOCKED: {activeBadge.unlockedAt}</span>
                     )}
                   </div>
                 ) : (
-                  <div className="text-zinc-500 text-center flex items-center justify-center h-full min-h-[66px]">
+                  <div className="text-muted-foreground text-center flex items-center justify-center h-full min-h-[66px]">
                     HOVER_OVER_BADGES_FOR_DETAILS
                   </div>
                 )}
@@ -425,7 +425,7 @@ export default function TrackerPage() {
         <div className="text-center mt-4">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-[#0096ff] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"
           >
             <span>&lt;--</span>
             <span>SYSTEM_CORE_HOME</span>
