@@ -1,8 +1,8 @@
 {
   "remoteURL": "https://github.com/Gopikrishnavallepu/VelSec.git",
   "gitLocation": "",
-  "syncinterval": 0,
-  "isSyncOnLoad": false,
+  "syncinterval": 10000,
+  "isSyncOnLoad": true,
   "checkStatusOnLoad": true,
   "noticeLevel": "ALL",
   "showSyncSuccessNotice": true

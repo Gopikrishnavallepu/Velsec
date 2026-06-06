@@ -1,0 +1,19 @@
+{
+  "settings": {
+    "blogFramework": "mkdocs",
+    "githubOwner": "Gopikrishnavallepu",
+    "githubRepo": "velsec",
+    "githubBranch": "main",
+    "githubPublishMode": "direct",
+    "githubPullRequestBranch": "blog-bridge/sync",
+    "githubTokenSecretName": "",
+    "syncSourceDir": "__all_markdown_files__",
+    "applyTemplateOnNewNote": false,
+    "templatePath": "",
+    "postsDir": "docs/blog/posts",
+    "localImageDir": "docs/assets/images/obsidian",
+    "imageNameTemplate": "{{slug}}/{{filename}}",
+    "gitCommitMessageTemplate": "chore(blog): sync {{title}}"
+  },
+  "syncRecords": {}
+}

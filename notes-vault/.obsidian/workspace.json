@@ -11,31 +11,27 @@
             "id": "6f679b267ed2ede9",
             "type": "leaf",
             "state": {
-              "type": "bases",
-              "state": {
-                "file": "Index.base",
-                "viewName": "Table"
-              },
-              "icon": "lucide-table",
-              "title": "Index"
-            }
-          },
-          {
-            "id": "3106297acc62c5ab",
-            "type": "leaf",
-            "state": {
               "type": "markdown",
               "state": {
-                "file": "GOpi.md",
+                "file": "Security_Engineer/SOC/Email_Security_SOC_Guide_Comprehensive.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "GOpi"
+              "title": "Email_Security_SOC_Guide_Comprehensive"
+            }
+          },
+          {
+            "id": "7be97853bf4dfc09",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -108,6 +104,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Muruga.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -117,7 +114,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for Muruga"
             }
           },
           {
@@ -186,11 +183,12 @@
               "title": "Calendar"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -204,13 +202,20 @@
       "bases:Create new base": false,
       "obsidian-excalidraw-plugin:New drawing": false,
       "github-sync:Sync with Remote": false,
-      "blog-bridge:Open Blog Bridge sync status": false
+      "blog-bridge:Open Blog Bridge sync status": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3106297acc62c5ab",
+  "active": "6f679b267ed2ede9",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2026-06-06 21.02.57.excalidraw.md",
+    "Excalidraw",
+    "Velsec_Blog_Root/INDEX.md",
+    "Excalidraw/Drawing 2026-06-06 21.00.19.excalidraw.md",
+    "Security_Engineer/SOC/Email_Security_SOC_Guide_Comprehensive.md",
+    "Security_Engineer/SOC/Comprehensive_SOC_Interview_Guide.md",
     "Index.base",
-    "GOpi.md",
+    "Muruga.md",
     "Sync notes",
     "Security_Engineer/SOC/Cisco_SOC_Part1_Core_SOC_IR.md",
     "cheat-sheets/nmap-cheatsheet.md",
