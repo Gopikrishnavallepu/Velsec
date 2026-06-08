@@ -144,12 +144,6 @@ async def sync_notes(
 ):
     """Sync notes from GitHub/Obsidian vault into the database."""
     expected_key = settings.SYNC_API_KEY
-    if expected_key == "default-sync-key" and not os.environ.get("PYTEST_CURRENT_TEST"):
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="SYNC_API_KEY is configured with an insecure fallback key in production."
-        )
-
     if not x_sync_key or x_sync_key != expected_key:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

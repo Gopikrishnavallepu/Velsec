@@ -10,10 +10,10 @@ from app.core.security import TokenData
 
 # Mock dependencies to avoid requiring live Supabase credentials/tokens during test
 async def override_get_current_user():
-    return TokenData(sub="test-user-id", email="test@velsec.com", role="authenticated")
+    return TokenData(sub="00000000-0000-0000-0000-000000000001", email="test@velsec.com", role="authenticated")
 
 async def override_get_admin_user():
-    return TokenData(sub="test-admin-id", email="admin@velsec.com", role="admin")
+    return TokenData(sub="00000000-0000-0000-0000-000000000002", email="admin@velsec.com", role="admin")
 
 app.dependency_overrides[get_current_user] = override_get_current_user
 app.dependency_overrides[get_admin_user] = override_get_admin_user

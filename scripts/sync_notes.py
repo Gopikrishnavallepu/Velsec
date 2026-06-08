@@ -57,6 +57,7 @@ def parse_markdown_file(file_path):
 
 def scan_notes_vault(vault_dir):
     notes = []
+    seen_ids = set()
     print(f"[INFO] Scanning vault directory: {vault_dir}")
     if not os.path.exists(vault_dir):
         print(f"[ERROR] Directory does not exist: {vault_dir}")
@@ -68,13 +69,34 @@ def scan_notes_vault(vault_dir):
                 file_path = os.path.join(root, file)
                 parsed = parse_markdown_file(file_path)
                 if parsed:
+                    note_id = parsed['id']
+                    if note_id in seen_ids:
+                        print(f"[WARN] Duplicate note ID found: {note_id} at {file_path}. Skipping to avoid DB sync conflicts.")
+                        continue
+                    seen_ids.add(note_id)
                     notes.append(parsed)
     return notes
 
 def sync_notes_to_api(notes):
-    api_base = os.environ.get("VELSEC_API_URL", "http://localhost:8000")
+    api_base = os.environ.get("VELSEC_API_URL")
+
+    # Validate that VELSEC_API_URL is set
+    if not api_base:
+        print("[ERROR] VELSEC_API_URL environment variable is not set!")
+        print("[HINT] Set it to your production API URL (e.g., https://velsec-org.vercel.app)")
+        print("[HINT] For local development: export VELSEC_API_URL=http://localhost:8000")
+        return False
+
     sync_url = f"{api_base}/api/v1/notes/sync"
-    sync_key = os.environ.get("SYNC_API_KEY", "default-sync-key")
+    sync_key = os.environ.get("SYNC_API_KEY")
+
+    # Validate that SYNC_API_KEY is set and not the insecure default
+    if not sync_key:
+        print("[ERROR] SYNC_API_KEY environment variable is not set!")
+        return False
+    if sync_key == "default-sync-key":
+        print("[ERROR] SYNC_API_KEY is set to the insecure default. Please set a secure key.")
+        return False
 
     print(f"[INFO] Syncing {len(notes)} notes to {sync_url}...")
     
@@ -95,7 +117,7 @@ def sync_notes_to_api(notes):
         print(f"[ERROR] HTTP Sync failed with code {e.code}: {e.read().decode('utf-8')}")
         return False
     except urllib.error.URLError as e:
-        print(f"[ERROR] Sync failed. Could not connect to API: {e.reason}")
+        print(f"[ERROR] Sync failed. Could not connect to API at {api_base}: {e.reason}")
         return False
 
 if __name__ == "__main__":

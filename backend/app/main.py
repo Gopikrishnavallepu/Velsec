@@ -26,11 +26,25 @@ origins = [
     "https://velsec.com",
     "http://learn.velsec.com",
     "https://learn.velsec.com",
+    "http://notes.velsec.com",
+    "https://notes.velsec.com",
+    "http://tracker.velsec.com",
+    "https://tracker.velsec.com",
+    "http://personal.velsec.com",
+    "https://personal.velsec.com",
+    # Vercel deployments
+    "https://velsec-org.vercel.app",
+    "https://velsec-org-velse-s-projects.vercel.app",
 ]
+
+# Also allow any *.vercel.app preview deployment origin
+import re
+origin_pattern = re.compile(r"https://velsec.*\.vercel\.app$")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://velsec.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
