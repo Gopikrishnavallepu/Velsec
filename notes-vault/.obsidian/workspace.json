@@ -11,10 +11,14 @@
             "id": "6f679b267ed2ede9",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "SOC_15yr_Expert_Interview_Guide.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "SOC_15yr_Expert_Interview_Guide"
             }
           },
           {
@@ -27,7 +31,8 @@
               "title": "Graph view"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -195,14 +200,14 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "obsidian-excalidraw-plugin:New drawing": false,
       "github-sync:Sync with Remote": false,
-      "blog-bridge:Open Blog Bridge sync status": false,
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "6f679b267ed2ede9",
+  "active": "7be97853bf4dfc09",
   "lastOpenFiles": [
+    "SOC_15yr_Expert_Interview_Guide.md",
+    "SOC_Interview_Answers.md",
     "Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Part2.md",
     "Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Part1.md",
     "Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Comprehensive.md",

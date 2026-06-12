@@ -5,6 +5,9 @@ import { createClient } from '@/utils/supabase/client';
 import ParticleField from '@/components/ui/ParticleField';
 import ReactMarkdown from 'react-markdown';
 import { getSubdomainUrl } from '@/utils/navigation';
+import GlassCard from '@/components/ui/GlassCard';
+import TiltWrapper from '@/components/ui/TiltWrapper';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Note {
   id: string;
@@ -188,45 +191,38 @@ export default function NotesPage() {
   }, [supabase.auth, activeCategory, searchQuery, fetchNotes]);
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
-      <ParticleField />
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 z-10">
       
-      {/* Background vignette overlay */}
-      <div className="fixed inset-0 -z-5 pointer-events-none bg-gradient-to-t from-[#050a18] via-transparent to-[#050a18]/40" />
-
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
-          
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_INTELLIGENCE</span>
+        <GlassCard glowColor="purple" className="p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+                <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_INTELLIGENCE</span>
+              </div>
+              <h1 className="text-3xl font-extrabold font-mono tracking-wider">
+                MIND_PALACE<span className="text-secondary">.VELSEC</span>
+              </h1>
+              <p className="text-xs text-muted-foreground font-mono mt-1">
+                SecOps Cheat Sheets, Penetration Testing Guides &amp; Vulnerability Writeups
+              </p>
             </div>
-            <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              NOTES<span className="text-secondary">.VELSEC</span>
-            </h1>
-            <p className="text-xs text-muted-foreground font-mono mt-1">
-              SecOps Cheat Sheets, Penetration Testing Guides &amp; Vulnerability Writeups
-            </p>
-          </div>
 
-          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
-            <div className="text-center font-mono">
-              <p className="text-[10px] text-muted-foreground font-bold">WIKI_ENTRIES</p>
-              <p className="text-lg font-extrabold text-secondary">{notes.length}</p>
-            </div>
-            <div className="text-center font-mono">
-              <p className="text-[10px] text-muted-foreground font-bold">REVISION</p>
-              <p className="text-lg font-extrabold text-secondary">v2.5</p>
+            <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
+              <div className="text-center font-mono">
+                <p className="text-[10px] text-muted-foreground font-bold">WIKI_ENTRIES</p>
+                <p className="text-lg font-extrabold text-secondary">{notes.length}</p>
+              </div>
+              <div className="text-center font-mono">
+                <p className="text-[10px] text-muted-foreground font-bold">REVISION</p>
+                <p className="text-lg font-extrabold text-secondary">v3.0</p>
+              </div>
             </div>
           </div>
-        </div>
+        </GlassCard>
 
         {errorMsg && (
           <div className="p-3.5 border border-amber-500/30 bg-amber-500/10 rounded-xl text-xs font-mono text-amber-400 text-center shadow-[0_0_15px_rgba(245,158,11,0.05)]">
@@ -236,12 +232,7 @@ export default function NotesPage() {
 
         {!isAuthenticated ? (
           /* Authentication Required Alert */
-          <div className="relative border border-rose-500/25 bg-rose-500/5 backdrop-blur-md rounded-2xl p-12 text-center flex flex-col items-center justify-center gap-4 max-w-xl mx-auto my-8">
-            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-rose-500" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-rose-500" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-rose-500" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-rose-500" />
-
+          <GlassCard glowColor="none" className="p-12 text-center flex flex-col items-center justify-center gap-4 max-w-xl mx-auto my-8 border-rose-500/25 bg-rose-500/5">
             <span className="text-4xl">🔒</span>
             <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
             <p className="text-xs text-muted-foreground font-mono max-w-md leading-relaxed">
@@ -259,7 +250,7 @@ export default function NotesPage() {
             >
               OR_AUTHORIZE_VIA_EMAIL
             </a>
-          </div>
+          </GlassCard>
         ) : (
           /* Main Wiki Layout */
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
@@ -272,11 +263,11 @@ export default function NotesPage() {
                 placeholder="SEARCH_NOTES..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-card/25 text-xs font-mono text-foreground placeholder-zinc-500 border border-secondary/20 focus:border-secondary/50 focus:outline-none rounded-lg px-3 py-2 transition-all duration-300"
+                className="w-full bg-black/40 backdrop-blur-md text-xs font-mono text-foreground placeholder-zinc-500 border border-secondary/20 focus:border-secondary/50 focus:outline-none rounded-lg px-3 py-2 transition-all duration-300"
               />
               
               {/* Categories */}
-              <div className="flex flex-wrap gap-1.5 p-2 bg-card/10 rounded-xl border border-secondary/10">
+              <div className="flex flex-wrap gap-1.5 p-2 bg-black/20 backdrop-blur-md rounded-xl border border-secondary/10">
                 {categories.map((cat) => (
                   <button
                     key={cat}
@@ -293,28 +284,29 @@ export default function NotesPage() {
               </div>
               
               {/* Notes List */}
-              <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto pr-1">
+              <div className="flex flex-col gap-3 max-h-[500px] overflow-y-auto pr-2 pb-4">
                 {loading ? (
                   <div className="text-center py-8 font-mono text-xs text-muted-foreground">
                     SYNCHRONIZING_NOTES_LIST...
                   </div>
                 ) : notes.map((n) => (
-                  <button
-                    key={n.id}
-                    onClick={() => setSelectedNote(n)}
-                    className={`p-3 rounded-lg border text-left cursor-pointer transition-all duration-300 w-full ${
-                      selectedNote?.id === n.id
-                        ? 'border-secondary bg-card/35 shadow-[0_0_12px_rgba(0,150,255,0.06)]'
-                        : 'border-border hover:border-secondary/20 bg-card/5'
-                    }`}
-                  >
-                    <span className="text-[8px] font-mono text-muted-foreground font-bold uppercase tracking-wider block mb-1">
-                      {n.category}
-                    </span>
-                    <span className="text-xs font-mono font-bold text-foreground block truncate">
-                      {n.title}
-                    </span>
-                  </button>
+                  <TiltWrapper key={n.id} intensity={8}>
+                    <button
+                      onClick={() => setSelectedNote(n)}
+                      className={`p-4 rounded-xl border text-left cursor-pointer transition-all duration-300 w-full backdrop-blur-md ${
+                        selectedNote?.id === n.id
+                          ? 'border-secondary bg-secondary/10 shadow-[0_0_20px_rgba(0,150,255,0.15)]'
+                          : 'border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60'
+                      }`}
+                    >
+                      <span className="text-[8px] font-mono text-muted-foreground font-bold uppercase tracking-wider block mb-1">
+                        {n.category}
+                      </span>
+                      <span className="text-xs font-mono font-bold text-foreground block truncate">
+                        {n.title}
+                      </span>
+                    </button>
+                  </TiltWrapper>
                 ))}
 
                 {!loading && notes.length === 0 && (
@@ -326,67 +318,72 @@ export default function NotesPage() {
             </div>
 
             {/* Reader Panel */}
-            <div className="md:col-span-2 relative border border-secondary/15 bg-card/20 backdrop-blur-md rounded-xl p-6 min-h-[450px] flex flex-col">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
+            <div className="md:col-span-2">
+              <GlassCard glowColor="blue" className="p-6 md:p-10 min-h-[500px] flex flex-col">
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center flex-1 text-center font-mono text-xs text-muted-foreground gap-2">
+                    <span className="animate-spin text-2xl text-secondary">⚙️</span>
+                    <span>DECRYPTING_NOTE_DOSSIER...</span>
+                  </div>
+                ) : selectedNote ? (
+                  <motion.div 
+                    key={selectedNote.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="flex flex-col flex-1 font-mono"
+                  >
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {selectedNote.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="px-2.5 py-1 rounded text-[9px] font-mono font-bold tracking-widest bg-secondary/10 border border-secondary/30 text-secondary"
+                        >
+                          {t.toUpperCase()}
+                        </span>
+                      ))}
+                    </div>
 
-              {loading ? (
-                <div className="flex flex-col items-center justify-center flex-1 text-center font-mono text-xs text-muted-foreground gap-2">
-                  <span className="animate-spin">⏳</span>
-                  <span>DECRYPTING_NOTE_DOSSIER...</span>
-                </div>
-              ) : selectedNote ? (
-                <div className="flex flex-col flex-1 font-mono">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {selectedNote.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="px-2 py-0.5 rounded text-[8px] font-mono font-bold tracking-widest bg-card border border-secondary/20 text-secondary"
+                    <h2 className="text-2xl font-black text-foreground mb-2 tracking-wide">{selectedNote.title}</h2>
+                    <div className="flex justify-between items-center text-[10px] text-muted-foreground border-b border-secondary/20 pb-4 mb-6">
+                      <span>SECURITY_MEMORANDUM // CATEGORY: {selectedNote.category.toUpperCase()}</span>
+                      <span>LAST_UPDATED: {selectedNote.last_updated}</span>
+                    </div>
+
+                    {/* Markdown Renderer */}
+                    <div className="text-sm text-foreground/90 leading-relaxed max-w-none space-y-6">
+                      <ReactMarkdown
+                        components={{
+                          h1: ({node: _, ...props}) => <h1 className="text-lg font-bold text-foreground mt-8 mb-4 border-b border-secondary/20 pb-2" {...props} />,
+                          h2: ({node: _, ...props}) => <h2 className="text-base font-bold text-secondary mt-6 mb-3" {...props} />,
+                          h3: ({node: _, ...props}) => <h3 className="text-[13px] font-bold text-foreground mt-5 mb-2" {...props} />,
+                          p: ({node: _, ...props}) => <p className="mb-4 leading-loose text-muted-foreground" {...props} />,
+                          ul: ({node: _, ...props}) => <ul className="list-disc pl-5 mb-4 space-y-2" {...props} />,
+                          ol: ({node: _, ...props}) => <ol className="list-decimal pl-5 mb-4 space-y-2" {...props} />,
+                          li: ({node: _, ...props}) => <li className="text-muted-foreground leading-loose" {...props} />,
+                          pre: ({node: _, ...props}) => <pre className="bg-black/60 rounded-xl border border-secondary/20 p-5 text-[11px] text-[#39ff14] overflow-x-auto my-6 whitespace-pre shadow-inner" {...props} />,
+                          code: ({node: _, ...props}) => <code className="bg-secondary/10 text-secondary px-1.5 py-0.5 rounded border border-secondary/20 text-[11px]" {...props} />,
+                          a: ({node: _, ...props}) => <a className="text-secondary hover:underline decoration-secondary/50 underline-offset-4" target="_blank" rel="noreferrer" {...props} />,
+                        }}
                       >
-                        {t.toUpperCase()}
-                      </span>
-                    ))}
+                        {selectedNote.content}
+                      </ReactMarkdown>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center flex-1 text-center text-muted-foreground font-mono text-xs">
+                    <span className="text-4xl mb-4 opacity-50">📖</span>
+                    SELECT_A_DOSSIER_TO_VIEW_INTELLIGENCE
                   </div>
-
-                  <h2 className="text-xl font-bold text-foreground mb-2">{selectedNote.title}</h2>
-                  <div className="flex justify-between items-center text-[9px] text-muted-foreground border-b border-secondary/10 pb-4 mb-4">
-                    <span>SECURITY_MEMORANDUM // CATEGORY: {selectedNote.category.toUpperCase()}</span>
-                    <span>LAST_UPDATED: {selectedNote.last_updated}</span>
-                  </div>
-
-                  {/* Markdown Renderer */}
-                  <div className="text-xs text-foreground leading-relaxed max-w-none mb-4 space-y-4">
-                    <ReactMarkdown
-                      components={{
-                        h1: ({node: _, ...props}) => <h1 className="text-sm font-bold text-foreground mt-4 mb-2 border-b border-secondary/10 pb-1" {...props} />,
-                        h2: ({node: _, ...props}) => <h2 className="text-xs font-bold text-foreground mt-4 mb-2" {...props} />,
-                        h3: ({node: _, ...props}) => <h3 className="text-[11px] font-bold text-foreground mt-3 mb-1" {...props} />,
-                        p: ({node: _, ...props}) => <p className="mb-4 leading-relaxed text-muted-foreground" {...props} />,
-                        ul: ({node: _, ...props}) => <ul className="list-disc pl-4 mb-4 space-y-1" {...props} />,
-                        ol: ({node: _, ...props}) => <ol className="list-decimal pl-4 mb-4 space-y-1" {...props} />,
-                        li: ({node: _, ...props}) => <li className="text-muted-foreground" {...props} />,
-                        pre: ({node: _, ...props}) => <pre className="bg-background/90 rounded-lg border border-border p-4 text-[10px] text-[#00f0ff] overflow-x-auto my-4 whitespace-pre" {...props} />,
-                        code: ({node: _, ...props}) => <code className="bg-background/60 text-[#00f0ff] px-1 py-0.5 rounded border border-border text-[10px]" {...props} />,
-                        a: ({node: _, ...props}) => <a className="text-secondary hover:underline" target="_blank" rel="noreferrer" {...props} />,
-                      }}
-                    >
-                      {selectedNote.content}
-                    </ReactMarkdown>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center flex-1 text-center text-muted-foreground font-mono text-xs">
-                  <span className="text-3xl mb-3">📖</span>
-                  SELECT_A_DOSSIER_TO_VIEW_INTELLIGENCE
-                </div>
-              )}
+                )}
+              </GlassCard>
             </div>
 
           </div>
         )}
 
         {/* Back Link */}
-        <div className="text-center mt-4">
+        <div className="text-center mt-6">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
             className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"

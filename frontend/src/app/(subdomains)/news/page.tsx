@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import ParticleField from '@/components/ui/ParticleField';
 import { getSubdomainUrl } from '@/utils/navigation';
 
+import GlassCard from '@/components/ui/GlassCard';
+import TiltWrapper from '@/components/ui/TiltWrapper';
+import { motion, AnimatePresence } from 'framer-motion';
+
 interface NewsItem {
   id: string;
   title: string;
@@ -66,49 +70,42 @@ export default function NewsPage() {
   });
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
-      <ParticleField />
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 z-10">
       
-      {/* Background vignette overlay */}
-      <div className="fixed inset-0 -z-5 pointer-events-none bg-gradient-to-t from-[#050a18] via-transparent to-[#050a18]/40" />
-
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
-          
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_INTELLIGENCE</span>
+        <GlassCard glowColor="green" className="p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+                <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_INTELLIGENCE</span>
+              </div>
+              <h1 className="text-3xl font-extrabold font-mono tracking-wider">
+                BROADCAST<span className="text-secondary">.VELSEC</span>
+              </h1>
+              <p className="text-xs text-muted-foreground font-mono mt-1">
+                Real-time Threat Intelligence, Exploitation Bulletins &amp; CVE Feeds
+              </p>
             </div>
-            <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              NEWS<span className="text-secondary">.VELSEC</span>
-            </h1>
-            <p className="text-xs text-muted-foreground font-mono mt-1">
-              Real-time Threat Intelligence, Exploitation Bulletins &amp; CVE Feeds
-            </p>
-          </div>
 
-          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
-            <div className="text-center font-mono">
-              <p className="text-[10px] text-muted-foreground font-bold">FEEDS_ONLINE</p>
-              <p className="text-lg font-extrabold text-secondary">8 / 8</p>
-            </div>
-            <div className="text-center font-mono">
-              <p className="text-[10px] text-muted-foreground font-bold">SYSTEM_STATE</p>
-              <p className="text-lg font-extrabold text-secondary">SECURE</p>
+            <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
+              <div className="text-center font-mono">
+                <p className="text-[10px] text-muted-foreground font-bold">FEEDS_ONLINE</p>
+                <p className="text-lg font-extrabold text-secondary">8 / 8</p>
+              </div>
+              <div className="text-center font-mono">
+                <p className="text-[10px] text-muted-foreground font-bold">SYSTEM_STATE</p>
+                <p className="text-lg font-extrabold text-secondary">SECURE</p>
+              </div>
             </div>
           </div>
-        </div>
+        </GlassCard>
 
         {/* Scrolling Marquee Alert Banner */}
-        <div className="w-full bg-card/35 border border-secondary/20 rounded-lg p-2.5 overflow-hidden whitespace-nowrap font-mono text-[10px] text-foreground relative">
-          <div className="absolute left-0 top-0 bottom-0 bg-background px-3 flex items-center text-secondary font-bold border-r border-secondary/20 z-10">
+        <div className="w-full bg-black/40 backdrop-blur-md border border-secondary/20 rounded-lg p-2.5 overflow-hidden whitespace-nowrap font-mono text-[10px] text-foreground relative shadow-[0_0_20px_rgba(0,150,255,0.05)]">
+          <div className="absolute left-0 top-0 bottom-0 bg-background/80 px-3 flex items-center text-secondary font-bold border-r border-secondary/20 z-10 backdrop-blur-md">
             🚨 ACTIVE_ALERTS:
           </div>
           <div className="inline-block animate-marquee pl-[12%] space-x-12">
@@ -143,69 +140,85 @@ export default function NewsPage() {
 
             {/* News Cards */}
             <div className="flex flex-col gap-3">
-              {filteredNews.map(item => (
-                <div
-                  key={item.id}
-                  onClick={() => setActiveItem(item)}
-                  className={`group relative p-4 rounded-xl border cursor-pointer transition-all duration-300 ${
-                    activeItem?.id === item.id
-                      ? 'border-secondary bg-card/30 shadow-[0_0_15px_rgba(0,150,255,0.08)]'
-                      : 'border-border hover:border-secondary/35 bg-card/5'
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-[8px] font-mono text-muted-foreground font-bold">{item.source.toUpperCase()} • {item.date}</span>
-                    {item.cvss && (
-                      <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                        item.severity === 'critical' ? 'bg-rose-500/10 border border-rose-500/30 text-rose-400' :
-                        item.severity === 'high' ? 'bg-orange-500/10 border border-orange-500/30 text-orange-400' :
-                        'bg-zinc-500/10 border border-zinc-500/30 text-muted-foreground'
-                      }`}>
-                        CVSS {item.cvss}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-sm font-bold font-mono text-foreground group-hover:text-secondary transition-colors">{item.title}</h3>
-                  <p className="text-[11px] font-mono text-muted-foreground line-clamp-2 mt-2 leading-relaxed">{item.summary}</p>
-                </div>
-              ))}
+              <AnimatePresence>
+                {filteredNews.map(item => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <TiltWrapper intensity={5}>
+                      <div
+                        onClick={() => setActiveItem(item)}
+                        className={`group relative p-5 rounded-xl border cursor-pointer transition-all duration-300 backdrop-blur-md ${
+                          activeItem?.id === item.id
+                            ? 'border-secondary bg-secondary/10 shadow-[0_0_20px_rgba(0,150,255,0.15)]'
+                            : 'border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60'
+                        }`}
+                      >
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-[8px] font-mono text-muted-foreground font-bold">{item.source.toUpperCase()} • {item.date}</span>
+                          {item.cvss && (
+                            <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                              item.severity === 'critical' ? 'bg-rose-500/10 border border-rose-500/30 text-rose-400' :
+                              item.severity === 'high' ? 'bg-orange-500/10 border border-orange-500/30 text-orange-400' :
+                              'bg-zinc-500/10 border border-zinc-500/30 text-muted-foreground'
+                            }`}>
+                              CVSS {item.cvss}
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-sm font-bold font-mono text-foreground group-hover:text-secondary transition-colors">{item.title}</h3>
+                        <p className="text-[11px] font-mono text-muted-foreground line-clamp-2 mt-2 leading-relaxed">{item.summary}</p>
+                      </div>
+                    </TiltWrapper>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
 
           </div>
 
           {/* Details Drawer */}
-          <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 min-h-[350px]">
-            <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
+          <div className="lg:col-span-1">
+            <GlassCard glowColor="blue" className="p-6 min-h-[350px]">
+              {activeItem ? (
+                <motion.div 
+                  key={activeItem.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex flex-col h-full font-mono text-xs"
+                >
+                  <span className="text-[8px] text-secondary font-bold tracking-widest block mb-2">{"//"} INTEL_SPECIFICATION</span>
+                  <h2 className="text-sm font-bold text-foreground border-b border-secondary/20 pb-3 mb-4">{activeItem.title}</h2>
+                  
+                  <span className="text-[9px] text-muted-foreground font-bold uppercase block mb-1">threat_vector_summary:</span>
+                  <p className="text-[11px] text-foreground/80 leading-relaxed mb-6">{activeItem.summary}</p>
 
-            {activeItem ? (
-              <div className="flex flex-col h-full font-mono text-xs">
-                <span className="text-[8px] text-secondary font-bold tracking-widest block mb-2">{"//"} INTEL_SPECIFICATION</span>
-                <h2 className="text-sm font-bold text-foreground border-b border-secondary/10 pb-3 mb-3">{activeItem.title}</h2>
-                
-                <span className="text-[9px] text-muted-foreground font-bold uppercase block mb-1">threat_vector_summary:</span>
-                <p className="text-[10px] text-muted-foreground leading-relaxed mb-5">{activeItem.summary}</p>
+                  <span className="text-[9px] text-muted-foreground font-bold uppercase block mb-1">recommended_mitigation:</span>
+                  <div className="p-4 bg-black/60 border border-white/5 rounded-lg text-[10px] text-[#00f0ff] leading-relaxed mb-4 shadow-inner">
+                    {activeItem.mitigation}
+                  </div>
 
-                <span className="text-[9px] text-muted-foreground font-bold uppercase block mb-1">recommended_mitigation:</span>
-                <div className="p-3 bg-background border border-border rounded-lg text-[10px] text-[#00f0ff] leading-relaxed mb-4">
-                  {activeItem.mitigation}
+                  <div className="text-[9px] text-muted-foreground text-right mt-auto pt-4 border-t border-white/5">
+                    REF_ID: {activeItem.id.toUpperCase()}
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full min-h-[310px] text-center text-muted-foreground font-mono text-xs">
+                  SELECT_NEWS_ENTRY_FOR_FULL_REPORT
                 </div>
-
-                <div className="text-[9px] text-muted-foreground text-right mt-auto">
-                  REF_ID: {activeItem.id.toUpperCase()}
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full min-h-[310px] text-center text-muted-foreground font-mono text-xs">
-                SELECT_NEWS_ENTRY_FOR_FULL_REPORT
-              </div>
-            )}
+              )}
+            </GlassCard>
           </div>
 
         </div>
 
         {/* Back Link */}
-        <div className="text-center mt-4">
+        <div className="text-center mt-6">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
             className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"

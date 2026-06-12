@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// Removing next/font/google due to local network fetch issues during build
+const geistSansVariable = "font-sans";
+const geistMonoVariable = "font-mono";
 
 export const metadata: Metadata = {
   title: "Velsec | Cybersecurity Ecosystem",
@@ -19,6 +12,9 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/components/ThemeProvider";
+import TransitionProvider from "@/components/TransitionProvider";
+
+import ClientGlobalCanvas from "@/components/3d/ClientGlobalCanvas";
 
 export default function RootLayout({
   children,
@@ -29,17 +25,22 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-background text-foreground`}
+      className={`${geistSansVariable} ${geistMonoVariable} h-full antialiased bg-background text-foreground`}
     >
-      <body className="min-h-full flex flex-col relative">
+      <body className="min-h-full flex flex-col relative overflow-x-hidden">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange
         >
+          <ClientGlobalCanvas />
           <Navbar />
-          {children}
+          <TransitionProvider>
+            <main className="flex-1 w-full flex flex-col relative z-10">
+              {children}
+            </main>
+          </TransitionProvider>
         </ThemeProvider>
       </body>
     </html>

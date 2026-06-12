@@ -515,14 +515,15 @@ async function main() {
       console.log(`   • ${r.name}: ${r.error}`);
     });
     console.log('');
-    process.exit(1);
+    console.log('');
+    throw new Error(`${failed} tests failed`);
   } else {
     console.log('✅ ALL TESTS PASSED\n');
-    process.exit(0);
   }
 }
 
-main().catch((err) => {
-  console.error('Fatal test runner error:', err);
-  process.exit(1);
+import { it } from 'vitest';
+
+it('runs all custom auth flow tests', async () => {
+  await main();
 });

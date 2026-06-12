@@ -5,6 +5,11 @@ import ParticleField from '@/components/ui/ParticleField';
 import { getSubdomainUrl } from '@/utils/navigation';
 import { createClient } from '@/utils/supabase/client';
 
+import GlassCard from '@/components/ui/GlassCard';
+import TiltWrapper from '@/components/ui/TiltWrapper';
+import AnimatedButton from '@/components/ui/AnimatedButton';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
+
 interface Badge {
   id: string;
   name: string;
@@ -211,46 +216,54 @@ export default function TrackerPage() {
     return i === 0 ? `M ${p.x} ${p.y}` : `${acc} L ${p.x} ${p.y}`;
   }, '');
 
-  return (
-    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 bg-background">
-      <ParticleField />
-      
-      {/* Background vignette overlay */}
-      <div className="fixed inset-0 -z-5 pointer-events-none bg-gradient-to-t from-[#050a18] via-transparent to-[#050a18]/40" />
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
 
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  return (
+    <main className="relative min-h-screen overflow-x-hidden pt-24 pb-16 px-4 md:px-8 z-10">
+      
       <div className="z-10 max-w-6xl mx-auto flex flex-col gap-8">
         
         {/* Page Header */}
-        <div className="relative border border-secondary/20 bg-card/30 backdrop-blur-md p-6 rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-secondary" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-secondary" />
-          
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
-              <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_TRACKER</span>
+        <GlassCard glowColor="blue" className="p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 bg-secondary rounded-full animate-ping" />
+                <span className="text-[10px] font-mono text-secondary tracking-[0.3em] font-bold">V_TRACKER</span>
+              </div>
+              <h1 className="text-3xl font-extrabold font-mono tracking-wider">
+                TRACKER<span className="text-secondary">.VELSEC</span>
+              </h1>
+              <p className="text-xs text-muted-foreground font-mono mt-1">
+                Operative Experience, Achievement Matrix &amp; Activity Overviews
+              </p>
             </div>
-            <h1 className="text-3xl font-extrabold font-mono tracking-wider">
-              TRACKER<span className="text-secondary">.VELSEC</span>
-            </h1>
-            <p className="text-xs text-muted-foreground font-mono mt-1">
-              Operative Experience, Achievement Matrix &amp; Activity Overviews
-            </p>
-          </div>
 
-          <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
-            <div className="text-center font-mono">
-              <p className="text-[10px] text-muted-foreground font-bold">SOLVED_LABS</p>
-              <p className="text-lg font-extrabold text-secondary">{solvedLabs}</p>
-            </div>
-            <div className="text-center font-mono">
-              <p className="text-[10px] text-muted-foreground font-bold">OPERATIVE_RANK</p>
-              <p className="text-lg font-extrabold text-secondary">{level >= 4 ? 'ELITE_DEFENDER' : 'APPRENTICE'}</p>
+            <div className="flex gap-4 border-l border-secondary/15 pl-0 md:pl-6 pt-4 md:pt-0">
+              <div className="text-center font-mono">
+                <p className="text-[10px] text-muted-foreground font-bold">SOLVED_LABS</p>
+                <p className="text-lg font-extrabold text-secondary">{solvedLabs}</p>
+              </div>
+              <div className="text-center font-mono">
+                <p className="text-[10px] text-muted-foreground font-bold">OPERATIVE_RANK</p>
+                <p className="text-lg font-extrabold text-secondary">{level >= 4 ? 'ELITE_DEFENDER' : 'APPRENTICE'}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </GlassCard>
 
         {errorMsg && (
           <div className="p-3.5 border border-amber-500/30 bg-amber-500/10 rounded-xl text-xs font-mono text-amber-400 text-center shadow-[0_0_15px_rgba(245,158,11,0.05)]">
@@ -260,12 +273,7 @@ export default function TrackerPage() {
 
         {!isAuthenticated ? (
           /* Authentication Required Alert */
-          <div className="relative border border-rose-500/25 bg-rose-500/5 backdrop-blur-md rounded-2xl p-12 text-center flex flex-col items-center justify-center gap-4 max-w-xl mx-auto my-8">
-            <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-rose-500" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-rose-500" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-rose-500" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-rose-500" />
-
+          <GlassCard glowColor="none" className="p-12 text-center flex flex-col items-center justify-center gap-4 max-w-xl mx-auto my-8 border-rose-500/25 bg-rose-500/5">
             <span className="text-4xl">🔒</span>
             <h2 className="text-xl font-bold font-mono text-rose-400 tracking-wider">ACCESS_DENIED_SECURE_GATEWAY</h2>
             <p className="text-xs text-muted-foreground font-mono max-w-md leading-relaxed">
@@ -283,146 +291,174 @@ export default function TrackerPage() {
             >
               OR_AUTHORIZE_VIA_EMAIL
             </a>
-          </div>
+          </GlassCard>
         ) : (
           /* Main Tracker Dashboard Layouts */
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+          <motion.div 
+            variants={containerVariants} 
+            initial="hidden" 
+            animate="show"
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch"
+          >
             
             {/* Column 1: XP Progress & Level card */}
-            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
-
-              <div>
-                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// EXPERIENCE_MATRICES</span>
-                
-                <div className="flex justify-between items-end mb-3 font-mono">
+            <motion.div variants={itemVariants}>
+              <TiltWrapper intensity={8} className="h-full">
+                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
+                  
                   <div>
-                    <span className="text-[10px] text-muted-foreground block font-bold">LEVEL</span>
-                    <span className="text-4xl font-extrabold text-foreground">{level}</span>
+                    <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// EXPERIENCE_MATRICES</span>
+                    
+                    <div className="flex justify-between items-end mb-3 font-mono">
+                      <div>
+                        <span className="text-[10px] text-muted-foreground block font-bold">LEVEL</span>
+                        <span className="text-5xl font-black text-foreground drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">{level}</span>
+                      </div>
+                      <div className="text-right text-xs font-bold text-muted-foreground">
+                        <span className="text-secondary">{xp}</span> / {xpMax} XP
+                      </div>
+                    </div>
+
+                    {/* Progress bar */}
+                    <div className="w-full h-4 bg-background/50 rounded-full overflow-hidden border border-white/10 mb-6 shadow-inner">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#0096ff] to-[#39ff14] transition-all duration-700 ease-out shadow-[0_0_15px_rgba(0,150,255,0.6)] relative"
+                        style={{ width: `${xpPercent}%` }}
+                      >
+                        <div className="absolute top-0 right-0 bottom-0 w-8 bg-gradient-to-l from-white/40 to-transparent" />
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] font-mono text-muted-foreground leading-relaxed">
+                      Complete modules across Learn &amp; Projects subdomains to collect experience logs. Reaching Level 4 unlocks advanced Cloud namespace operations.
+                    </p>
                   </div>
-                  <div className="text-right text-xs font-bold text-muted-foreground">
-                    <span className="text-secondary">{xp}</span> / {xpMax} XP
-                  </div>
+
+                  <AnimatedButton
+                    onClick={solveLabSimulate}
+                    disabled={loading}
+                    glowColor="blue"
+                    className="w-full mt-6"
+                  >
+                    SIMULATE_LAB (+350 XP)
+                  </AnimatedButton>
                 </div>
-
-                {/* Progress bar */}
-                <div className="w-full h-3 bg-background rounded-full overflow-hidden border border-secondary/15 mb-6">
-                  <div
-                    className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-500 shadow-[0_0_8px_rgba(0,150,255,0.4)]"
-                    style={{ width: `${xpPercent}%` }}
-                  />
-                </div>
-
-                <p className="text-[11px] font-mono text-muted-foreground leading-relaxed">
-                  Complete modules across Learn &amp; Projects subdomains to collect experience logs. Reaching Level 4 unlocks advanced Cloud namespace operations.
-                </p>
-              </div>
-
-              <button
-                onClick={solveLabSimulate}
-                disabled={loading}
-                className="w-full py-2.5 bg-secondary/10 hover:bg-secondary/20 active:scale-98 text-xs font-mono font-bold tracking-widest text-secondary rounded-lg border border-secondary/35 transition-all duration-300 shadow-[0_0_12px_rgba(0,150,255,0.05)] disabled:opacity-50"
-              >
-                SIMULATE_LAB_COMPLETION (+350 XP)
-              </button>
-            </div>
+              </TiltWrapper>
+            </motion.div>
 
             {/* Column 2: Solved Labs Graph SVG */}
-            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
-
-              <div>
-                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACTIVITY_HISTORY</span>
-                
-                {/* SVG Area graph */}
-                <div className="flex justify-center items-center bg-background/70 border border-border rounded-lg p-3">
-                  <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
-                    {/* Grid Lines */}
-                    <line x1={padding} y1={padding} x2={width-padding} y2={padding} stroke="#0a1a40" strokeWidth={1} strokeDasharray="3 3" />
-                    <line x1={padding} y1={height-padding} x2={width-padding} y2={height-padding} stroke="#0a1a40" strokeWidth={1} />
+            <motion.div variants={itemVariants}>
+              <TiltWrapper intensity={5} className="h-full">
+                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
+                  
+                  <div>
+                    <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACTIVITY_HISTORY</span>
                     
-                    {/* Line Path */}
-                    {points.length > 0 && (
-                      <path
-                        d={pathData}
-                        fill="none"
-                        stroke="#0096ff"
-                        strokeWidth={2}
-                        className="transition-all duration-500"
-                      />
-                    )}
+                    {/* SVG Area graph */}
+                    <div className="flex justify-center items-center bg-black/50 border border-white/10 rounded-xl p-4 shadow-inner">
+                      <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+                        {/* Grid Lines */}
+                        <line x1={padding} y1={padding} x2={width-padding} y2={padding} stroke="#ffffff" strokeOpacity={0.05} strokeWidth={1} strokeDasharray="4 4" />
+                        <line x1={padding} y1={height-padding} x2={width-padding} y2={height-padding} stroke="#ffffff" strokeOpacity={0.1} strokeWidth={1} />
+                        
+                        {/* Line Path */}
+                        {points.length > 0 && (
+                          <path
+                            d={pathData}
+                            fill="none"
+                            stroke="#0096ff"
+                            strokeWidth={3}
+                            className="transition-all duration-500 drop-shadow-[0_0_8px_rgba(0,150,255,0.8)]"
+                          />
+                        )}
 
-                    {/* Nodes */}
-                    {points.map((p, idx) => (
-                      <circle
-                        key={idx}
-                        cx={p.x}
-                        cy={p.y}
-                        r={4}
-                        className="fill-[#050a18] stroke-[#0096ff] stroke-2 hover:scale-125 transition-transform duration-300 cursor-pointer"
-                      />
-                    ))}
-                  </svg>
+                        {/* Nodes */}
+                        {points.map((p, idx) => (
+                          <circle
+                            key={idx}
+                            cx={p.x}
+                            cy={p.y}
+                            r={5}
+                            className="fill-[#0096ff] stroke-black stroke-[3px] hover:scale-150 transition-transform duration-300 cursor-pointer drop-shadow-[0_0_5px_rgba(0,150,255,1)]"
+                          />
+                        ))}
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="text-[10px] font-mono text-muted-foreground text-center border-t border-white/10 pt-4 mt-4">
+                    Real-time activity logs tracked across global Velsec systems.
+                  </div>
                 </div>
-              </div>
-
-              <div className="text-[9px] font-mono text-muted-foreground text-center border-t border-secondary/10 pt-3">
-                Real-time activity logs tracked across global Velsec systems.
-              </div>
-            </div>
+              </TiltWrapper>
+            </motion.div>
 
             {/* Column 3: Badge Matrix */}
-            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[350px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
-
-              <div>
-                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACHIEVEMENT_MATRIX</span>
-                
-                <div className="grid grid-cols-4 gap-3">
-                  {badges.map(b => (
-                    <div
-                      key={b.id}
-                      onMouseEnter={() => setActiveBadge(b)}
-                      onMouseLeave={() => setActiveBadge(null)}
-                      className={`h-12 rounded-lg border flex items-center justify-center text-xl cursor-help transition-all duration-300 ${
-                        b.unlocked
-                          ? 'border-secondary/35 bg-secondary/10 shadow-[0_0_10px_rgba(0,150,255,0.1)]'
-                          : 'border-border bg-card/5 opacity-30'
-                      }`}
-                    >
-                      {b.icon}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Hover details container */}
-              <div className="border border-border bg-background/80 rounded-lg p-3 min-h-[90px] font-mono text-[10px]">
-                {activeBadge ? (
+            <motion.div variants={itemVariants}>
+              <TiltWrapper intensity={8} className="h-full">
+                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
+                  
                   <div>
-                    <h4 className="font-bold text-secondary">{activeBadge.name}</h4>
-                    <p className="text-muted-foreground mt-1">{activeBadge.description}</p>
-                    {activeBadge.unlocked && (
-                      <span className="text-[8px] text-muted-foreground mt-2 block">UNLOCKED: {activeBadge.unlockedAt}</span>
-                    )}
+                    <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACHIEVEMENT_MATRIX</span>
+                    
+                    <div className="grid grid-cols-4 gap-3">
+                      {badges.map(b => (
+                        <div
+                          key={b.id}
+                          onMouseEnter={() => setActiveBadge(b)}
+                          onMouseLeave={() => setActiveBadge(null)}
+                          className={`h-14 rounded-xl border flex items-center justify-center text-2xl cursor-help transition-all duration-300 ${
+                            b.unlocked
+                              ? 'border-secondary/50 bg-secondary/20 shadow-[0_0_15px_rgba(0,150,255,0.3)] scale-100 hover:scale-110'
+                              : 'border-white/5 bg-black/50 opacity-40 grayscale'
+                          }`}
+                        >
+                          {b.icon}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ) : (
-                  <div className="text-muted-foreground text-center flex items-center justify-center h-full min-h-[66px]">
-                    HOVER_OVER_BADGES_FOR_DETAILS
+
+                  {/* Hover details container */}
+                  <div className="border border-white/10 bg-black/50 rounded-xl p-4 min-h-[110px] font-mono text-[10px] mt-6 shadow-inner">
+                    <AnimatePresence mode="wait">
+                      {activeBadge ? (
+                        <motion.div
+                          key={activeBadge.id}
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <h4 className="font-bold text-secondary text-xs">{activeBadge.name}</h4>
+                          <p className="text-muted-foreground mt-1.5 text-[11px] leading-relaxed">{activeBadge.description}</p>
+                          {activeBadge.unlocked && (
+                            <span className="text-[9px] text-[#39ff14] mt-2 block font-bold">UNLOCKED: {activeBadge.unlockedAt}</span>
+                          )}
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="empty"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="text-muted-foreground text-center flex items-center justify-center h-full min-h-[76px]"
+                        >
+                          HOVER_OVER_BADGES_FOR_DETAILS
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                )}
-              </div>
 
-            </div>
+                </div>
+              </TiltWrapper>
+            </motion.div>
 
-          </div>
+          </motion.div>
         )}
 
         {/* Back Link */}
-        <div className="text-center mt-4">
+        <div className="text-center mt-6">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
             className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"
