@@ -134,7 +134,7 @@ export default function HomePage() {
       </section>
 
       {/* ========== ECOSYSTEM SECTION ========== */}
-      <section className="relative py-24 px-6 z-10 bg-black/20 backdrop-blur-lg border-t border-white/5">
+      <section className="relative py-24 px-6 z-10 bg-black/5 dark:bg-black/20 backdrop-blur-lg border-t border-border">
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}

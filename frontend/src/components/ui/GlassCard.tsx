@@ -23,7 +23,7 @@ export default function GlassCard({ children, className, glowColor = "none" }: G
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl bg-white/5 dark:bg-black/40",
+        "relative overflow-hidden rounded-xl bg-white/60 dark:bg-black/40 backdrop-blur-md border border-border/50",
         "backdrop-blur-xl border border-white/10 dark:border-white/5",
         "transition-all duration-300",
         glowClasses[glowColor],

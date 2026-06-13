@@ -212,7 +212,7 @@ export default function CategoryNotesPage() {
                 placeholder="SEARCH_NOTES..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black/40 backdrop-blur-md text-xs font-mono text-foreground placeholder-zinc-500 border border-secondary/20 focus:border-secondary/50 focus:outline-none rounded-lg px-3 py-2 transition-all duration-300"
+                className="w-full bg-black/5 dark:bg-black/40 backdrop-blur-md text-xs font-mono text-foreground placeholder-zinc-500 border border-secondary/20 focus:border-secondary/50 focus:outline-none rounded-lg px-3 py-2 transition-all duration-300"
               />
               
               {/* Notes List */}
@@ -228,7 +228,7 @@ export default function CategoryNotesPage() {
                       className={`p-4 rounded-xl border text-left cursor-pointer transition-all duration-300 w-full backdrop-blur-md ${
                         selectedNote?.id === n.id
                           ? 'border-secondary bg-secondary/10 shadow-[0_0_20px_rgba(0,150,255,0.15)]'
-                          : 'border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60'
+                          : 'border-border hover:border-secondary/40 bg-black/5 dark:bg-black/40 hover:bg-black/10 dark:hover:bg-black/60'
                       }`}
                     >
                       <span className="text-xs font-mono font-bold text-foreground block truncate">
@@ -291,7 +291,7 @@ export default function CategoryNotesPage() {
                           ul: ({node: _, ...props}) => <ul className="list-disc pl-6 mb-4 space-y-2 text-muted-foreground" {...props} />,
                           ol: ({node: _, ...props}) => <ol className="list-decimal pl-6 mb-4 space-y-2 text-muted-foreground" {...props} />,
                           li: ({node: _, ...props}) => <li className="leading-loose" {...props} />,
-                          pre: ({node: _, ...props}) => <pre className="bg-black/60 rounded-xl border border-secondary/20 p-5 text-[12px] text-[#39ff14] overflow-x-auto my-6 whitespace-pre shadow-inner font-mono" {...props} />,
+                          pre: ({node: _, ...props}) => <pre className="bg-black/5 dark:bg-black/60 rounded-xl border border-secondary/20 p-5 text-[12px] text-[#22c55e] dark:text-[#39ff14] overflow-x-auto my-6 whitespace-pre shadow-inner font-mono" {...props} />,
                           code: ({node: _, inline, ...props}: any) => inline 
                             ? <code className="bg-secondary/10 text-secondary px-1.5 py-0.5 rounded border border-secondary/20 text-[12px] font-mono" {...props} />
                             : <code className="font-mono text-[12px]" {...props} />,
@@ -299,7 +299,7 @@ export default function CategoryNotesPage() {
                           blockquote: ({node: _, ...props}) => <blockquote className="border-l-4 border-secondary/60 bg-gradient-to-r from-secondary/10 to-transparent px-6 py-4 my-6 rounded-r-lg italic text-foreground/90 font-mono shadow-[inset_4px_0_0_rgba(0,150,255,0.4)]" {...props} />,
                           hr: ({node: _, ...props}) => <hr className="border-secondary/20 my-10" {...props} />,
                           table: ({node: _, ...props}) => (
-                            <div className="overflow-x-auto my-8 border border-secondary/30 rounded-xl bg-black/40 shadow-inner backdrop-blur-sm">
+                            <div className="overflow-x-auto my-8 border border-secondary/30 rounded-xl bg-black/5 dark:bg-black/40 shadow-inner backdrop-blur-sm">
                               <table className="w-full text-left text-[13px] border-collapse font-mono" {...props} />
                             </div>
                           ),

@@ -304,7 +304,7 @@ export default function TrackerPage() {
             {/* Column 1: XP Progress & Level card */}
             <motion.div variants={itemVariants}>
               <TiltWrapper intensity={8} className="h-full">
-                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
+                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/5 dark:bg-black/40 hover:bg-black/10 dark:hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
                   
                   <div>
                     <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// EXPERIENCE_MATRICES</span>
@@ -349,13 +349,13 @@ export default function TrackerPage() {
             {/* Column 2: Solved Labs Graph SVG */}
             <motion.div variants={itemVariants}>
               <TiltWrapper intensity={5} className="h-full">
-                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
+                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/5 dark:bg-black/40 hover:bg-black/10 dark:hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
                   
                   <div>
                     <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACTIVITY_HISTORY</span>
                     
                     {/* SVG Area graph */}
-                    <div className="flex justify-center items-center bg-black/50 border border-white/10 rounded-xl p-4 shadow-inner">
+                    <div className="flex justify-center items-center bg-black/5 dark:bg-black/50 border border-white/10 rounded-xl p-4 shadow-inner">
                       <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
                         {/* Grid Lines */}
                         <line x1={padding} y1={padding} x2={width-padding} y2={padding} stroke="#ffffff" strokeOpacity={0.05} strokeWidth={1} strokeDasharray="4 4" />
@@ -396,7 +396,7 @@ export default function TrackerPage() {
             {/* Column 3: Badge Matrix */}
             <motion.div variants={itemVariants}>
               <TiltWrapper intensity={8} className="h-full">
-                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
+                <div className="relative border border-white/10 hover:border-secondary/40 bg-black/5 dark:bg-black/40 hover:bg-black/10 dark:hover:bg-black/60 transition-colors backdrop-blur-md rounded-xl p-6 flex flex-col justify-between min-h-[350px]">
                   
                   <div>
                     <span className="text-[9px] font-mono text-secondary tracking-widest block mb-4">// ACHIEVEMENT_MATRIX</span>
@@ -410,7 +410,7 @@ export default function TrackerPage() {
                           className={`h-14 rounded-xl border flex items-center justify-center text-2xl cursor-help transition-all duration-300 ${
                             b.unlocked
                               ? 'border-secondary/50 bg-secondary/20 shadow-[0_0_15px_rgba(0,150,255,0.3)] scale-100 hover:scale-110'
-                              : 'border-white/5 bg-black/50 opacity-40 grayscale'
+                              : 'border-white/5 bg-black/5 dark:bg-black/50 opacity-40 grayscale'
                           }`}
                         >
                           {b.icon}
@@ -420,7 +420,7 @@ export default function TrackerPage() {
                   </div>
 
                   {/* Hover details container */}
-                  <div className="border border-white/10 bg-black/50 rounded-xl p-4 min-h-[110px] font-mono text-[10px] mt-6 shadow-inner">
+                  <div className="border border-white/10 bg-black/5 dark:bg-black/50 rounded-xl p-4 min-h-[110px] font-mono text-[10px] mt-6 shadow-inner">
                     <AnimatePresence mode="wait">
                       {activeBadge ? (
                         <motion.div

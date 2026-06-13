@@ -104,7 +104,7 @@ export default function NewsPage() {
         </GlassCard>
 
         {/* Scrolling Marquee Alert Banner */}
-        <div className="w-full bg-black/40 backdrop-blur-md border border-secondary/20 rounded-lg p-2.5 overflow-hidden whitespace-nowrap font-mono text-[10px] text-foreground relative shadow-[0_0_20px_rgba(0,150,255,0.05)]">
+        <div className="w-full bg-black/5 dark:bg-black/40 backdrop-blur-md border border-secondary/20 rounded-lg p-2.5 overflow-hidden whitespace-nowrap font-mono text-[10px] text-foreground relative shadow-[0_0_20px_rgba(0,150,255,0.05)]">
           <div className="absolute left-0 top-0 bottom-0 bg-background/80 px-3 flex items-center text-secondary font-bold border-r border-secondary/20 z-10 backdrop-blur-md">
             🚨 ACTIVE_ALERTS:
           </div>
@@ -155,7 +155,7 @@ export default function NewsPage() {
                         className={`group relative p-5 rounded-xl border cursor-pointer transition-all duration-300 backdrop-blur-md ${
                           activeItem?.id === item.id
                             ? 'border-secondary bg-secondary/10 shadow-[0_0_20px_rgba(0,150,255,0.15)]'
-                            : 'border-white/10 hover:border-secondary/40 bg-black/40 hover:bg-black/60'
+                            : 'border-border hover:border-secondary/40 bg-black/5 dark:bg-black/40 hover:bg-black/10 dark:hover:bg-black/60'
                         }`}
                       >
                         <div className="flex justify-between items-center mb-2">
@@ -199,7 +199,7 @@ export default function NewsPage() {
                   <p className="text-[11px] text-foreground/80 leading-relaxed mb-6">{activeItem.summary}</p>
 
                   <span className="text-[9px] text-muted-foreground font-bold uppercase block mb-1">recommended_mitigation:</span>
-                  <div className="p-4 bg-black/60 border border-white/5 rounded-lg text-[10px] text-[#00f0ff] leading-relaxed mb-4 shadow-inner">
+                  <div className="p-4 bg-black/5 dark:bg-black/60 border border-border rounded-lg text-[10px] text-[#007cdb] dark:text-[#00f0ff] leading-relaxed mb-4 shadow-inner">
                     {activeItem.mitigation}
                   </div>
 

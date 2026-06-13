@@ -62,6 +62,9 @@
   --ring: #0096ff;
 
   --radius: 0.5rem;
+  
+  --glass-panel-bg: rgba(10, 20, 50, 0.6);
+  --vignette-bg: rgba(5, 10, 24, 0.85);
 }
 
 .light {
@@ -92,6 +95,9 @@
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #007cdb;
+  
+  --glass-panel-bg: rgba(255, 255, 255, 0.75);
+  --vignette-bg: rgba(248, 250, 252, 0.9);
 }
 
 body {
@@ -102,10 +108,10 @@ body {
 }
 
 .glass-panel {
-  background: var(--color-dark-glass);
+  background: var(--glass-panel-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 150, 255, 0.1);
+  border: 1px solid var(--border);
 }
 
 /* Scanline animation */
@@ -132,7 +138,7 @@ body {
 .cinematic-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(5, 10, 24, 0.85) 100%);
+  background: radial-gradient(ellipse at center, transparent 40%, var(--vignette-bg) 100%);
   pointer-events: none;
   z-index: 30;
 }

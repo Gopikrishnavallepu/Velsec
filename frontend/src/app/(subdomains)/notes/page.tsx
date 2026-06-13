@@ -40,7 +40,7 @@ const TreeRenderer = ({ node, level = 0 }: { node: TreeNode; level?: number }) =
         <span className="font-bold tracking-widest uppercase text-foreground">
           {node.name.replace(/_/g, ' ')}
         </span>
-        <span className="text-[10px] text-muted-foreground ml-2 bg-black/40 px-2 py-0.5 rounded-full border border-white/5">
+        <span className="text-[10px] text-muted-foreground ml-2 bg-black/5 dark:bg-black/40 px-2 py-0.5 rounded-full border border-border">
           {node.notes.length + Object.keys(node.children).length} items
         </span>
         
@@ -196,7 +196,7 @@ export default function NotesDashboardPage() {
         <GlassCard glowColor="blue" className="p-8">
           <div className="mb-6 pb-4 border-b border-white/10 flex justify-between items-center">
             <h2 className="text-lg font-mono font-bold text-foreground tracking-wider">DIRECTORY_STRUCTURE</h2>
-            <span className="text-xs font-mono text-muted-foreground border border-white/10 px-2 py-1 rounded bg-black/20">ROOT /</span>
+            <span className="text-xs font-mono text-muted-foreground border border-border px-2 py-1 rounded bg-black/5 dark:bg-black/20">ROOT /</span>
           </div>
           
           {loading ? (
@@ -205,11 +205,11 @@ export default function NotesDashboardPage() {
               MAPPING_DIRECTORY_STRUCTURE...
             </div>
           ) : Object.keys(treeData).length === 0 ? (
-            <div className="py-10 text-center font-mono text-xs text-muted-foreground border border-dashed border-white/10 rounded-xl bg-black/20">
+            <div className="py-10 text-center font-mono text-xs text-muted-foreground border border-dashed border-border rounded-xl bg-black/5 dark:bg-black/20">
               NO_DIRECTORIES_FOUND
             </div>
           ) : (
-            <div className="bg-black/40 rounded-xl border border-white/5 p-4 shadow-inner">
+            <div className="bg-black/5 dark:bg-black/40 rounded-xl border border-border p-4 shadow-inner">
               {Object.values(treeData).map((rootNode) => (
                 <TreeRenderer key={rootNode.name} node={rootNode} level={0} />
               ))}
