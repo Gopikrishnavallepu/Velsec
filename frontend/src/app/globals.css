@@ -152,3 +152,38 @@ body {
 .text-glow-green {
   text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 30px rgba(57, 255, 20, 0.2);
 }
+
+/* Print Styles for PDF Export */
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  /* Hide unnecessary UI elements */
+  nav, aside, .cinematic-vignette, .scanline-overlay, canvas {
+    display: none !important;
+  }
+  
+  /* Reset layout constraints for printing */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Ensure text doesn't break awkwardly */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  pre, blockquote, table, img {
+    page-break-inside: avoid;
+  }
+  
+  /* Ensure colors print if the user has background graphics enabled */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

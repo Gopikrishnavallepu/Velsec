@@ -1,27 +1,35 @@
-name: Sync Obsidian Notes to DB
+name: Sync Obsidian Notes to Supabase
 
 on:
   push:
-    paths:
-      - 'notes-vault/**'
-      - 'scripts/sync_notes.py'
     branches:
       - main
+    paths:
+      - 'notes-vault/**/*.md'
+  workflow_dispatch: # Allow manual trigger from GitHub UI
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Setup Python
+        
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Run Sync Script
+          cache: 'pip'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install supabase python-dotenv
+          
+      - name: Run Supabase Sync Script
         env:
-          VELSEC_API_URL: ${{ secrets.VELSEC_API_URL }}
-          SYNC_API_KEY: ${{ secrets.SYNC_API_KEY }}
-        run: python scripts/sync_notes.py
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          python scripts/supabase_direct_sync.py
