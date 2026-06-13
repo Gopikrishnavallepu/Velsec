@@ -128,19 +128,34 @@ export default function CategoryNotesPage() {
         </div>
         
         {selectedNote && (
-          <div className="flex gap-3">
+          <div className="relative">
             <button 
-              onClick={handleExportMD}
-              className="text-[10px] font-bold text-secondary border border-secondary/30 px-3 py-1.5 rounded bg-secondary/10 hover:bg-secondary/20 transition-all font-mono"
+              onClick={() => document.getElementById('export-menu')?.classList.toggle('hidden')}
+              onBlur={() => setTimeout(() => document.getElementById('export-menu')?.classList.add('hidden'), 200)}
+              className="text-[14px] p-2 text-secondary border border-secondary/30 rounded bg-secondary/10 hover:bg-secondary/20 transition-all font-mono"
+              title="Export Options"
             >
-              DOWNLOAD .MD
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
             </button>
-            <button 
-              onClick={handleExportPDF}
-              className="text-[10px] font-bold text-primary border border-primary/30 px-3 py-1.5 rounded bg-primary/10 hover:bg-primary/20 transition-all font-mono"
-            >
-              PRINT TO PDF
-            </button>
+            
+            <div id="export-menu" className="hidden absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-xl overflow-hidden z-50">
+              <button 
+                onClick={handleExportMD}
+                className="w-full text-left px-4 py-3 text-xs font-mono text-foreground hover:bg-secondary/10 hover:text-secondary transition-colors border-b border-border"
+              >
+                📥 Download Markdown (.md)
+              </button>
+              <button 
+                onClick={handleExportPDF}
+                className="w-full text-left px-4 py-3 text-xs font-mono text-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+              >
+                🖨️ Print to PDF
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -175,16 +190,16 @@ export default function CategoryNotesPage() {
                 h1: ({node: _, ...props}) => <h1 className="text-xl font-black text-foreground print:text-black mt-10 mb-5 border-b-2 border-secondary/30 print:border-black/20 pb-2 tracking-wide" {...props} />,
                 h2: ({node: _, ...props}) => <h2 className="text-lg font-bold text-secondary print:text-black mt-8 mb-4 tracking-wide" {...props} />,
                 h3: ({node: _, ...props}) => <h3 className="text-[14px] font-bold text-foreground print:text-black mt-6 mb-3 tracking-wide" {...props} />,
-                p: ({node: _, ...props}) => <p className="mb-4 leading-loose text-muted-foreground print:text-black/80" {...props} />,
-                ul: ({node: _, ...props}) => <ul className="list-disc pl-6 mb-4 space-y-2 text-muted-foreground print:text-black/80" {...props} />,
-                ol: ({node: _, ...props}) => <ol className="list-decimal pl-6 mb-4 space-y-2 text-muted-foreground print:text-black/80" {...props} />,
-                li: ({node: _, ...props}) => <li className="leading-loose" {...props} />,
-                pre: ({node: _, ...props}) => <pre className="bg-black/5 dark:bg-black/60 print:bg-gray-100 rounded-xl border border-secondary/20 print:border-gray-300 p-5 text-[12px] text-[#22c55e] dark:text-[#39ff14] print:text-black overflow-x-auto my-6 whitespace-pre shadow-inner font-mono" {...props} />,
+                p: ({node: _, ...props}) => <p className="mb-3 leading-relaxed text-muted-foreground print:text-black/80" {...props} />,
+                ul: ({node: _, ...props}) => <ul className="list-disc pl-6 mb-3 space-y-1 text-muted-foreground print:text-black/80" {...props} />,
+                ol: ({node: _, ...props}) => <ol className="list-decimal pl-6 mb-3 space-y-1 text-muted-foreground print:text-black/80" {...props} />,
+                li: ({node: _, ...props}) => <li className="leading-relaxed" {...props} />,
+                pre: ({node: _, ...props}) => <pre className="bg-black/5 dark:bg-black/60 print:bg-gray-100 rounded-xl border border-secondary/20 print:border-gray-300 p-4 text-[12px] text-[#22c55e] dark:text-[#39ff14] print:text-black overflow-x-auto my-4 whitespace-pre shadow-inner font-mono" {...props} />,
                 code: ({node: _, inline, ...props}: any) => inline 
                   ? <code className="bg-secondary/10 print:bg-gray-100 text-secondary print:text-black px-1.5 py-0.5 rounded border border-secondary/20 print:border-gray-300 text-[12px] font-mono" {...props} />
                   : <code className="font-mono text-[12px] print:text-black" {...props} />,
                 a: ({node: _, ...props}) => <a className="text-secondary print:text-blue-600 hover:text-white hover:bg-secondary/20 transition-colors px-1 rounded underline decoration-secondary/50 underline-offset-4 font-bold" target="_blank" rel="noreferrer" {...props} />,
-                blockquote: ({node: _, ...props}) => <blockquote className="border-l-4 border-secondary/60 print:border-gray-400 bg-gradient-to-r from-secondary/10 print:from-gray-50 to-transparent px-6 py-4 my-6 rounded-r-lg italic text-foreground/90 print:text-black font-mono shadow-[inset_4px_0_0_rgba(0,150,255,0.4)] print:shadow-none" {...props} />,
+                blockquote: ({node: _, ...props}) => <blockquote className="border-l-4 border-secondary/60 print:border-gray-400 bg-gradient-to-r from-secondary/10 print:from-gray-50 to-transparent px-6 py-3 my-4 rounded-r-lg italic text-foreground/90 print:text-black font-mono shadow-[inset_4px_0_0_rgba(0,150,255,0.4)] print:shadow-none" {...props} />,
                 hr: ({node: _, ...props}) => <hr className="border-secondary/20 print:border-gray-300 my-10" {...props} />,
                 table: ({node: _, ...props}) => (
                   <div className="overflow-x-auto my-8 border border-secondary/30 print:border-gray-300 rounded-xl bg-black/5 dark:bg-black/40 print:bg-white shadow-inner backdrop-blur-sm print:shadow-none">

@@ -6,8 +6,8 @@ import urllib.request
 import urllib.error
 
 # Config
-SUPABASE_URL = "https://ubfkvjzuqvgqrfkunmqx.supabase.co"
-SUPABASE_KEY = "sb_publishable_s9T2KOiy1hsPcOVrISGCfw_Q8jyvHbS"
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ubfkvjzuqvgqrfkunmqx.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_publishable_s9T2KOiy1hsPcOVrISGCfw_Q8jyvHbS")
 
 def parse_markdown_file(file_path, vault_dir):
     try:
