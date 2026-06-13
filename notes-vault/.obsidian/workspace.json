@@ -25,18 +25,31 @@
             "id": "7be97853bf4dfc09",
             "type": "leaf",
             "state": {
+              "type": "bases",
+              "state": {
+                "file": "Untitled.base",
+                "viewName": "Table"
+              },
+              "icon": "lucide-table",
+              "title": "Untitled"
+            }
+          },
+          {
+            "id": "8f106c888769ca93",
+            "type": "leaf",
+            "state": {
               "type": "markdown",
               "state": {
-                "file": "SOC_15yr_Expert_Interview_Guide.md",
+                "file": "AI/Claude code setup.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SOC_15yr_Expert_Interview_Guide"
+              "title": "Claude code setup"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -170,16 +183,17 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "AI/Claude code setup.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of Claude code setup"
             }
           },
           {
-            "id": "40119acaa8635afa",
+            "id": "e01ee4854150e462",
             "type": "leaf",
             "state": {
               "type": "git-view",
@@ -204,33 +218,57 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "github-sync:Sync with Remote": false,
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7be97853bf4dfc09",
+  "active": "c649aa26158866bb",
   "lastOpenFiles": [
-    "SOC_15yr_Expert_Interview_Guide.md",
-    "SOC_Interview_Answers.md",
-    "Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Part2.md",
-    "Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Part1.md",
-    "Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Comprehensive.md",
-    "Security_Engineer/SOC/Email_Security_SOC_Guide_Comprehensive.md",
-    "Excalidraw/Drawing 2026-06-06 21.02.57.excalidraw.md",
-    "Excalidraw",
-    "Velsec_Blog_Root/INDEX.md",
-    "Excalidraw/Drawing 2026-06-06 21.00.19.excalidraw.md",
-    "Security_Engineer/SOC/Comprehensive_SOC_Interview_Guide.md",
-    "Index.base",
-    "Muruga.md",
-    "Sync notes",
-    "Security_Engineer/SOC/Cisco_SOC_Part1_Core_SOC_IR.md",
-    "cheat-sheets/nmap-cheatsheet.md",
-    "Career_Development/Resume/INDEX.md",
-    "Career_Development/Interview_Preparation/INDEX.md",
-    "2026-06-03.md",
-    "Untitled 1.base",
-    "Data_Analyst/Data_Analytics/Excel_Skills_Mastery_Guide.md",
+    "velsec-notes",
+    "Velsec_notes/supabase/config.toml",
+    "Velsec_notes/supabase",
+    "Velsec_notes/security_assessment_report.md",
+    "Velsec_notes/scripts/sql_batches/batch_010.sql",
+    "Velsec_notes/scripts/sql_batches/batch_008.sql",
+    "Velsec_notes/scripts/sql_batches/batch_009.sql",
+    "Velsec_notes/scripts/sql_batches/batch_007.sql",
+    "Velsec_notes/scripts/sql_batches/batch_006.sql",
+    "Velsec_notes/scripts/sql_batches/batch_005.sql",
+    "Velsec_notes/scripts/sql_batches/batch_004.sql",
+    "Velsec_notes/scripts/sql_batches/batch_003.sql",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Threat_Hunting_SOC_Guide_Part4.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Threat_Hunting_SOC_Guide_Part3.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Threat_Hunting_SOC_Guide_Part2.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Threat_Hunting_SOC_Guide_Part1.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Threat_Hunting_SOC_Guide_Comprehensive.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part8_Cloud_Security_Azure.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part7_Security_Tools_SIEM_EDR_SOAR.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part6_SOC_Analyst_Interview_Scenarios.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part5_Incident_Response_DFIR.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part4_Security_Frameworks_Models.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part3_Attacks_Threats_Countermeasures.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part2_Network_Security_Cryptography.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Part1_Cybersecurity_Fundamentals.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Study_Guide_Master_Index.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/SOC_Concepts_Interview_Guide.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/SOC_TP_FP_Checklist.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Part2.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Part1.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Reactive_SOC_Investigation_Guide_Comprehensive.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/INDEX.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Email_Security_SOC_Guide_Part3.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Email_Security_SOC_Guide_Part2.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Email_Security_SOC_Guide_Part1.md",
+    "Velsec_notes/notes-vault/Security_Engineer/SOC/Email_Security_SOC_Guide_Comprehensive.md",
+    "Velsec_notes/frontend/public/window.svg",
+    "Velsec_notes/frontend/public/vercel.svg",
+    "Velsec_notes/frontend/public/next.svg",
+    "Velsec_notes/frontend/public/logo.png",
+    "Velsec_notes/frontend/public/globe.svg",
+    "Velsec_notes/frontend/public/file.svg",
+    "Velsec_notes/frontend/public/banner.png",
+    "notes-vault/frontend/public/window.svg",
+    "notes-vault/frontend/public/vercel.svg",
+    "notes-vault/frontend/public/next.svg",
     "Untitled.canvas"
   ]
 }

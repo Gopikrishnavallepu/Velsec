@@ -1,9 +1,0 @@
-{
-  "remoteURL": "https://github.com/Gopikrishnavallepu/Velsec.git",
-  "gitLocation": "",
-  "syncinterval": 10000,
-  "isSyncOnLoad": false,
-  "checkStatusOnLoad": true,
-  "noticeLevel": "ALL",
-  "showSyncSuccessNotice": true
-}
