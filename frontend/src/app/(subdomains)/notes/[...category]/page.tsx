@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useParams } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { getSubdomainUrl } from '@/utils/navigation';
 import GlassCard from '@/components/ui/GlassCard';
 import TiltWrapper from '@/components/ui/TiltWrapper';
@@ -281,17 +282,32 @@ export default function CategoryNotesPage() {
                     {/* Markdown Renderer */}
                     <div className="text-sm text-foreground/90 leading-relaxed max-w-none space-y-6">
                       <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
                         components={{
-                          h1: ({node: _, ...props}) => <h1 className="text-lg font-bold text-foreground mt-8 mb-4 border-b border-secondary/20 pb-2" {...props} />,
-                          h2: ({node: _, ...props}) => <h2 className="text-base font-bold text-secondary mt-6 mb-3" {...props} />,
-                          h3: ({node: _, ...props}) => <h3 className="text-[13px] font-bold text-foreground mt-5 mb-2" {...props} />,
+                          h1: ({node: _, ...props}) => <h1 className="text-xl font-black text-foreground mt-10 mb-5 border-b-2 border-secondary/30 pb-2 tracking-wide" {...props} />,
+                          h2: ({node: _, ...props}) => <h2 className="text-lg font-bold text-secondary mt-8 mb-4 tracking-wide" {...props} />,
+                          h3: ({node: _, ...props}) => <h3 className="text-[14px] font-bold text-foreground mt-6 mb-3 tracking-wide" {...props} />,
                           p: ({node: _, ...props}) => <p className="mb-4 leading-loose text-muted-foreground" {...props} />,
-                          ul: ({node: _, ...props}) => <ul className="list-disc pl-5 mb-4 space-y-2" {...props} />,
-                          ol: ({node: _, ...props}) => <ol className="list-decimal pl-5 mb-4 space-y-2" {...props} />,
-                          li: ({node: _, ...props}) => <li className="text-muted-foreground leading-loose" {...props} />,
-                          pre: ({node: _, ...props}) => <pre className="bg-black/60 rounded-xl border border-secondary/20 p-5 text-[11px] text-[#39ff14] overflow-x-auto my-6 whitespace-pre shadow-inner" {...props} />,
-                          code: ({node: _, ...props}) => <code className="bg-secondary/10 text-secondary px-1.5 py-0.5 rounded border border-secondary/20 text-[11px]" {...props} />,
-                          a: ({node: _, ...props}) => <a className="text-secondary hover:underline decoration-secondary/50 underline-offset-4" target="_blank" rel="noreferrer" {...props} />,
+                          ul: ({node: _, ...props}) => <ul className="list-disc pl-6 mb-4 space-y-2 text-muted-foreground" {...props} />,
+                          ol: ({node: _, ...props}) => <ol className="list-decimal pl-6 mb-4 space-y-2 text-muted-foreground" {...props} />,
+                          li: ({node: _, ...props}) => <li className="leading-loose" {...props} />,
+                          pre: ({node: _, ...props}) => <pre className="bg-black/60 rounded-xl border border-secondary/20 p-5 text-[12px] text-[#39ff14] overflow-x-auto my-6 whitespace-pre shadow-inner font-mono" {...props} />,
+                          code: ({node: _, inline, ...props}: any) => inline 
+                            ? <code className="bg-secondary/10 text-secondary px-1.5 py-0.5 rounded border border-secondary/20 text-[12px] font-mono" {...props} />
+                            : <code className="font-mono text-[12px]" {...props} />,
+                          a: ({node: _, ...props}) => <a className="text-secondary hover:text-white hover:bg-secondary/20 transition-colors px-1 rounded underline decoration-secondary/50 underline-offset-4 font-bold" target="_blank" rel="noreferrer" {...props} />,
+                          blockquote: ({node: _, ...props}) => <blockquote className="border-l-4 border-secondary/60 bg-gradient-to-r from-secondary/10 to-transparent px-6 py-4 my-6 rounded-r-lg italic text-foreground/90 font-mono shadow-[inset_4px_0_0_rgba(0,150,255,0.4)]" {...props} />,
+                          hr: ({node: _, ...props}) => <hr className="border-secondary/20 my-10" {...props} />,
+                          table: ({node: _, ...props}) => (
+                            <div className="overflow-x-auto my-8 border border-secondary/30 rounded-xl bg-black/40 shadow-inner backdrop-blur-sm">
+                              <table className="w-full text-left text-[13px] border-collapse font-mono" {...props} />
+                            </div>
+                          ),
+                          thead: ({node: _, ...props}) => <thead className="bg-secondary/10 border-b-2 border-secondary/40 text-secondary tracking-widest uppercase" {...props} />,
+                          tbody: ({node: _, ...props}) => <tbody className="divide-y divide-white/10" {...props} />,
+                          tr: ({node: _, ...props}) => <tr className="hover:bg-white/5 transition-colors" {...props} />,
+                          th: ({node: _, ...props}) => <th className="px-5 py-4 font-black" {...props} />,
+                          td: ({node: _, ...props}) => <td className="px-5 py-4 text-muted-foreground align-top" {...props} />,
                         }}
                       >
                         {selectedNote.content}
