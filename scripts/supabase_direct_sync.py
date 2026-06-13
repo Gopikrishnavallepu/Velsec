@@ -9,7 +9,7 @@ import urllib.error
 SUPABASE_URL = "https://ubfkvjzuqvgqrfkunmqx.supabase.co"
 SUPABASE_KEY = "sb_publishable_s9T2KOiy1hsPcOVrISGCfw_Q8jyvHbS"
 
-def parse_markdown_file(file_path):
+def parse_markdown_file(file_path, vault_dir):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
@@ -44,10 +44,15 @@ def parse_markdown_file(file_path):
 
     note_id = os.path.splitext(os.path.basename(file_path))[0]
 
+    # Calculate folder path relative to vault
+    rel_path = os.path.relpath(file_path, vault_dir)
+    folder_path = os.path.dirname(rel_path).replace('\\', '/')
+    category = folder_path if folder_path and folder_path != "." else metadata.get("category", "General")
+
     return {
         "id": note_id,
         "title": metadata.get("title", "Untitled Note"),
-        "category": metadata.get("category", "General"),
+        "category": category,
         "tags": metadata.get("tags", []),
         "content": body.strip(),
         "last_updated": metadata.get("lastUpdated", "2026-06-03")
@@ -60,7 +65,7 @@ def scan_notes_vault(vault_dir):
         for file in files:
             if file.endswith('.md'):
                 file_path = os.path.join(root, file)
-                parsed = parse_markdown_file(file_path)
+                parsed = parse_markdown_file(file_path, vault_dir)
                 if parsed:
                     note_id = parsed['id']
                     if note_id in seen_ids:
