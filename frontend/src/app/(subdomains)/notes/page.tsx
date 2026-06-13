@@ -55,75 +55,73 @@ export default function NotesPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
 
-  // Fetch notes from FastAPI backend
+  // Fetch notes directly from Supabase
   const fetchNotes = useCallback(async (category: string, search: string) => {
     setLoading(true);
     setErrorMsg(null);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
 
-      if (!token) {
+      if (!session?.access_token) {
         setIsAuthenticated(false);
         setLoading(false);
         return;
       }
 
       setIsAuthenticated(true);
-      const apiBase = process.env.NEXT_PUBLIC_API_URL !== undefined
-        ? process.env.NEXT_PUBLIC_API_URL
-        : (typeof window !== 'undefined' && 
-           !window.location.hostname.includes('localhost') && 
-           !window.location.hostname.endsWith('.local')
-            ? ''
-            : 'http://localhost:8000');
-      const categoryParam = category !== 'ALL' ? encodeURIComponent(category) : 'all';
-      const searchParam = search ? encodeURIComponent(search) : '';
-      
-      const res = await fetch(
-        `${apiBase}/api/v1/notes/?category=${categoryParam}&search=${searchParam}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }
-      );
 
-      if (res.status === 401) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
+      // Query Supabase notes table directly
+      let query = supabase.from('notes').select('*');
+
+      if (category && category !== 'ALL') {
+        query = query.eq('category', category);
       }
 
-      if (!res.ok) {
-        throw new Error(`API returned status code ${res.status}`);
+      if (search) {
+        query = query.or(`title.ilike.%${search}%,content.ilike.%${search}%`);
       }
 
-      const data = await res.json();
-      setNotes(data);
-      if (data.length > 0) {
-        // Keep selected note if it still exists in the list, otherwise select first
+      query = query.order('last_updated', { ascending: false });
+
+      const { data, error } = await query;
+
+      if (error) {
+        throw new Error(`Supabase query error: ${error.message}`);
+      }
+
+      const notesData: Note[] = (data || []).map((item: Record<string, unknown>) => ({
+        id: item.id as string,
+        title: item.title as string,
+        category: item.category as string,
+        tags: (item.tags as string[]) || [],
+        content: item.content as string,
+        last_updated: (item.last_updated as string) || '2026-06-03',
+      }));
+
+      setNotes(notesData);
+      if (notesData.length > 0) {
         setSelectedNote((prev) => {
-          if (prev && data.some((n: Note) => n.id === prev.id)) {
-            return data.find((n: Note) => n.id === prev.id);
+          if (prev && notesData.some((n) => n.id === prev.id)) {
+            return notesData.find((n) => n.id === prev.id) || null;
           }
-          return data[0];
+          return notesData[0];
         });
       } else {
         setSelectedNote(null);
       }
-    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-      console.warn(`Backend connection failed: ${err.message}. Loading mock fallback notes.`);
-      setErrorMsg('API offline. Decrypting offline cached records...');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.warn(`Notes fetch failed: ${errorMessage}. Loading fallback notes.`);
+      setErrorMsg('Database offline. Decrypting offline cached records...');
       
       // Fallback local filtering logic
-      const fallbackNotes = [
+      const fallbackNotes: Note[] = [
         {
           id: "cloud-sec-intro",
           title: "Introduction to Cloud Security",
           category: "Security Engineer",
           tags: ["Cloud", "AWS", "Security"],
-          content: "This is a fallback offline note. Please ensure the backend API is running to fetch your full library of notes.",
+          content: "This is a fallback offline note. Please ensure the Supabase database is connected and the notes-vault has been synced.",
           last_updated: "2026-06-03"
         },
         {
@@ -131,7 +129,7 @@ export default function NotesPage() {
           title: "Data Analytics Foundations",
           category: "Data Analyst",
           tags: ["Data", "Excel", "PowerBI"],
-          content: "This is a fallback offline note. Please ensure the backend API is running to fetch your full library of notes.",
+          content: "This is a fallback offline note. Please ensure the Supabase database is connected and the notes-vault has been synced.",
           last_updated: "2026-06-03"
         },
         {
@@ -139,7 +137,7 @@ export default function NotesPage() {
           title: "Security Engineer Interview Guide",
           category: "Career Development",
           tags: ["Interview", "Career", "HR"],
-          content: "This is a fallback offline note. Please ensure the backend API is running to fetch your full library of notes.",
+          content: "This is a fallback offline note. Please ensure the Supabase database is connected and the notes-vault has been synced.",
           last_updated: "2026-06-03"
         }
       ];
@@ -149,10 +147,10 @@ export default function NotesPage() {
         filtered = filtered.filter(n => n.category.toLowerCase() === category.toLowerCase());
       }
       if (search) {
-        const query = search.toLowerCase();
+        const q = search.toLowerCase();
         filtered = filtered.filter(n => 
-          n.title.toLowerCase().includes(query) || 
-          n.content.toLowerCase().includes(query)
+          n.title.toLowerCase().includes(q) || 
+          n.content.toLowerCase().includes(q)
         );
       }
 
@@ -170,7 +168,7 @@ export default function NotesPage() {
     } finally {
       setLoading(false);
     }
-  }, [supabase.auth]);
+  }, [supabase]);
 
   // Debounced search trigger
   useEffect(() => {
