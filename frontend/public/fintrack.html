@@ -1044,11 +1044,19 @@ let sbUserId = null;
 
 window.addEventListener('message', async (event) => {
   if (event.data && event.data.type === 'SUPABASE_INIT') {
-    const { url, key, token, uid } = event.data;
+    const { url, key, token, uid, theme } = event.data;
     sbUserId = uid;
     sbClient = supabase.createClient(url, key, {
       global: { headers: { Authorization: 'Bearer ' + token } }
     });
+    
+    // Sync theme with parent
+    if (theme) {
+      dark = theme === 'dark';
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+      const themeSwitch = document.getElementById('ts');
+      if (themeSwitch) themeSwitch.classList.toggle('on', dark);
+    }
     
     // Clear hardcoded data
     expenses = []; loans = []; budgets = []; investments = [];

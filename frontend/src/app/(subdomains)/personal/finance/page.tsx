@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { getSubdomainUrl } from '@/utils/navigation';
 import { createClient } from '@/utils/supabase/client';
+import { useTheme } from 'next-themes';
 
 export default function FinancePage() {
   const [mounted, setMounted] = useState(false);
@@ -10,6 +11,7 @@ export default function FinancePage() {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const supabase = createClient();
+  const { theme, resolvedTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -26,22 +28,25 @@ export default function FinancePage() {
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
       
+      const currentTheme = theme === 'system' ? resolvedTheme : theme;
+
       iframeRef.current.contentWindow.postMessage({
         type: 'SUPABASE_INIT',
         url,
         key,
         token: session.access_token,
-        uid: session.user.id
+        uid: session.user.id,
+        theme: currentTheme || 'dark'
       }, '*');
     }
-  }, [session, iframeLoaded]);
+  }, [session, iframeLoaded, theme, resolvedTheme]);
 
   const handleIframeLoad = () => {
     setIframeLoaded(true);
   };
 
   return (
-    <main className="flex-1 w-full h-[100vh] flex flex-col pt-16 bg-background relative">
+    <main className="w-full h-[calc(100vh-64px)] flex flex-col pt-16 bg-background relative overflow-hidden">
       {/* Back to Personal Hub */}
       <div className="absolute top-20 left-4 z-50">
         <a 
