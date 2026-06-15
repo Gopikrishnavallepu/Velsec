@@ -17,45 +17,52 @@ def parse_markdown_file(file_path, vault_dir):
         print(f"[ERROR] Failed to read {file_path}: {e}")
         return None
 
-    match = re.match(r'^---\s*\n(.*?)\n---\s*\n(.*)$', content, re.DOTALL)
-    if not match:
-        return None
-
-    frontmatter_str = match.group(1)
-    body = match.group(2)
-
-    metadata = {}
-    for line in frontmatter_str.split('\n'):
-        if not line.strip() or ':' not in line:
-            continue
-        key, val = line.split(':', 1)
-        key = key.strip()
-        val = val.strip()
-
-        if val.startswith('"') and val.endswith('"'):
-            val = val[1:-1]
-        elif val.startswith("'") and val.endswith("'"):
-            val = val[1:-1]
-        elif val.startswith('[') and val.endswith(']'):
-            items = val[1:-1].split(',')
-            val = [i.strip().strip('"').strip("'") for i in items if i.strip()]
-
-        metadata[key] = val
-
     note_id = os.path.splitext(os.path.basename(file_path))[0]
 
     # Calculate folder path relative to vault
     rel_path = os.path.relpath(file_path, vault_dir)
     folder_path = os.path.dirname(rel_path).replace('\\', '/')
-    category = folder_path if folder_path and folder_path != "." else metadata.get("category", "General")
+    default_category = folder_path if folder_path and folder_path != "." else "General"
+
+    metadata = {}
+    body = content
+
+    match = re.match(r'^---\s*\n(.*?)\n---\s*\n(.*)$', content, re.DOTALL)
+    if match:
+        frontmatter_str = match.group(1)
+        body = match.group(2)
+
+        for line in frontmatter_str.split('\n'):
+            if not line.strip() or ':' not in line:
+                continue
+            key, val = line.split(':', 1)
+            key = key.strip()
+            val = val.strip()
+
+            if val.startswith('"') and val.endswith('"'):
+                val = val[1:-1]
+            elif val.startswith("'") and val.endswith("'"):
+                val = val[1:-1]
+            elif val.startswith('[') and val.endswith(']'):
+                items = val[1:-1].split(',')
+                val = [i.strip().strip('"').strip("'") for i in items if i.strip()]
+
+            metadata[key] = val
+
+    import time
+    try:
+        mtime = os.path.getmtime(file_path)
+        fallback_date = time.strftime('%Y-%m-%d', time.localtime(mtime))
+    except:
+        fallback_date = "2026-06-15"
 
     return {
         "id": note_id,
-        "title": metadata.get("title", "Untitled Note"),
-        "category": category,
+        "title": metadata.get("title", note_id),
+        "category": metadata.get("category", default_category),
         "tags": metadata.get("tags", []),
         "content": body.strip(),
-        "last_updated": metadata.get("lastUpdated", "2026-06-03")
+        "last_updated": metadata.get("lastUpdated", fallback_date)
     }
 
 def scan_notes_vault(vault_dir):
