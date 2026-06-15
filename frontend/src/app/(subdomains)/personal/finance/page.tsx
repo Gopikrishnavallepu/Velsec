@@ -7,6 +7,7 @@ import { createClient } from '@/utils/supabase/client';
 export default function FinancePage() {
   const [mounted, setMounted] = useState(false);
   const [session, setSession] = useState<any>(null);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const supabase = createClient();
 
@@ -19,8 +20,9 @@ export default function FinancePage() {
     });
   }, [supabase]);
 
-  const handleIframeLoad = () => {
-    if (session && iframeRef.current && iframeRef.current.contentWindow) {
+  useEffect(() => {
+    // Only send the credentials when BOTH the session is ready AND the iframe is loaded
+    if (session && iframeLoaded && iframeRef.current && iframeRef.current.contentWindow) {
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
       
@@ -32,6 +34,10 @@ export default function FinancePage() {
         uid: session.user.id
       }, '*');
     }
+  }, [session, iframeLoaded]);
+
+  const handleIframeLoad = () => {
+    setIframeLoaded(true);
   };
 
   return (

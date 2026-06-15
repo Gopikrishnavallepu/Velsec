@@ -81,12 +81,23 @@ ALTER TABLE public.finance_budgets ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.finance_investments ENABLE ROW LEVEL SECURITY;
 
 -- Create Policies to ensure users can only see and edit their own data
+DROP POLICY IF EXISTS "Users can manage their own habits" ON public.habits;
 CREATE POLICY "Users can manage their own habits" ON public.habits FOR ALL USING (auth.uid() = user_id);
+
 -- Habit logs depend on habit_id which belongs to user
+DROP POLICY IF EXISTS "Users can manage their own habit logs" ON public.habit_logs;
 CREATE POLICY "Users can manage their own habit logs" ON public.habit_logs FOR ALL USING (
   EXISTS (SELECT 1 FROM public.habits h WHERE h.id = habit_id AND h.user_id = auth.uid())
 );
+
+DROP POLICY IF EXISTS "Users can manage their own expenses" ON public.finance_expenses;
 CREATE POLICY "Users can manage their own expenses" ON public.finance_expenses FOR ALL USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can manage their own loans" ON public.finance_loans;
 CREATE POLICY "Users can manage their own loans" ON public.finance_loans FOR ALL USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can manage their own budgets" ON public.finance_budgets;
 CREATE POLICY "Users can manage their own budgets" ON public.finance_budgets FOR ALL USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can manage their own investments" ON public.finance_investments;
 CREATE POLICY "Users can manage their own investments" ON public.finance_investments FOR ALL USING (auth.uid() = user_id);
