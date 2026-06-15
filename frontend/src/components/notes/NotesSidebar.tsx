@@ -99,6 +99,23 @@ export default function NotesSidebar() {
 
   const [loading, setLoading] = useState(true);
   const [treeData, setTreeData] = useState<Record<string, TreeNode>>({});
+  const [allNotes, setAllNotes] = useState<Note[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  const loadFavorites = useCallback(() => {
+    try {
+      const favs = JSON.parse(localStorage.getItem('velsec_favorites') || '[]');
+      setFavorites(favs);
+    } catch (e) {
+      setFavorites([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadFavorites();
+    window.addEventListener('favoritesUpdated', loadFavorites);
+    return () => window.removeEventListener('favoritesUpdated', loadFavorites);
+  }, [loadFavorites]);
 
   const fetchAndBuildTree = useCallback(async () => {
     setLoading(true);
@@ -114,6 +131,7 @@ export default function NotesSidebar() {
       if (error) throw error;
 
       const notes = (data || []) as Note[];
+      setAllNotes(notes);
       const root: Record<string, TreeNode> = {};
 
       notes.forEach((note) => {
@@ -176,6 +194,46 @@ export default function NotesSidebar() {
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto pr-2 pb-10">
+          
+          {favorites.length > 0 && allNotes.length > 0 && (
+            <div className="mb-6">
+              <div className="flex flex-col font-mono text-sm w-full">
+                <div className="flex items-center gap-2 py-2 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 rounded-lg px-2 transition-colors relative group w-full text-yellow-500">
+                  <span className="text-yellow-500 transition-transform duration-300 rotate-90">
+                    ▸
+                  </span>
+                  <span className="font-bold tracking-widest uppercase text-xs truncate">
+                    ⭐ STARRED
+                  </span>
+                  <span className="text-[9px] text-muted-foreground ml-auto bg-black/5 dark:bg-black/40 px-1.5 py-0.5 rounded-full border border-border">
+                    {allNotes.filter(n => favorites.includes(n.id)).length}
+                  </span>
+                </div>
+                <div className="overflow-hidden relative opacity-100">
+                  <div className="absolute left-0 top-0 bottom-0 border-l border-border" style={{ marginLeft: `12px` }} />
+                  <div className="py-1">
+                    {allNotes.filter(n => favorites.includes(n.id)).map(note => {
+                      const isActive = currentNoteId === note.id;
+                      return (
+                        <a 
+                          key={note.id}
+                          href={getSubdomainUrl('notes', `/${note.category}?note=${note.id}`)}
+                          className={`flex items-center group/note py-1.5 pr-4 transition-colors w-full rounded-r-lg ${isActive ? 'bg-secondary/20 border-l-2 border-secondary' : 'hover:bg-black/5 dark:hover:bg-white/5 border-l-2 border-transparent'}`}
+                          style={{ paddingLeft: `22px` }}
+                        >
+                          <span className={`mr-2 transition-colors ${isActive ? 'text-secondary' : 'text-secondary/40 group-hover/note:text-secondary'}`}>├─</span>
+                          <span className={`text-xs transition-colors truncate ${isActive ? 'text-secondary font-bold' : 'text-muted-foreground group-hover/note:text-foreground'}`}>
+                            {note.title}
+                          </span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {Object.values(treeData).map((rootNode) => (
             <TreeRenderer 
               key={rootNode.name} 

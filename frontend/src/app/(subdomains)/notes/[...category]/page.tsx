@@ -31,6 +31,36 @@ export default function CategoryNotesPage() {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    if (selectedNote) {
+      try {
+        const favs = JSON.parse(localStorage.getItem('velsec_favorites') || '[]');
+        setIsFavorite(favs.includes(selectedNote.id));
+      } catch (e) {
+        setIsFavorite(false);
+      }
+    }
+  }, [selectedNote]);
+
+  const toggleFavorite = () => {
+    if (!selectedNote) return;
+    try {
+      let favs = JSON.parse(localStorage.getItem('velsec_favorites') || '[]');
+      if (favs.includes(selectedNote.id)) {
+        favs = favs.filter((id: string) => id !== selectedNote.id);
+        setIsFavorite(false);
+      } else {
+        favs.push(selectedNote.id);
+        setIsFavorite(true);
+      }
+      localStorage.setItem('velsec_favorites', JSON.stringify(favs));
+      window.dispatchEvent(new Event('favoritesUpdated'));
+    } catch (e) {
+      console.error('Failed to update favorites', e);
+    }
+  };
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -125,6 +155,15 @@ export default function CategoryNotesPage() {
           <h1 className="text-xl font-bold font-mono tracking-widest text-foreground truncate">
             {selectedNote ? selectedNote.title : 'NO_FILE_SELECTED'}
           </h1>
+          {selectedNote && (
+            <button
+              onClick={toggleFavorite}
+              className={`ml-2 text-2xl hover:scale-110 transition-transform ${isFavorite ? 'text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]' : 'text-muted-foreground hover:text-yellow-500/50'}`}
+              title={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+            >
+              {isFavorite ? '★' : '☆'}
+            </button>
+          )}
         </div>
         
         {selectedNote && (
