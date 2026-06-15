@@ -282,145 +282,87 @@ export default function PersonalPage() {
             </a>
           </div>
         ) : (
-          /* Dashboard Grid */
+          /* Hub Grid */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            {/* Card 1: Agent Profile & Certifications */}
-            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
-
+            {/* 1. Goals Portal */}
+            <a href={mounted ? getSubdomainUrl('personal', '/goals') : '/goals'} className="group relative border border-secondary/15 bg-card/25 hover:bg-card/40 backdrop-blur-md rounded-xl p-6 transition-all duration-500 hover:shadow-[0_0_30px_rgba(0,150,255,0.1)] hover:border-secondary/40 overflow-hidden min-h-[220px] flex flex-col justify-between">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div>
-                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-2">// AGENT_IDENTIFICATION</span>
-                <div className="flex items-center gap-4 border-b border-secondary/10 pb-4 mb-4">
-                  <div className="w-14 h-14 rounded-full border-2 border-secondary/50 bg-background flex items-center justify-center text-2xl shadow-[0_0_12px_rgba(0,150,255,0.2)]">
-                    👤
-                  </div>
-                  <div className="font-mono">
-                    <h3 className="text-sm font-bold text-foreground">GOPISHEK_VALLEPU</h3>
-                    <p className="text-[9px] text-secondary font-bold">TITLE: CYBER_OPERATIVE</p>
-                    <p className="text-[9px] text-muted-foreground">SECTOR: DEVSECOPS_SEC</p>
-                  </div>
-                </div>
-
-                {/* Certifications toggles */}
-                <span className="text-[9px] font-mono text-muted-foreground block mb-2 font-bold tracking-wider">CERTIFICATE_DECK (CLICK TO UPDATE):</span>
-                <div className="grid grid-cols-2 gap-2">
-                  {certs.map(c => (
-                    <button
-                      key={c.id}
-                      onClick={() => toggleCert(c.id)}
-                      className={`p-2 rounded text-[10px] font-mono font-bold text-center border transition-all duration-300 ${
-                        c.acquired
-                          ? 'border-secondary/40 bg-secondary/10 text-secondary shadow-[0_0_8px_rgba(0,150,255,0.15)]'
-                          : 'border-border bg-card/5 text-muted-foreground hover:border-secondary/25'
-                      }`}
-                    >
-                      {c.name}
-                    </button>
-                  ))}
-                </div>
+                <span className="text-4xl mb-4 block group-hover:scale-110 transition-transform duration-300 group-hover:-rotate-6">🎯</span>
+                <h3 className="text-xl font-bold font-mono text-foreground mb-2 group-hover:text-secondary transition-colors">Personal Goals</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">Track short-term milestones, quarterly objectives, and long-term career aspirations with actionable steps.</p>
               </div>
+              <div className="flex justify-end items-center mt-4 text-xs font-mono font-bold text-secondary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
+                ENTER_MODULE <span className="ml-2">→</span>
+              </div>
+            </a>
 
-              <button
-                onClick={compileCV}
-                disabled={cvCompiling}
-                className={`w-full py-2 mt-4 text-xs font-mono font-bold tracking-widest rounded-lg border transition-all duration-300 ${
-                  cvCompiling
-                    ? 'border-amber-500 text-amber-500 bg-transparent animate-pulse cursor-not-allowed'
-                    : 'border-secondary text-secondary bg-secondary/5 hover:bg-secondary/15'
-                }`}
-              >
-                {cvCompiling ? 'COMPILING_CV...' : 'GENERATE_CV_REPORT'}
-              </button>
-            </div>
-
-            {/* Card 2: Objective Tracker Checklist */}
-            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
-
+            {/* 2. Communication Portal */}
+            <a href={mounted ? getSubdomainUrl('personal', '/communication') : '/communication'} className="group relative border border-purple-500/15 bg-card/25 hover:bg-card/40 backdrop-blur-md rounded-xl p-6 transition-all duration-500 hover:shadow-[0_0_30px_rgba(168,85,247,0.1)] hover:border-purple-500/40 overflow-hidden min-h-[220px] flex flex-col justify-between">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div>
-                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-3">// ACTIVE_OBJECTIVES</span>
-                <div className="flex flex-col gap-3">
-                  {tasks.map(t => (
-                    <div
-                      key={t.id}
-                      onClick={() => toggleTask(t.id)}
-                      className="flex items-center gap-3 cursor-pointer group"
-                    >
-                      <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
-                        t.completed
-                          ? 'border-secondary bg-secondary/15 text-secondary'
-                          : 'border-border group-hover:border-secondary/40'
-                      }`}>
-                        {t.completed && <span className="text-[9px]">✔</span>}
-                      </div>
-                      <span className={`text-[11px] font-mono transition-colors ${
-                        t.completed ? 'text-muted-foreground line-through' : 'text-foreground group-hover:text-foreground'
-                      }`}>
-                        {t.text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                <span className="text-4xl mb-4 block group-hover:scale-110 transition-transform duration-300 group-hover:rotate-6">💬</span>
+                <h3 className="text-xl font-bold font-mono text-foreground mb-2 group-hover:text-purple-400 transition-colors">Effective Comm</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">Frameworks for active listening, conflict resolution, persuasive speaking, and professional networking.</p>
               </div>
-
-              <div className="text-[9px] font-mono text-muted-foreground text-center border-t border-secondary/10 pt-3 mt-4">
-                * Resolving active objectives boosts operative tier levels.
+              <div className="flex justify-end items-center mt-4 text-xs font-mono font-bold text-purple-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
+                ENTER_MODULE <span className="ml-2">→</span>
               </div>
-            </div>
+            </a>
 
-            {/* Card 3: Skill Matrix Levels */}
-            <div className="relative border border-secondary/15 bg-card/25 backdrop-blur-md rounded-xl p-5 flex flex-col justify-between min-h-[360px]">
-              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-secondary/40" />
-              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-secondary/40" />
-
+            {/* 3. Habits Portal */}
+            <a href={mounted ? getSubdomainUrl('personal', '/habits') : '/habits'} className="group relative border border-emerald-500/15 bg-card/25 hover:bg-card/40 backdrop-blur-md rounded-xl p-6 transition-all duration-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] hover:border-emerald-500/40 overflow-hidden min-h-[220px] flex flex-col justify-between">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div>
-                <span className="text-[9px] font-mono text-secondary tracking-widest block mb-3">// COGNITIVE_SKILL_MATRIX</span>
-                <div className="space-y-4">
-                  {skills.map(s => (
-                    <div key={s.name} className="flex flex-col gap-1.5 font-mono">
-                      <div className="flex justify-between items-center text-[10px] text-muted-foreground">
-                        <span>{s.name}</span>
-                        <span className="text-secondary font-bold">{s.level}%</span>
-                      </div>
-                      
-                      <div className="flex gap-2 items-center">
-                        <div className="flex-1 h-2 bg-background rounded-full overflow-hidden border border-secondary/10">
-                          <div
-                            className="h-full bg-gradient-to-r from-[#0096ff] to-[#00f0ff] transition-all duration-300"
-                            style={{ width: `${s.level}%` }}
-                          />
-                        </div>
-                        <button
-                          onClick={() => trainSkill(s.name)}
-                          disabled={loading}
-                          className="px-2 py-0.5 rounded border border-secondary/30 text-[8px] text-secondary hover:bg-secondary/10 font-bold active:scale-95 transition-all disabled:opacity-50"
-                        >
-                          TRAIN
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <span className="text-4xl mb-4 block group-hover:scale-110 transition-transform duration-300 group-hover:-rotate-12">🌱</span>
+                <h3 className="text-xl font-bold font-mono text-foreground mb-2 group-hover:text-emerald-400 transition-colors">Daily Habitations</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">Visual heatmaps and streaks for daily routines. Build robust systems, not just goals.</p>
               </div>
+              <div className="flex justify-end items-center mt-4 text-xs font-mono font-bold text-emerald-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
+                ENTER_MODULE <span className="ml-2">→</span>
+              </div>
+            </a>
 
-              <div className="text-[9px] font-mono text-muted-foreground text-center border-t border-secondary/10 pt-3 mt-4">
-                Train competencies iteratively to secure final sandbox clearances.
+            {/* 4. Finance Portal */}
+            <a href={mounted ? getSubdomainUrl('personal', '/finance') : '/finance'} className="group relative border border-amber-500/15 bg-card/25 hover:bg-card/40 backdrop-blur-md rounded-xl p-6 transition-all duration-500 hover:shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:border-amber-500/40 overflow-hidden min-h-[220px] flex flex-col justify-between md:col-span-2 lg:col-span-1">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div>
+                <span className="text-4xl mb-4 block group-hover:scale-110 transition-transform duration-300 group-hover:-translate-y-2">📈</span>
+                <h3 className="text-xl font-bold font-mono text-foreground mb-2 group-hover:text-amber-400 transition-colors">FinTrack Pro</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">Comprehensive financial tracking dashboard. Manage expenses, EMIs, budgets, and investment growth portfolios.</p>
               </div>
-            </div>
+              <div className="flex justify-end items-center mt-4 text-xs font-mono font-bold text-amber-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
+                ENTER_MODULE <span className="ml-2">→</span>
+              </div>
+            </a>
+
+            {/* 5. Resume Portal */}
+            <a href={mounted ? getSubdomainUrl('personal', '/resume') : '/resume'} className="group relative border border-rose-500/15 bg-card/25 hover:bg-card/40 backdrop-blur-md rounded-xl p-6 transition-all duration-500 hover:shadow-[0_0_30px_rgba(244,63,94,0.1)] hover:border-rose-500/40 overflow-hidden min-h-[220px] flex flex-col justify-between md:col-span-2 lg:col-span-2">
+              <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div>
+                <div className="flex justify-between items-start">
+                  <span className="text-4xl mb-4 block group-hover:scale-110 transition-transform duration-300">📄</span>
+                  <span className="px-2 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/30 text-[9px] font-mono font-bold rounded">EXPORTABLE</span>
+                </div>
+                <h3 className="text-xl font-bold font-mono text-foreground mb-2 group-hover:text-rose-400 transition-colors">Cyberspace Resume</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed max-w-lg">A fully-featured, dynamically generated professional CV. Track your certifications, skills matrix, past experiences, and operative level.</p>
+              </div>
+              <div className="flex justify-end items-center mt-4 text-xs font-mono font-bold text-rose-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
+                ENTER_MODULE <span className="ml-2">→</span>
+              </div>
+            </a>
 
           </div>
         )}
 
         {/* Back Link */}
-        <div className="text-center mt-4">
+        <div className="text-center mt-8">
           <a
             href={mounted ? getSubdomainUrl('home') : '/'}
-            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-mono font-bold text-muted-foreground hover:text-secondary transition-colors group"
           >
-            <span>&lt;--</span>
+            <span className="group-hover:-translate-x-1 transition-transform">&lt;--</span>
             <span>SYSTEM_CORE_HOME</span>
           </a>
         </div>
