@@ -76,7 +76,7 @@ export default function HomePage() {
             </TiltWrapper>
 
             {/* VELSEC Title */}
-            <h1 className="text-6xl md:text-8xl font-black tracking-[0.15em] font-mono leading-none mt-4">
+            <h1 className="text-5xl md:text-8xl font-black tracking-[0.15em] font-mono leading-none mt-4">
               <span className="text-foreground">VEL</span>
               <span className="text-secondary text-glow-blue">SEC</span>
             </h1>
