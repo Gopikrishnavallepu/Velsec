@@ -147,15 +147,15 @@ export default function SubdomainGrid() {
                 >
                   {sub.name}
                 </h3>
-                <p className="text-[11px] font-mono text-zinc-600">{sub.domain}</p>
+                <p className="text-[11px] font-mono text-slate-400">{sub.domain}</p>
               </div>
             </div>
 
             {/* Tagline */}
-            <p className="text-sm font-semibold text-foreground mb-2">{sub.tagline}</p>
+            <p className="text-sm font-semibold text-slate-100 mb-2">{sub.tagline}</p>
 
             {/* Description */}
-            <p className="text-xs text-muted-foreground leading-relaxed mb-4">{sub.description}</p>
+            <p className="text-xs text-slate-300 leading-relaxed mb-4">{sub.description}</p>
 
             {/* Feature Pills */}
             <div className="flex flex-wrap gap-2">

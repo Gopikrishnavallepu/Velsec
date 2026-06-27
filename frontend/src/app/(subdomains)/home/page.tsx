@@ -5,176 +5,219 @@ import { useEffect, useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import SubdomainGrid from '@/components/ui/SubdomainGrid';
 import { getSubdomainUrl } from '@/utils/navigation';
-import TiltWrapper from '@/components/ui/TiltWrapper';
 import AnimatedButton from '@/components/ui/AnimatedButton';
+import { Shield, Activity, Cpu, Network, Terminal, Lock, Globe, Server } from 'lucide-react';
 
-const pillars = [
-  { icon: '🔒', label: 'CYBERSECURITY\nSOLUTIONS', subdomain: 'home' },
-  { icon: '🎓', label: 'LEARNING\nECOSYSTEM', subdomain: 'learn' },
-  { icon: '🧠', label: 'AI\nSECURITY', subdomain: 'home' },
-  { icon: '♾️', label: 'DEVSECOPS\nEXCELLENCE', subdomain: 'projects' },
-  { icon: '👤', label: 'PERSONAL &\nCAREER GROWTH', subdomain: 'personal' },
-  { icon: '💻', label: 'PROJECTS &\nPRACTICAL LABS', subdomain: 'projects' },
-  { icon: '📰', label: 'TECH NEWS &\nINSIGHTS', subdomain: 'news' },
-  { icon: '🎯', label: 'PROGRESS\nTRACKER', subdomain: 'tracker' },
+const widgets = [
+  { icon: <Shield size={16} />, label: 'THREAT_LEVEL', value: 'ELEVATED', color: 'text-destructive' },
+  { icon: <Activity size={16} />, label: 'ACTIVE_SESSIONS', value: '1,337', color: 'text-cyber-green' },
+  { icon: <Cpu size={16} />, label: 'SYS_LOAD', value: '42.8%', color: 'text-cyber-blue' },
+  { icon: <Network size={16} />, label: 'NET_TRAFFIC', value: '8.4 TB/S', color: 'text-cyber-purple' },
 ];
 
-const actionBar = [
-  { icon: '📖', label: 'LEARN', subdomain: 'learn' },
-  { icon: '🔬', label: 'PRACTICE', subdomain: 'projects' },
-  { icon: '⚙️', label: 'IMPLEMENT', subdomain: 'projects' },
-  { icon: '📈', label: 'GROW', subdomain: 'tracker' },
-  { icon: '🛡️', label: 'PROTECT', subdomain: 'home' },
+const modules = [
+  { icon: <Terminal size={20} />, label: 'CYBER_ACADEMY', subdomain: 'learn', desc: 'EXECUTE LEARNING MODULES AND MASTER OFFENSIVE/DEFENSIVE OPERATIONS.' },
+  { icon: <Server size={20} />, label: 'LAB_ENVIRONMENTS', subdomain: 'projects', desc: 'DEPLOY VIRTUALIZED TARGETS AND PRACTICE LIVE EXPLOITATION.' },
+  { icon: <Globe size={20} />, label: 'THREAT_INTEL', subdomain: 'news', desc: 'MONITOR GLOBAL SECURITY EVENTS AND VULNERABILITY DISCLOSURES.' },
+  { icon: <Lock size={20} />, label: 'SYS_TRACKER', subdomain: 'tracker', desc: 'ANALYZE SKILL PROGRESSION AND CERTIFICATION READINESS.' },
 ];
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
+  const [logText, setLogText] = useState("");
+  const fullLog = `> INIT SYS... [OK]\n> ESTABLISHING SECURE CONNECTION... [OK]\n> BYPASSING MAINFRAME ENCRYPTION... [SUCCESS]\n> WELCOME TO VELSEC CYBER COMMAND.`;
 
   useEffect(() => {
     setMounted(true);
+    let i = 0;
+    const typingInterval = setInterval(() => {
+      if (i < fullLog.length) {
+        setLogText(fullLog.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 20);
+    return () => clearInterval(typingInterval);
   }, []);
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2
-      }
+      transition: { staggerChildren: 0.1, delayChildren: 0.1 }
     }
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
   };
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      {/* ========== HERO SECTION ========== */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-8 pt-24 pb-12">
+    <main className="relative min-h-screen overflow-hidden pt-20 pb-12 bg-cyber-bg">
+      {/* ========== COMMAND CENTER DASHBOARD ========== */}
+      <section className="relative min-h-screen flex flex-col items-center px-4 md:px-8">
         <motion.div 
-          className="z-10 w-full max-w-6xl flex flex-col items-center"
+          className="z-10 w-full max-w-7xl flex flex-col gap-6"
           variants={containerVariants}
           initial="hidden"
           animate="show"
         >
 
-          {/* ---- Logo + Branding ---- */}
-          <motion.div variants={itemVariants} className="flex flex-col items-center gap-2 mb-6">
-            <TiltWrapper intensity={20}>
-              <div className="relative w-28 h-28 md:w-36 md:h-36 drop-shadow-[0_0_40px_rgba(0,150,255,0.6)]">
-                <Image
-                  src="/logo.png"
-                  alt="Velsec Logo"
-                  fill
-                  className="object-contain mix-blend-lighten"
-                  priority
-                />
+          {/* ---- Top Header Bar ---- */}
+          <motion.div variants={itemVariants} className="w-full flex flex-col md:flex-row justify-between items-end pb-4">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 relative">
+                <Image src="/logo.png" alt="Velsec" fill className="object-contain" />
               </div>
-            </TiltWrapper>
-
-            {/* VELSEC Title */}
-            <h1 className="text-5xl md:text-8xl font-black tracking-[0.15em] font-mono leading-none mt-4">
-              <span className="text-foreground">VEL</span>
-              <span className="text-secondary text-glow-blue">SEC</span>
-            </h1>
-
-            {/* Tagline */}
-            <p className="text-base md:text-xl font-bold tracking-wider mt-2 text-center">
-              <span className="text-foreground">SECURE TODAY. </span>
-              <span className="text-secondary italic text-glow-blue">EMPOWER TOMORROW.</span>
-            </p>
-
-            {/* Subtitle */}
-            <p className="text-xs md:text-sm text-muted-foreground italic tracking-wide text-center mt-1">
-              The Ultimate Cybersecurity Learning &amp; Solutions Ecosystem
-            </p>
+              <div>
+                <h1 
+                  className="text-4xl md:text-5xl font-black tracking-widest text-cyber-green text-glow-green uppercase glitch-effect" 
+                  data-text="VELSEC_CMD"
+                >
+                  VELSEC_CMD
+                </h1>
+                <p className="text-[10px] md:text-xs text-cyber-blue tracking-widest uppercase font-mono mt-1">
+                  Global Security Operations Center
+                </p>
+              </div>
+            </div>
+            <div className="hidden md:flex flex-col items-end font-mono">
+              <span className="text-[10px] text-muted-foreground tracking-widest">
+                SYS.STATUS: <span className="text-cyber-green animate-pulse inline-block">ONLINE</span>
+              </span>
+              <span className="text-[10px] text-muted-foreground tracking-widest">ENCRYPTION: AES-256 GCM</span>
+              <span className="text-[10px] text-muted-foreground tracking-widest">TIME: {mounted ? new Date().toISOString() : '...'}</span>
+            </div>
           </motion.div>
+          
+          {/* Thin divider line */}
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-cyber-green/30 to-transparent" />
 
-          {/* Separator */}
-          <motion.div variants={itemVariants} className="w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-[#0096ff]/30 to-transparent my-6" />
-
-          {/* ---- 8 Pillar Cards ---- */}
-          <motion.div variants={itemVariants} className="w-full grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-8">
-            {pillars.map((p, idx) => (
-              <motion.a
-                key={p.label}
-                href={mounted ? getSubdomainUrl(p.subdomain) : `/${p.subdomain}`}
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-                className="group flex flex-col items-center text-center p-3 rounded-xl border border-border/30 hover:border-secondary/60 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,150,255,0.15)] bg-white/5 dark:bg-black/40 backdrop-blur-md"
-              >
-                <div className="w-12 h-12 rounded-full border border-secondary/30 flex items-center justify-center mb-2 group-hover:border-secondary group-hover:shadow-[0_0_20px_rgba(0,150,255,0.3)] transition-all duration-300">
-                  <span className="text-xl group-hover:scale-110 transition-transform duration-300">{p.icon}</span>
+          {/* ---- Dashboard Bento Grid ---- */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            
+            {/* Left Column: Logs & Identity (Col Span 4) */}
+            <motion.div variants={itemVariants} className="lg:col-span-4 flex flex-col gap-4">
+              
+              {/* Terminal Window */}
+              <div className="bg-cyber-darker border border-cyber-green/20 rounded-md shadow-[0_0_15px_rgba(0,255,136,0.05)] overflow-hidden flex flex-col h-64">
+                <div className="bg-cyber-green/10 border-b border-cyber-green/20 px-3 py-1.5 flex items-center justify-between">
+                  <span className="text-[10px] text-cyber-green font-mono tracking-widest uppercase">/bin/bash - velsec-sys</span>
+                  <div className="flex gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-destructive" />
+                    <div className="w-2 h-2 rounded-full bg-[#f59e0b]" />
+                    <div className="w-2 h-2 rounded-full bg-cyber-green" />
+                  </div>
                 </div>
-                <span className="text-[9px] md:text-[10px] font-mono font-bold text-muted-foreground group-hover:text-secondary transition-colors duration-300 leading-tight whitespace-pre-line">
-                  {p.label}
-                </span>
-              </motion.a>
-            ))}
-          </motion.div>
+                <div className="p-4 font-mono text-xs text-cyber-green/80 whitespace-pre-wrap flex-1 overflow-y-auto uppercase tracking-wider leading-relaxed">
+                  {logText}
+                  <span className="animate-pulse">_</span>
+                </div>
+              </div>
 
-          {/* ---- Action Bar ---- */}
-          <motion.div variants={itemVariants} className="mt-4 flex flex-wrap justify-center gap-4">
-            <a href={mounted ? getSubdomainUrl('learn') : '/learn'}>
-              <AnimatedButton glowColor="purple" icon="🚀">
-                ENTER ACADEMY
-              </AnimatedButton>
-            </a>
-            <a href={mounted ? getSubdomainUrl('projects') : '/projects'}>
-              <AnimatedButton glowColor="green" icon="💻">
-                ACCESS LABS
-              </AnimatedButton>
-            </a>
-          </motion.div>
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-3">
+                <a href={mounted ? getSubdomainUrl('learn') : '/learn'} className="w-full">
+                  <AnimatedButton glowColor="green" icon={<Terminal size={14}/>} className="w-full justify-start border-cyber-green/30">
+                    INIT_ACADEMY()
+                  </AnimatedButton>
+                </a>
+                <a href={mounted ? getSubdomainUrl('projects') : '/projects'} className="w-full">
+                  <AnimatedButton glowColor="blue" icon={<Shield size={14}/>} className="w-full justify-start border-cyber-blue/30">
+                    DEPLOY_LABS()
+                  </AnimatedButton>
+                </a>
+              </div>
+
+            </motion.div>
+
+            {/* Right Column: Widgets & Modules (Col Span 8) */}
+            <motion.div variants={itemVariants} className="lg:col-span-8 flex flex-col gap-4">
+              
+              {/* Status Widgets */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {widgets.map((w, idx) => (
+                  <div key={idx} className="bg-cyber-darker border border-border/50 p-4 rounded-md flex flex-col hover:border-cyber-blue/50 hover:shadow-[0_0_15px_rgba(0,200,255,0.1)] transition-all group">
+                    <div className="text-muted-foreground mb-2 group-hover:text-cyber-blue transition-colors">{w.icon}</div>
+                    <span className="text-[10px] text-muted-foreground mb-1 font-mono tracking-widest uppercase">{w.label}</span>
+                    <span className={`text-base font-bold tracking-widest font-mono ${w.color}`}>{w.value}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* System Modules Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+                {modules.map((m, idx) => (
+                  <a 
+                    key={idx}
+                    href={mounted ? getSubdomainUrl(m.subdomain) : `/${m.subdomain}`}
+                    className="group interactive bg-slate-950/40 border border-cyber-green/10 p-5 rounded-md hover:border-cyber-green/50 hover:bg-cyber-green/5 transition-all duration-300 relative overflow-hidden flex flex-col justify-between"
+                  >
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyber-green/50 to-transparent -translate-x-full group-hover:animate-[glint_2s_ease-in-out_infinite]" />
+                    <div>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="text-cyber-green/70 group-hover:text-cyber-green transition-all">{m.icon}</div>
+                        <h3 className="text-sm font-bold text-foreground group-hover:text-cyber-green transition-colors font-mono tracking-widest uppercase">{m.label}</h3>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground group-hover:text-foreground/80 transition-colors font-mono uppercase tracking-widest leading-relaxed">
+                        {m.desc}
+                      </p>
+                    </div>
+                    <div className="mt-4 text-[10px] text-cyber-green/40 group-hover:text-cyber-green transition-colors flex items-center gap-1 font-mono uppercase tracking-widest">
+                      <span>EXECUTE</span>
+                      <span className="group-hover:translate-x-1 transition-transform">-&gt;</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+
+            </motion.div>
+          </div>
 
         </motion.div>
       </section>
 
+      {/* Thin divider line */}
+      <div className="w-full max-w-7xl mx-auto h-px bg-gradient-to-r from-transparent via-cyber-blue/30 to-transparent mt-12 mb-12" />
+
       {/* ========== ECOSYSTEM SECTION ========== */}
-      <section className="relative py-24 px-6 z-10 bg-black/5 dark:bg-black/20 backdrop-blur-lg border-t border-border">
+      <section className="relative pb-24 px-6 z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.5 }}
+          className="max-w-7xl mx-auto mb-10 border-l-2 border-cyber-blue pl-4"
         >
-          <h2 className="text-3xl md:text-4xl font-bold font-mono tracking-wider mb-4">
-            <span className="text-muted-foreground">THE </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0096ff] to-[#39ff14] text-glow-blue">ECOSYSTEM</span>
+          <h2 
+            className="text-lg md:text-xl font-bold font-mono tracking-widest text-cyber-blue uppercase glitch-effect"
+            data-text="> SYSTEM.DISCOVER(ECOSYSTEM)"
+          >
+            &gt; SYSTEM.DISCOVER(ECOSYSTEM)
           </h2>
-          <p className="text-sm text-muted-foreground font-mono max-w-xl mx-auto">
-            Six integrated platforms designed to accelerate your cybersecurity career from learning to implementation.
+          <p className="text-[10px] text-muted-foreground font-mono mt-2 uppercase tracking-widest">
+            Scanning available network nodes and subdomains...
           </p>
-          <div className="w-32 h-[2px] bg-gradient-to-r from-transparent via-[#0096ff] to-transparent mx-auto mt-6" />
         </motion.div>
 
         <SubdomainGrid />
       </section>
 
       {/* ========== FOOTER ========== */}
-      <footer className="relative py-12 px-6 border-t border-border z-10 bg-background/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="relative w-8 h-8">
-              <Image
-                src="/logo.png"
-                alt="Velsec"
-                fill
-                className="object-contain mix-blend-lighten"
-              />
-            </div>
-            <span className="text-sm font-mono text-zinc-600">
-              &copy; 2025 Velsec. Secure Today. Empower Tomorrow.
+      <footer className="relative py-8 px-6 border-t border-cyber-green/20 z-10 bg-cyber-darker">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Terminal size={12} className="text-cyber-green" />
+            <span className="text-[10px] font-mono text-muted-foreground tracking-widest uppercase">
+              ROOT@VELSEC:~# EOF - 2025 SECURE TODAY. EMPOWER TOMORROW.
             </span>
           </div>
-          <div className="flex gap-6 text-xs font-mono">
-            <span className="text-zinc-600 hover:text-secondary transition-colors cursor-pointer">GitHub</span>
-            <span className="text-zinc-600 hover:text-secondary transition-colors cursor-pointer">Discord</span>
-            <span className="text-zinc-600 hover:text-secondary transition-colors cursor-pointer">Twitter</span>
+          <div className="flex gap-4 text-[10px] font-mono tracking-widest uppercase">
+            <span className="text-cyber-green/50 hover:text-cyber-green transition-colors cursor-pointer">[GITHUB]</span>
+            <span className="text-cyber-green/50 hover:text-cyber-green transition-colors cursor-pointer">[DISCORD]</span>
+            <span className="text-cyber-green/50 hover:text-cyber-green transition-colors cursor-pointer">[TWITTER]</span>
           </div>
         </div>
       </footer>
