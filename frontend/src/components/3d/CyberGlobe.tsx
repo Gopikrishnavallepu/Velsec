@@ -18,7 +18,7 @@ export default function CyberGlobe() {
   return (
     <Sphere ref={meshRef} args={[1, 64, 64]} scale={2}>
       <MeshDistortMaterial
-        color="#00FF88"
+        color="#0096ff"
         attach="material"
         distort={0.4}
         speed={2}

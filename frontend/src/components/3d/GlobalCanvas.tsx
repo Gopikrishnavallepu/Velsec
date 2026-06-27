@@ -39,10 +39,10 @@ function ParticleField() {
 
   // Change color theme based on subdomain/path implicitly
   const color = pathname.includes("tracker") 
-    ? "#00FF88" // neon green
+    ? "#39ff14" // neon green
     : pathname.includes("learn") 
-      ? "#7A5FFF" // cyber purple
-      : "#00C8FF"; // electric blue
+      ? "#ff00ff" // purple
+      : "#0096ff"; // cyan
 
   return (
     <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
@@ -64,21 +64,21 @@ function FloatingGeometries() {
       <Float speed={1.5} rotationIntensity={1.5} floatIntensity={2}>
         <mesh position={[4, 2, -5]} rotation={[0.5, 0.5, 0]}>
           <octahedronGeometry args={[1, 0]} />
-          <meshStandardMaterial color="#00C8FF" wireframe opacity={0.3} transparent />
+          <meshStandardMaterial color="#0096ff" wireframe opacity={0.3} transparent />
         </mesh>
       </Float>
       
       <Float speed={2} rotationIntensity={2} floatIntensity={3}>
         <mesh position={[-5, -2, -10]} rotation={[0.2, 0.8, 0]}>
           <torusGeometry args={[1.5, 0.4, 16, 100]} />
-          <meshStandardMaterial color="#00FF88" wireframe opacity={0.15} transparent />
+          <meshStandardMaterial color="#39ff14" wireframe opacity={0.15} transparent />
         </mesh>
       </Float>
 
       <Float speed={1} rotationIntensity={1} floatIntensity={1}>
         <mesh position={[0, -4, -8]} rotation={[0, 0.5, 0]}>
           <icosahedronGeometry args={[2, 0]} />
-          <meshStandardMaterial color="#7A5FFF" wireframe opacity={0.1} transparent />
+          <meshStandardMaterial color="#ff00ff" wireframe opacity={0.1} transparent />
         </mesh>
       </Float>
     </>

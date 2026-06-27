@@ -1,19 +1,12 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap');
-
 @theme {
-  --font-sans: 'Space Grotesk', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  --color-neon-green: #00FF88;
-  --color-cyber-blue: #00C8FF;
-  --color-cyber-purple: #7A5FFF;
-  --color-warning: #FF9800;
-  --color-critical: #FF3B3B;
-  --color-dark-bg: #050505;
-  --color-dark-glass: rgba(5, 5, 5, 0.7);
+  --color-neon-green: #39ff14;
+  --color-cyber-blue: #0096ff;
+  --color-plexus-blue: #0060cc;
+  --color-dark-bg: #050a18;
+  --color-dark-glass: rgba(10, 20, 50, 0.6);
   
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -41,122 +34,91 @@
 }
 
 :root {
-  --background: #050505;
+  --background: #050a18;
   --foreground: #e0e8f0;
   
-  --card: #0a0a0a;
+  --card: #0a1228;
   --card-foreground: #e0e8f0;
   
-  --popover: #0a0a0a;
+  --popover: #0a1228;
   --popover-foreground: #e0e8f0;
   
-  --primary: #00FF88;
-  --primary-foreground: #050505;
+  --primary: #39ff14;
+  --primary-foreground: #050a18;
   
-  --secondary: #00C8FF;
-  --secondary-foreground: #050505;
+  --secondary: #0096ff;
+  --secondary-foreground: #050a18;
   
-  --muted: #111111;
+  --muted: #111d3a;
   --muted-foreground: #7a8baa;
   
-  --accent: rgba(0, 200, 255, 0.1);
-  --accent-foreground: #00C8FF;
+  --accent: rgba(0, 150, 255, 0.1);
+  --accent-foreground: #0096ff;
   
-  --destructive: #FF3B3B;
+  --destructive: #ef4444;
   --destructive-foreground: #f8fafc;
 
-  --border: rgba(0, 200, 255, 0.2);
-  --input: #111111;
-  --ring: #00FF88;
+  --border: rgba(0, 150, 255, 0.15);
+  --input: #111d3a;
+  --ring: #0096ff;
 
-  --radius: 0.25rem;
+  --radius: 0.5rem;
   
-  --glass-panel-bg: rgba(5, 5, 5, 0.75);
-  --vignette-bg: rgba(2, 2, 2, 0.9);
+  --glass-panel-bg: rgba(10, 20, 50, 0.6);
+  --vignette-bg: rgba(5, 10, 24, 0.85);
 }
 
 .light {
-  /* Forcing dark mode for the Hacker Theme */
-  --background: #050505;
-  --foreground: #e0e8f0;
-  --card: #0a0a0a;
-  --card-foreground: #e0e8f0;
-  --popover: #0a0a0a;
-  --popover-foreground: #e0e8f0;
-  --primary: #00FF88;
-  --primary-foreground: #050505;
-  --secondary: #00C8FF;
-  --secondary-foreground: #050505;
-  --muted: #111111;
-  --muted-foreground: #7a8baa;
-  --accent: rgba(0, 200, 255, 0.1);
-  --accent-foreground: #00C8FF;
-  --destructive: #FF3B3B;
+  --background: #ffffff;
+  --foreground: #020617;
+  
+  --card: #f8fafc;
+  --card-foreground: #020617;
+  
+  --popover: #ffffff;
+  --popover-foreground: #020617;
+  
+  --primary: #16a34a;
+  --primary-foreground: #ffffff;
+  
+  --secondary: #2563eb;
+  --secondary-foreground: #ffffff;
+  
+  --muted: #f1f5f9;
+  --muted-foreground: #334155;
+  
+  --accent: rgba(37, 99, 235, 0.1);
+  --accent-foreground: #2563eb;
+  
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: rgba(0, 200, 255, 0.2);
-  --input: #111111;
-  --ring: #00FF88;
-  --glass-panel-bg: rgba(5, 5, 5, 0.75);
-  --vignette-bg: rgba(2, 2, 2, 0.9);
+
+  --border: #cbd5e1;
+  --input: #cbd5e1;
+  --ring: #2563eb;
+  
+  --glass-panel-bg: rgba(255, 255, 255, 0.85);
+  --vignette-bg: rgba(255, 255, 255, 0.95);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
-  /* hide default cursor when custom cursor is active */
-  cursor: none; 
-}
-
-/* Make sure all child elements also hide the cursor */
-* {
-  cursor: none !important;
 }
 
 .glass-panel {
   background: var(--glass-panel-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Cyber Glow Utilities */
-.text-glow-green {
-  text-shadow: 0 0 8px rgba(0, 255, 136, 0.6), 0 0 20px rgba(0, 255, 136, 0.3);
-}
-.text-glow-blue {
-  text-shadow: 0 0 8px rgba(0, 200, 255, 0.6), 0 0 20px rgba(0, 200, 255, 0.3);
-}
-.box-glow-green {
-  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2), inset 0 0 15px rgba(0, 255, 136, 0.1);
-}
-.box-glow-blue {
-  box-shadow: 0 0 15px rgba(0, 200, 255, 0.2), inset 0 0 15px rgba(0, 200, 255, 0.1);
-}
-
-/* Animations */
+/* Scanline animation */
 @keyframes scanline {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(100vh); }
-}
-
-.scanline-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 40;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
 }
 
 .scanline-overlay::after {
@@ -165,48 +127,63 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 8px;
-  background: linear-gradient(to bottom, transparent, rgba(0, 255, 136, 0.3), transparent);
-  animation: scanline 8s linear infinite;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.15), transparent);
+  box-shadow: 0 0 20px rgba(0, 150, 255, 0.1);
+  animation: scanline 6s linear infinite;
+  pointer-events: none;
+  z-index: 40;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #050505;
-  border-left: 1px solid rgba(0, 255, 136, 0.1);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 200, 255, 0.3);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 255, 136, 0.6);
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+/* Cinematic vignette */
+.cinematic-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, var(--vignette-bg) 100%);
+  pointer-events: none;
+  z-index: 30;
 }
 
-/* Glitch effect on hover for certain elements */
-.glitch-hover:hover {
-  animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-}
-@keyframes glitch-skew {
-  0% { transform: skew(0deg); }
-  20% { transform: skew(-10deg); }
-  40% { transform: skew(10deg); }
-  60% { transform: skew(-5deg); }
-  80% { transform: skew(5deg); }
-  100% { transform: skew(0deg); }
+/* Glow text utility */
+.text-glow-blue {
+  text-shadow: 0 0 10px rgba(0, 150, 255, 0.5), 0 0 30px rgba(0, 150, 255, 0.2);
 }
 
+.text-glow-green {
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 30px rgba(57, 255, 20, 0.2);
+}
+
+/* Print Styles for PDF Export */
 @media print {
   body {
     background-color: white !important;
     color: black !important;
   }
-  nav, aside, .scanline-overlay, canvas {
+  
+  /* Hide unnecessary UI elements */
+  nav, aside, .cinematic-vignette, .scanline-overlay, canvas {
     display: none !important;
+  }
+  
+  /* Reset layout constraints for printing */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Ensure text doesn't break awkwardly */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  
+  pre, blockquote, table, img {
+    page-break-inside: avoid;
+  }
+  
+  /* Ensure colors print if the user has background graphics enabled */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
-import CustomCursor from "@/components/ui/CustomCursor";
-import MatrixBackground from "@/components/ui/MatrixBackground";
 
 // Removing next/font/google due to local network fetch issues during build
 const geistSansVariable = "font-sans";
@@ -36,8 +34,6 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <CustomCursor />
-          <MatrixBackground />
           <ClientGlobalCanvas />
           <Navbar />
           <TransitionProvider>

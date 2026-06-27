@@ -3,7 +3,6 @@
 This guide will walk you through deploying the Velsec platform for free using **Vercel** (Frontend), **Render** (Backend), and **Supabase** (Database).
 
 ## Prerequisites
-
 1. A [GitHub](https://github.com) account.
 2. A [Vercel](https://vercel.com) account.
 3. A [Render](https://render.com) account.
@@ -12,16 +11,12 @@ This guide will walk you through deploying the Velsec platform for free using **
 ---
 
 ## 1. Push Code to GitHub
-
 1. Open your terminal in the project root (`d:\Velsec\velsec-org`).
 2. Add your GitHub repository as a remote (if not already done):
-
    ```bash
    git remote add origin https://github.com/your-username/velsec-org.git
    ```
-
 3. Commit and push the code:
-
    ```bash
    git add .
    git commit -m "Prepare for Vercel and Render deployment"
@@ -31,7 +26,6 @@ This guide will walk you through deploying the Velsec platform for free using **
 ---
 
 ## 2. Deploy Database (Supabase)
-
 1. Go to your [Supabase Dashboard](https://app.supabase.com) and create a new project.
 2. Once the project is provisioned, go to **Project Settings -> API** to retrieve your `URL` and `anon public` keys.
 3. Go to **Project Settings -> Database** to retrieve your PostgreSQL connection string (URI).
@@ -40,7 +34,6 @@ This guide will walk you through deploying the Velsec platform for free using **
 ---
 
 ## 3. Deploy Backend (Render)
-
 Render offers a very generous free tier for web services and natively supports the `render.yaml` infrastructure-as-code file included in this repository.
 
 1. Go to your [Render Dashboard](https://dashboard.render.com).
@@ -60,7 +53,6 @@ Render offers a very generous free tier for web services and natively supports t
 ---
 
 ## 4. Deploy Frontend (Vercel)
-
 1. Go to your [Vercel Dashboard](https://vercel.com/dashboard).
 2. Click **Add New... -> Project**.
 3. Import the `velsec-org` repository from GitHub.
@@ -74,9 +66,7 @@ Render offers a very generous free tier for web services and natively supports t
 6. Click **Deploy**.
 
 ## Conclusion
-
-Your Velsec platform is now fully deployed!
-
+Your Velsec platform is now fully deployed! 
 - The Next.js frontend is served globally via Vercel's Edge Network.
 - The FastAPI backend runs on a Render free-tier container.
 - The Postgres database and Authentication are handled securely by Supabase.
