@@ -1,12 +1,17 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;700;900&display=swap');
+
 @theme {
-  --color-neon-green: #39ff14;
-  --color-cyber-blue: #0096ff;
-  --color-plexus-blue: #0060cc;
-  --color-dark-bg: #050a18;
-  --color-dark-glass: rgba(10, 20, 50, 0.6);
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-cyber-bg: #050505;
+  --color-cyber-darker: #020202;
+  --color-cyber-green: #00ff88;
+  --color-cyber-blue: #00c8ff;
+  --color-cyber-purple: #7a5fff;
   
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -34,85 +39,129 @@
 }
 
 :root {
-  --background: #050a18;
-  --foreground: #e0e8f0;
+  --background: #050505;
+  --foreground: #cbd5e1; /* slate-300 */
   
-  --card: #0a1228;
-  --card-foreground: #e0e8f0;
+  --card: #09090d;
+  --card-foreground: #cbd5e1;
   
-  --popover: #0a1228;
-  --popover-foreground: #e0e8f0;
+  --popover: #09090d;
+  --popover-foreground: #cbd5e1;
   
-  --primary: #39ff14;
-  --primary-foreground: #050a18;
+  --primary: #00ff88;
+  --primary-foreground: #020202;
   
-  --secondary: #0096ff;
-  --secondary-foreground: #050a18;
+  --secondary: #00c8ff;
+  --secondary-foreground: #020202;
   
-  --muted: #111d3a;
-  --muted-foreground: #7a8baa;
+  --muted: #020202;
+  --muted-foreground: #64748b; /* slate-500 */
   
-  --accent: rgba(0, 150, 255, 0.1);
-  --accent-foreground: #0096ff;
+  --accent: rgba(0, 200, 255, 0.1);
+  --accent-foreground: #00c8ff;
   
   --destructive: #ef4444;
-  --destructive-foreground: #f8fafc;
+  --destructive-foreground: #020202;
 
-  --border: rgba(0, 150, 255, 0.15);
-  --input: #111d3a;
-  --ring: #0096ff;
+  --border: rgba(0, 255, 136, 0.2); /* border-cyber-green/20 */
+  --input: #020202;
+  --ring: #00ff88;
 
-  --radius: 0.5rem;
+  --radius: 0.25rem; /* rounded to rounded-md */
   
-  --glass-panel-bg: rgba(10, 20, 50, 0.6);
-  --vignette-bg: rgba(5, 10, 24, 0.85);
+  --glass-panel-bg: rgba(9, 9, 13, 0.8);
+  --vignette-bg: rgba(5, 5, 5, 0.95);
 }
 
 .light {
-  --background: #ffffff;
-  --foreground: #020617;
-  
-  --card: #f8fafc;
-  --card-foreground: #020617;
-  
-  --popover: #ffffff;
-  --popover-foreground: #020617;
-  
-  --primary: #16a34a;
-  --primary-foreground: #ffffff;
-  
-  --secondary: #2563eb;
-  --secondary-foreground: #ffffff;
-  
-  --muted: #f1f5f9;
-  --muted-foreground: #334155;
-  
-  --accent: rgba(37, 99, 235, 0.1);
-  --accent-foreground: #2563eb;
-  
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-
-  --border: #cbd5e1;
-  --input: #cbd5e1;
-  --ring: #2563eb;
-  
-  --glass-panel-bg: rgba(255, 255, 255, 0.85);
-  --vignette-bg: rgba(255, 255, 255, 0.95);
+  /* Enforce dark mode even in light theme as per mandate */
+  --background: #050505;
+  --foreground: #cbd5e1;
+  --card: #09090d;
+  --card-foreground: #cbd5e1;
+  --popover: #09090d;
+  --popover-foreground: #cbd5e1;
+  --primary: #00ff88;
+  --primary-foreground: #020202;
+  --secondary: #00c8ff;
+  --secondary-foreground: #020202;
+  --muted: #020202;
+  --muted-foreground: #64748b;
+  --accent: rgba(0, 200, 255, 0.1);
+  --accent-foreground: #00c8ff;
+  --destructive: #ef4444;
+  --destructive-foreground: #020202;
+  --border: rgba(0, 255, 136, 0.2);
+  --input: #020202;
+  --ring: #00ff88;
+  --glass-panel-bg: rgba(9, 9, 13, 0.8);
+  --vignette-bg: rgba(5, 5, 5, 0.95);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
   overflow-x: hidden;
 }
 
 .glass-panel {
   background: var(--glass-panel-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
+}
+
+/* Micro-Interactions & Special Effects */
+.text-glow-green {
+  filter: drop-shadow(0 0 5px rgba(0,255,136,0.8));
+}
+.text-glow-blue {
+  filter: drop-shadow(0 0 5px rgba(0,200,255,0.8));
+}
+
+/* CSS Glitch Effect */
+.glitch-effect {
+  position: relative;
+}
+.glitch-effect:hover::before,
+.glitch-effect:hover::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+}
+.glitch-effect:hover::before {
+  left: 2px;
+  text-shadow: -1px 0 #00ff88;
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+.glitch-effect:hover::after {
+  left: -2px;
+  text-shadow: -1px 0 #00c8ff;
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(78px, 9999px, 80px, 0); }
+  20% { clip: rect(15px, 9999px, 86px, 0); }
+  40% { clip: rect(31px, 9999px, 8px, 0); }
+  60% { clip: rect(66px, 9999px, 2px, 0); }
+  80% { clip: rect(10px, 9999px, 94px, 0); }
+  100% { clip: rect(54px, 9999px, 12px, 0); }
+}
+@keyframes glitch-anim-2 {
+  0% { clip: rect(65px, 9999px, 100px, 0); }
+  20% { clip: rect(3px, 9999px, 7px, 0); }
+  40% { clip: rect(29px, 9999px, 88px, 0); }
+  60% { clip: rect(87px, 9999px, 55px, 0); }
+  80% { clip: rect(12px, 9999px, 21px, 0); }
+  100% { clip: rect(94px, 9999px, 3px, 0); }
 }
 
 /* Scanline animation */
@@ -128,8 +177,8 @@ body {
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.15), transparent);
-  box-shadow: 0 0 20px rgba(0, 150, 255, 0.1);
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.15), transparent);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
   animation: scanline 6s linear infinite;
   pointer-events: none;
   z-index: 40;
@@ -144,46 +193,30 @@ body {
   z-index: 30;
 }
 
-/* Glow text utility */
-.text-glow-blue {
-  text-shadow: 0 0 10px rgba(0, 150, 255, 0.5), 0 0 30px rgba(0, 150, 255, 0.2);
+/* Custom Scrollbar for dense dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #020202;
+  border-left: 1px solid rgba(0, 255, 136, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.3);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 136, 0.8);
 }
 
-.text-glow-green {
-  text-shadow: 0 0 10px rgba(57, 255, 20, 0.5), 0 0 30px rgba(57, 255, 20, 0.2);
-}
-
-/* Print Styles for PDF Export */
 @media print {
   body {
     background-color: white !important;
     color: black !important;
   }
-  
-  /* Hide unnecessary UI elements */
   nav, aside, .cinematic-vignette, .scanline-overlay, canvas {
     display: none !important;
   }
-  
-  /* Reset layout constraints for printing */
-  main {
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: visible !important;
-  }
-
-  /* Ensure text doesn't break awkwardly */
-  h1, h2, h3, h4, h5, h6 {
-    page-break-after: avoid;
-  }
-  
-  pre, blockquote, table, img {
-    page-break-inside: avoid;
-  }
-  
-  /* Ensure colors print if the user has background graphics enabled */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
 }
+

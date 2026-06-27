@@ -42,37 +42,31 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 px-6 py-3 flex justify-between items-center border-b border-border bg-background/90 backdrop-blur-md">
-        {/* Logo */}
+      <nav className="fixed top-0 left-0 w-full z-50 px-4 py-2 flex justify-between items-center border-b border-cyber-green/20 bg-cyber-bg/95 backdrop-blur-md">
+        {/* Logo / Terminal Prompt */}
         <a 
           href={mounted ? getSubdomainUrl('home') : '/'} 
-          className="flex items-center gap-3 group"
+          className="flex items-center gap-2 group"
         >
-          <div className="relative w-12 h-12 drop-shadow-[0_0_12px_rgba(0,150,255,0.4)] group-hover:drop-shadow-[0_0_20px_rgba(0,150,255,0.7)] transition-all duration-500">
-            <Image
-              src="/logo.png"
-              alt="Velsec Logo"
-              fill
-              className="object-contain dark:mix-blend-lighten"
-              priority
-            />
+          <div className="relative w-8 h-8 group-hover:drop-shadow-[0_0_15px_rgba(0,255,136,0.8)] transition-all duration-300">
+            <Image src="/logo.png" alt="Velsec Logo" fill className="object-contain" priority />
           </div>
-          <span className="text-xl font-bold tracking-widest font-mono hidden sm:inline-block">
-            <span className="text-foreground">VEL</span>
-            <span className="text-secondary">SEC</span>
+          <span className="text-sm font-bold tracking-widest font-mono hidden sm:inline-block text-cyber-green text-glow-green">
+            root@velsec:~$ <span className="text-foreground/80 animate-pulse">_</span>
           </span>
         </a>
 
         {/* Navigation Links and Auth Button Container */}
         <div className="flex items-center gap-1 md:gap-4">
           {/* Main Links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-2 mr-2">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={mounted ? getSubdomainUrl(link.key) : `/${link.key}`}
-                className="px-4 py-2 text-xs font-mono font-bold tracking-wider text-muted-foreground hover:text-secondary hover:bg-accent rounded transition-all duration-300 border border-transparent hover:border-border"
+                className="group flex items-center gap-1.5 px-3 py-1 text-[10px] font-mono tracking-widest text-muted-foreground hover:text-cyber-green transition-all duration-300 border border-transparent hover:border-cyber-green/30 hover:bg-cyber-green/5"
               >
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground group-hover:bg-cyber-green group-hover:animate-ping" />
                 {link.label}
               </a>
             ))}
@@ -83,10 +77,10 @@ export default function Navbar() {
             {mounted && (
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2 rounded-lg bg-card border border-border text-muted-foreground hover:text-secondary transition-all"
+                className="p-1.5 rounded-sm bg-black border border-border text-muted-foreground hover:text-cyber-blue hover:border-cyber-blue/50 transition-all"
                 aria-label="Toggle Theme"
               >
-                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
               </button>
             )}
 
@@ -94,16 +88,16 @@ export default function Navbar() {
             {session ? (
               <a
                 href={mounted ? getSubdomainUrl('home', '/profile') : '/profile'}
-                className="hidden lg:inline-block px-4 py-2 text-xs font-mono font-bold tracking-wider text-secondary hover:bg-accent rounded transition-all duration-300 border border-border shadow-[0_0_10px_rgba(0,150,255,0.1)] whitespace-nowrap"
+                className="hidden lg:inline-block px-4 py-1.5 text-[10px] font-mono tracking-widest text-cyber-blue hover:bg-cyber-blue/10 border border-cyber-blue/30 hover:border-cyber-blue hover:shadow-[0_0_10px_rgba(0,200,255,0.3)] transition-all duration-300 whitespace-nowrap"
               >
-                PROFILE
+                [ PROFILE ]
               </a>
             ) : (
               <a
                 href={mounted ? getSubdomainUrl('home', '/login') : '/login'}
-                className="hidden lg:inline-block px-4 py-2 text-xs font-mono font-bold tracking-wider text-primary-foreground bg-secondary hover:opacity-90 rounded transition-all duration-300 shadow-[0_0_15px_rgba(0,150,255,0.3)] whitespace-nowrap"
+                className="hidden lg:inline-block px-4 py-1.5 text-[10px] font-mono tracking-widest text-cyber-bg bg-cyber-green hover:bg-cyber-green border border-cyber-green hover:shadow-[0_0_15px_rgba(0,255,136,0.6)] transition-all duration-300 whitespace-nowrap"
               >
-                LOGIN
+                AUTH::LOGIN
               </a>
             )}
 

@@ -14,17 +14,16 @@ interface GlassCardProps {
 
 export default function GlassCard({ children, className, glowColor = "none" }: GlassCardProps) {
   const glowClasses = {
-    none: "",
-    blue: "hover:shadow-[0_0_30px_rgba(0,150,255,0.3)] border-[rgba(0,150,255,0.2)]",
-    green: "hover:shadow-[0_0_30px_rgba(57,255,20,0.3)] border-[rgba(57,255,20,0.2)]",
-    purple: "hover:shadow-[0_0_30px_rgba(255,0,255,0.3)] border-[rgba(255,0,255,0.2)]",
+    none: "border-border hover:border-border/80",
+    blue: "border-[rgba(0,200,255,0.2)] hover:border-[rgba(0,200,255,1)] hover:shadow-[0_0_15px_rgba(0,200,255,0.2)]",
+    green: "border-[rgba(0,255,136,0.2)] hover:border-[rgba(0,255,136,1)] hover:shadow-[0_0_15px_rgba(0,255,136,0.2)]",
+    purple: "border-[rgba(122,95,255,0.2)] hover:border-[rgba(122,95,255,1)] hover:shadow-[0_0_15px_rgba(122,95,255,0.2)]",
   };
 
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl bg-white/60 dark:bg-black/40 backdrop-blur-md border border-border/50",
-        "backdrop-blur-xl border border-white/10 dark:border-white/5",
+        "relative overflow-hidden rounded-md bg-slate-950/80 backdrop-blur-md border",
         "transition-all duration-300",
         glowClasses[glowColor],
         className
