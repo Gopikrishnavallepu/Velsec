@@ -6,8 +6,8 @@ import urllib.request
 import urllib.error
 
 # Config
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ubfkvjzuqvgqrfkunmqx.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_publishable_s9T2KOiy1hsPcOVrISGCfw_Q8jyvHbS")
+SUPABASE_URL = os.environ.get("SUPABASE_URL") or "https://ubfkvjzuqvgqrfkunmqx.supabase.co"
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY") or "sb_publishable_s9T2KOiy1hsPcOVrISGCfw_Q8jyvHbS"
 
 def parse_markdown_file(file_path, vault_dir):
     try:
@@ -23,6 +23,9 @@ def parse_markdown_file(file_path, vault_dir):
     rel_path = os.path.relpath(file_path, vault_dir)
     folder_path = os.path.dirname(rel_path).replace('\\', '/')
     default_category = folder_path if folder_path and folder_path != "." else "General"
+
+    if note_id.upper() == "INDEX" and folder_path and folder_path != ".":
+        note_id = f"{folder_path.replace('/', '_')}_{note_id}"
 
     metadata = {}
     body = content
